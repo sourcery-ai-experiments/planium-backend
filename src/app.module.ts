@@ -9,13 +9,13 @@ import { AuthModule } from './modules/auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.development.local', '.env.development'],
+      envFilePath: ['.env.development', '.env'],
       validate,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'),
+        uri: process.env.DATABASE_URL || configService.get('DATABASE_URL'),
       }),
       inject: [ConfigService],
     }),
