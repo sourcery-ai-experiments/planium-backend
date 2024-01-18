@@ -13,6 +13,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const environment_validation_1 = require("./config/environment.validation");
 const workers_module_1 = require("./modules/workers/workers.module");
 const auth_module_1 = require("./modules/auth/auth.module");
+const health_status_module_1 = require("./modules/health-status/health-status.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -33,6 +34,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             workers_module_1.WorkersModule,
             auth_module_1.AuthModule,
+            health_status_module_1.HealthStatusModule,
         ],
         controllers: [],
         providers: [],
