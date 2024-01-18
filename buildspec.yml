@@ -1,6 +1,11 @@
 version: 0.2
+
 phases:
   install:
+    commands:
+      - nvm install 20.9.0
+      - nvm use 20.9.0
+  pre_build:
     commands:
       - npm install
   build:
@@ -8,8 +13,8 @@ phases:
       - npm run build
   post_build:
     commands:
-      - cp -R node_modules/ dist/node_modules # nodejs needs this
-      - cp Procfile dist/Procfile # EBS needs this
+      - cp -R node_modules/ dist/node_modules
+      - cp Procfile dist/Procfile
 artifacts:
   files:
     - "**/*"
