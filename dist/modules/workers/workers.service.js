@@ -23,12 +23,14 @@ let WorkersService = class WorkersService {
         this.workerModel = workerModel;
     }
     async create(worker) {
-        await this.verifyEmailExists(worker.email);
+        const existEmail = await this.verifyEmailExists(worker.email);
+        if (existEmail) {
+            throw new common_1.BadRequestException('El correo electrónico ya existe');
+        }
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(worker.password, salt);
         worker.password = hashedPassword;
-        const newWorker = new this.workerModel(worker);
-        await newWorker.save();
+        const newWorker = await this.workerModel.create(worker);
         const { password, ...workerData } = newWorker.toObject();
         return {
             message: 'Operario creado correctamente',
@@ -36,18 +38,35 @@ let WorkersService = class WorkersService {
         };
     }
     async findAll() {
-        return this.workerModel.find().exec();
+        try {
+            return this.workerModel.find().exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async findById(id) {
-        return this.workerModel.findById(id).exec();
+        try {
+            return this.workerModel.findById(id).exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async findOne(where) {
-        return this.workerModel.findOne(where).exec();
+        try {
+            return this.workerModel.findOne(where).exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async verifyEmailExists(email) {
-        const worker = await this.findOne({ email });
-        if (worker) {
-            throw new common_1.BadRequestException('El correo electrónico ya existe');
+        try {
+            return await this.findOne({ email });
+        }
+        catch (error) {
+            throw new Error(error);
         }
     }
 };

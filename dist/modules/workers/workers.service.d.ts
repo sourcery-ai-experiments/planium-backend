@@ -23,8 +23,8 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Model } from 'mongoose';
-import { Worker, WorkerDocument } from '@/schemas/Worker';
-import { CreateWorkerDto } from '@/modules/workers/dto/create-worker.dto';
+import { Worker, WorkerDocument } from '@schema/Worker';
+import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 export declare class WorkersService {
     private readonly workerModel;
     constructor(workerModel: Model<WorkerDocument>);
@@ -69,5 +69,11 @@ export declare class WorkersService {
     } & Required<{
         _id: import("mongoose").Types.ObjectId;
     }>>;
-    private verifyEmailExists;
+    verifyEmailExists(email: string): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
+        _id: import("mongoose").Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, Worker> & Worker & {
+        _id: import("mongoose").Types.ObjectId;
+    } & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }>>;
 }

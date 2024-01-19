@@ -16,6 +16,7 @@ exports.WorkersController = void 0;
 const common_1 = require("@nestjs/common");
 const workers_service_1 = require("./workers.service");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
+const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 let WorkersController = class WorkersController {
     constructor(workersService) {
         this.workersService = workersService;
@@ -26,6 +27,7 @@ let WorkersController = class WorkersController {
 };
 exports.WorkersController = WorkersController;
 __decorate([
+    (0, auth_decorator_1.Public)(),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),

@@ -40,4 +40,28 @@ export class AuthService {
   async comparePasswords(password: string, storedPasswordHash: string) {
     return bcrypt.compare(password, storedPasswordHash);
   }
+
+  async validateWorkerSession(workerId: string) {
+    const worker = await this.workerService.findById(workerId);
+
+    if (!worker) {
+      throw new UnauthorizedException('No se encontró el operario');
+    }
+
+    return {
+      message: 'Operario verificado correctamente',
+      data: worker,
+    };
+  }
+
+  async refreshToken(payload: object) {
+    const token = this.jwtService.sign(payload);
+
+    return {
+      message: 'Token actualizado',
+      data: {
+        access_token: token,
+      },
+    };
+  }
 }

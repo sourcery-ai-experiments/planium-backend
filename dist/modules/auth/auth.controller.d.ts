@@ -9,4 +9,14 @@ export declare class AuthController {
             access_token: string;
         };
     }>;
+    validateWorker(req: any): Promise<{
+        message: string;
+        data: import("../../schemas/Worker").Worker;
+    }>;
+    refreshToken(companyId: string, req: any): Promise<{
+        message: string;
+        data: {
+            access_token: string;
+        };
+    }>;
 }

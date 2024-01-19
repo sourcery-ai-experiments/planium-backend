@@ -1,4 +1,4 @@
-import { WorkersService } from '@modules/workers/workers.service';
+import { WorkersService } from '@module/workers/workers.service';
 import { JwtService } from '@nestjs/jwt';
 export declare class AuthService {
     private readonly workerService;
@@ -10,5 +10,15 @@ export declare class AuthService {
             access_token: string;
         };
     }>;
-    private comparePasswords;
+    comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
+    validateWorkerSession(workerId: string): Promise<{
+        message: string;
+        data: import("../../schemas/Worker").Worker;
+    }>;
+    refreshToken(payload: object): Promise<{
+        message: string;
+        data: {
+            access_token: string;
+        };
+    }>;
 }
