@@ -4,23 +4,25 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { validate } from './config/environment.validation';
 import { WorkersModule } from './modules/workers/workers.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { HealthStatusModule } from './modules/health-status/health-status.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.development.local', '.env.development'],
+      envFilePath: ['.env.development', '.env'],
       validate,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'),
+        uri: process.env.DATABASE_URL || configService.get('DATABASE_URL'),
       }),
       inject: [ConfigService],
     }),
     WorkersModule,
     AuthModule,
+    HealthStatusModule,
   ],
   controllers: [],
   providers: [],
