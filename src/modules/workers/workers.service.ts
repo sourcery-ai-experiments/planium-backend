@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { Worker, WorkerDocument } from '@/schemas/Worker';
-import { CreateWorkerDto } from '@/modules/workers/dto/create-worker.dto';
+import { Worker, WorkerDocument } from '@schema/Worker';
+import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 
 @Injectable()
 export class WorkersService {
@@ -13,15 +13,18 @@ export class WorkersService {
   ) {}
 
   async create(worker: CreateWorkerDto) {
-    await this.verifyEmailExists(worker.email);
+    const existEmail = await this.verifyEmailExists(worker.email);
+
+    if (existEmail) {
+      throw new BadRequestException('El correo electrónico ya existe');
+    }
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(worker.password, salt);
 
     worker.password = hashedPassword;
 
-    const newWorker = new this.workerModel(worker);
-    await newWorker.save();
+    const newWorker = await this.workerModel.create(worker);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...workerData } = newWorker.toObject();
@@ -33,21 +36,34 @@ export class WorkersService {
   }
 
   async findAll(): Promise<Worker[]> {
-    return this.workerModel.find().exec();
+    try {
+      return this.workerModel.find().exec();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findById(id: string): Promise<Worker> {
-    return this.workerModel.findById(id).exec();
+    try {
+      return this.workerModel.findById(id).exec();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findOne(where: Record<string, string>) {
-    return this.workerModel.findOne(where).exec();
+    try {
+      return this.workerModel.findOne(where).exec();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  private async verifyEmailExists(email: string) {
-    const worker = await this.findOne({ email });
-    if (worker) {
-      throw new BadRequestException('El correo electrónico ya existe');
+  async verifyEmailExists(email: string) {
+    try {
+      return await this.findOne({ email });
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }

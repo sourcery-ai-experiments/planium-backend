@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { WorkersService } from '@modules/workers/workers.service';
+import { WorkersService } from '@module/workers/workers.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class AuthService {
     };
   }
 
-  private async comparePasswords(password: string, storedPasswordHash: string) {
+  async comparePasswords(password: string, storedPasswordHash: string) {
     return bcrypt.compare(password, storedPasswordHash);
   }
 }

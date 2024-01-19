@@ -1,6 +1,6 @@
 import {
   IsNotEmpty,
-  IsEmpty,
+  IsOptional,
   IsEmail,
   ValidateNested,
   IsMongoId,
@@ -18,27 +18,27 @@ class Phone {
   code: string;
 }
 class PersonalInformation {
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   socialSecurityNumber: string;
 
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsMongoId()
   fileId: string;
 }
 
 class EmergencyContact {
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   name: string;
 
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   phone: string;
 
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   phoneCode: string;
 }
 
@@ -66,19 +66,19 @@ export class CreateWorkerDto {
   phone: Phone;
 
   @ApiPropertyOptional()
-  @IsEmpty()
+  @IsOptional()
   @ValidateNested()
   @Type(() => PersonalInformation)
   personalInformation: PersonalInformation;
 
   @ApiPropertyOptional()
-  @IsEmpty()
+  @IsOptional()
   @ValidateNested()
   @Type(() => EmergencyContact)
   emergencyContact: EmergencyContact;
 
   @ApiPropertyOptional()
-  @IsEmpty()
+  @IsOptional()
   @IsMongoId()
   fileId: string;
 }

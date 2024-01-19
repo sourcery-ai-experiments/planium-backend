@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { findByCompany } from '@schemas/methods';
+import { findByCompany } from '@/schemas/methods';
 
 export type FileDocument = HydratedDocument<File>;
 

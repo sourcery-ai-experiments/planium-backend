@@ -75,8 +75,8 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1",
-      "^schemas/(.*)$": "<rootDir>/src/$1",
-      "^modules/(.*)$": "<rootDir>/src/$1"
+      "^@schema/(.*)$": "<rootDir>/schemas/$1",
+      "^@module/(.*)$": "<rootDir>/modules/$1"
     }
   }
 }
