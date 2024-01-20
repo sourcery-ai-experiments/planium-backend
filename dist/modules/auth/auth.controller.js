@@ -22,18 +22,18 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    signInWorker(signInWorkerDto) {
-        const { email, password } = signInWorkerDto;
-        return this.authService.signInWorker(email, password);
+    signIn(signInUserDto) {
+        const { email, password } = signInUserDto;
+        return this.authService.signIn(email, password);
     }
-    validateWorker(req) {
-        const workerId = req.user.sub;
-        return this.authService.validateWorkerSession(workerId);
+    validateUser(req) {
+        const userId = req.user.sub;
+        return this.authService.validateSession(userId);
     }
     refreshToken(companyId, req) {
-        const workerId = req.user.sub;
+        const userId = req.user.sub;
         const payload = {
-            sub: workerId,
+            sub: userId,
             companyId,
         };
         return this.authService.refreshToken(payload);
@@ -43,19 +43,19 @@ exports.AuthController = AuthController;
 __decorate([
     (0, auth_decorator_1.Public)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, common_1.Post)('worker/login'),
+    (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [sign_in_dto_1.SignInWorkerDto]),
+    __metadata("design:paramtypes", [sign_in_dto_1.SignInDto]),
     __metadata("design:returntype", void 0)
-], AuthController.prototype, "signInWorker", null);
+], AuthController.prototype, "signIn", null);
 __decorate([
-    (0, common_1.Get)('worker/validate'),
+    (0, common_1.Get)('validate'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], AuthController.prototype, "validateWorker", null);
+], AuthController.prototype, "validateUser", null);
 __decorate([
     (0, common_1.Get)('refresh'),
     __param(0, (0, company_id_decorator_1.CompanyId)()),

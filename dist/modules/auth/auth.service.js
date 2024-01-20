@@ -12,24 +12,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const bcrypt = require("bcrypt");
-const workers_service_1 = require("../workers/workers.service");
+const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
-    constructor(workerService, jwtService) {
-        this.workerService = workerService;
+    constructor(userService, jwtService) {
+        this.userService = userService;
         this.jwtService = jwtService;
     }
-    async signInWorker(email, password) {
-        const worker = await this.workerService.findOne({ email });
-        if (!worker) {
+    async signIn(email, password) {
+        const user = await this.userService.findOne({ email });
+        if (!user) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
-        const isMatch = await this.comparePasswords(password, worker.password);
+        const isMatch = await this.comparePasswords(password, user.password);
         if (!isMatch) {
             throw new common_1.UnauthorizedException('Invalid credentials');
         }
         const payload = {
-            sub: worker._id,
+            sub: user._id,
         };
         const token = this.jwtService.sign(payload);
         return {
@@ -42,14 +42,14 @@ let AuthService = class AuthService {
     async comparePasswords(password, storedPasswordHash) {
         return bcrypt.compare(password, storedPasswordHash);
     }
-    async validateWorkerSession(workerId) {
-        const worker = await this.workerService.findById(workerId);
-        if (!worker) {
-            throw new common_1.UnauthorizedException('No se encontró el operario');
+    async validateSession(userId) {
+        const user = await this.userService.findById(userId);
+        if (!user) {
+            throw new common_1.UnauthorizedException('No se encontró el usuario');
         }
         return {
-            message: 'Operario verificado correctamente',
-            data: worker,
+            message: 'Usuario verificado correctamente',
+            data: user,
         };
     }
     async refreshToken(payload) {
@@ -65,7 +65,7 @@ let AuthService = class AuthService {
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [workers_service_1.WorkersService,
+    __metadata("design:paramtypes", [users_service_1.UsersService,
         jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

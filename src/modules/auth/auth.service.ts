@@ -1,30 +1,30 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { WorkersService } from '@module/workers/workers.service';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly workerService: WorkersService,
+    private readonly userService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async signInWorker(email: string, password: string) {
-    const worker = await this.workerService.findOne({ email });
+  async signIn(email: string, password: string) {
+    const user = await this.userService.findOne({ email });
 
-    if (!worker) {
+    if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isMatch = await this.comparePasswords(password, worker.password);
+    const isMatch = await this.comparePasswords(password, user.password);
 
     if (!isMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = {
-      sub: worker._id,
+      sub: user._id,
     };
 
     const token = this.jwtService.sign(payload);
@@ -41,16 +41,16 @@ export class AuthService {
     return bcrypt.compare(password, storedPasswordHash);
   }
 
-  async validateWorkerSession(workerId: string) {
-    const worker = await this.workerService.findById(workerId);
+  async validateSession(userId: string) {
+    const user = await this.userService.findById(userId);
 
-    if (!worker) {
-      throw new UnauthorizedException('No se encontró el operario');
+    if (!user) {
+      throw new UnauthorizedException('No se encontró el usuario');
     }
 
     return {
-      message: 'Operario verificado correctamente',
-      data: worker,
+      message: 'Usuario verificado correctamente',
+      data: user,
     };
   }
 

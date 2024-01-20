@@ -5,26 +5,6 @@ export type WorkerDocument = HydratedDocument<Worker>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Worker {
-  @Prop({ required: true })
-  name: string;
-
-  @Prop({ required: true })
-  email: string;
-
-  @Prop({ required: true })
-  password: string;
-
-  @Prop({ required: true })
-  nationality: string;
-
-  @Prop(
-    raw({
-      number: { type: String, required: true },
-      code: { type: String, required: true },
-    }),
-  )
-  phone: Record<string, any>;
-
   @Prop(
     raw({
       socialSecurityNumber: { type: String },
@@ -44,6 +24,9 @@ export class Worker {
 
   @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId })
+  userId: Types.ObjectId;
 }
 
 export const WorkerSchema = SchemaFactory.createForClass(Worker);

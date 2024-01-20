@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { User } from '@/schemas/User';
 import { getModelToken } from '@nestjs/mongoose';
+import { UserType } from '@/types/User';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -67,6 +68,7 @@ describe('UsersService', () => {
         number: '3003421965',
         countryCode: '57',
       },
+      type: UserType.WORKER,
     };
 
     jest.spyOn(service, 'verifyEmailExists').mockImplementation(() => null);

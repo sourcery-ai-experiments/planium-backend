@@ -2,16 +2,16 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { WorkersService } from '@module/workers/workers.service';
+import { UsersService } from '@module/users/users.service';
 import { Types } from 'mongoose';
 
 describe('AuthService', () => {
   let service: AuthService;
   let jwtService: Partial<JwtService>;
-  let workerService: Partial<WorkersService>;
+  let userService: Partial<UsersService>;
 
   beforeEach(async () => {
-    workerService = {
+    userService = {
       findOne: jest.fn(),
     };
 
@@ -23,8 +23,8 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         {
-          provide: WorkersService,
-          useValue: workerService,
+          provide: UsersService,
+          useValue: userService,
         },
         {
           provide: JwtService,
@@ -40,31 +40,31 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should throw exception if worker does not exist', async () => {
-    jest.spyOn(workerService, 'findOne').mockResolvedValue(null);
+  it('should throw exception if user does not exist', async () => {
+    jest.spyOn(userService, 'findOne').mockResolvedValue(null);
 
     await expect(
-      service.signInWorker('pepe.mock@gmail.com', '12345678'),
+      service.signIn('pepe.mock@gmail.com', '12345678'),
     ).rejects.toThrow(UnauthorizedException);
   });
 
   it('should thrown exception if password does not match', async () => {
-    const mockWorker = {
+    const mockUser = {
       _id: new Types.ObjectId(),
       email: 'pepe.mock@gmail.com',
       password: '123456789',
     } as any;
 
-    jest.spyOn(workerService, 'findOne').mockResolvedValue(mockWorker);
+    jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
     jest.spyOn(service, 'comparePasswords').mockResolvedValue(false);
 
     await expect(
-      service.signInWorker('pepe.mock@gmail.com', '12345678'),
+      service.signIn('pepe.mock@gmail.com', '12345678'),
     ).rejects.toThrow(UnauthorizedException);
   });
 
-  it('should return access token', async () => {
-    const mockWorker = {
+  it('should return access token if user login', async () => {
+    const mockUser = {
       _id: new Types.ObjectId(),
       email: 'pepe.mock@gmail.com',
       password: '123456789',
@@ -72,12 +72,12 @@ describe('AuthService', () => {
 
     const accessToken = 'access-token';
 
-    jest.spyOn(workerService, 'findOne').mockResolvedValue(mockWorker);
+    jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
     jest.spyOn(jwtService, 'sign').mockReturnValue(accessToken);
     jest.spyOn(service, 'comparePasswords').mockResolvedValue(true);
 
     await expect(
-      service.signInWorker('pepe.mock@gmail.com', '123456789'),
+      service.signIn('pepe.mock@gmail.com', '123456789'),
     ).resolves.toEqual({
       message: 'Logueado correctamente',
       data: {

@@ -1,37 +1,44 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
 import { Worker, WorkerDocument } from '@schema/Worker';
+import { UsersService } from '@module/users/users.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
+import { UserType } from '@/types/User';
 
 @Injectable()
 export class WorkersService {
   constructor(
     @InjectModel(Worker.name)
     private readonly workerModel: Model<WorkerDocument>,
+    private readonly userService: UsersService,
   ) {}
 
   async create(worker: CreateWorkerDto) {
-    const existEmail = await this.verifyEmailExists(worker.email);
+    const userBody = {
+      name: worker.name,
+      email: worker.email,
+      password: worker.password,
+      phone: worker.phone,
+      nationality: worker.nationality,
+      type: UserType.WORKER,
+    };
 
-    if (existEmail) {
-      throw new BadRequestException('El correo electrónico ya existe');
-    }
+    const workerBody = {
+      personalInformation: worker?.personalInformation,
+      emergencyContact: worker?.emergencyContact,
+      fileId: worker?.fileId,
+    };
 
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(worker.password, salt);
+    const user = await this.userService.create(userBody);
 
-    worker.password = hashedPassword;
-
-    const newWorker = await this.workerModel.create(worker);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...workerData } = newWorker.toObject();
+    await this.workerModel.create({
+      ...workerBody,
+      userId: user.data._id,
+    });
 
     return {
       message: 'Operario creado correctamente',
-      data: workerData,
     };
   }
 
@@ -54,14 +61,6 @@ export class WorkersService {
   async findOne(where: Record<string, string>) {
     try {
       return this.workerModel.findOne(where).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
-  async verifyEmailExists(email: string) {
-    try {
-      return await this.findOne({ email });
     } catch (error) {
       throw new Error(error);
     }

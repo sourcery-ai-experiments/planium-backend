@@ -24,7 +24,7 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], Phone.prototype, "code", void 0);
+], Phone.prototype, "countryCode", void 0);
 class PersonalInformation {
 }
 __decorate([
@@ -54,7 +54,7 @@ __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], EmergencyContact.prototype, "phoneCode", void 0);
+], EmergencyContact.prototype, "phoneCountryCode", void 0);
 class CreateWorkerDto {
 }
 exports.CreateWorkerDto = CreateWorkerDto;

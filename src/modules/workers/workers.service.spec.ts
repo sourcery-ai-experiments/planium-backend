@@ -1,11 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
-import { WorkersService } from './workers.service';
-import { Worker } from '@/schemas/Worker';
 import { getModelToken } from '@nestjs/mongoose';
+import { Worker } from '@/schemas/Worker';
+import { UsersService } from '@module/users/users.service';
+import { WorkersService } from './workers.service';
 
 describe('WorkersService', () => {
   let service: WorkersService;
+
+  const mockUserService = {
+    create: jest.fn().mockImplementation((dto) => ({
+      message: 'Usuario creado correctamente',
+      data: {
+        _id: '507f1f77bcf86cd799439011',
+        ...dto,
+      },
+    })),
+  };
 
   const workerList = [
     {
@@ -43,6 +54,11 @@ describe('WorkersService', () => {
           provide: getModelToken(Worker.name),
           useValue: mockWorkerModel,
         },
+        UsersService,
+        {
+          provide: UsersService,
+          useValue: mockUserService,
+        },
       ],
     }).compile();
 
@@ -61,7 +77,7 @@ describe('WorkersService', () => {
       nationality: 'Colombiana',
       phone: {
         number: '3003421965',
-        code: '57',
+        countryCode: '57',
       },
       personalInformation: {
         socialSecurityNumber: '123456789',
@@ -70,21 +86,13 @@ describe('WorkersService', () => {
       emergencyContact: {
         name: 'Juan Diaz',
         phone: '3003421965',
-        phoneCode: '57',
+        phoneCountryCode: '57',
       },
       fileId: '607f1f77bcf86cd799439011',
     };
 
-    jest.spyOn(service, 'verifyEmailExists').mockImplementation(() => null);
-
-    const { password, ...workerData } = dto;
-
     expect(await service.create(dto)).toEqual({
       message: 'Operario creado correctamente',
-      data: {
-        id: '507f1f77bcf86cd799439011',
-        ...workerData,
-      },
     });
   });
 

@@ -6,25 +6,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WorkersModule = void 0;
+exports.UsersModule = void 0;
 const common_1 = require("@nestjs/common");
+const users_service_1 = require("./users.service");
+const User_1 = require("../../schemas/User");
 const mongoose_1 = require("@nestjs/mongoose");
-const workers_service_1 = require("./workers.service");
-const users_module_1 = require("../users/users.module");
-const Worker_1 = require("../../schemas/Worker");
-const workers_controller_1 = require("./workers.controller");
-let WorkersModule = class WorkersModule {
+let UsersModule = class UsersModule {
 };
-exports.WorkersModule = WorkersModule;
-exports.WorkersModule = WorkersModule = __decorate([
+exports.UsersModule = UsersModule;
+exports.UsersModule = UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: Worker_1.Worker.name, schema: Worker_1.WorkerSchema }]),
-            users_module_1.UsersModule,
+            mongoose_1.MongooseModule.forFeature([{ name: User_1.User.name, schema: User_1.UserSchema }]),
         ],
-        providers: [workers_service_1.WorkersService],
-        controllers: [workers_controller_1.WorkersController],
-        exports: [workers_service_1.WorkersService],
+        providers: [users_service_1.UsersService],
+        controllers: [],
+        exports: [users_service_1.UsersService],
     })
-], WorkersModule);
-//# sourceMappingURL=workers.module.js.map
+], UsersModule);
+//# sourceMappingURL=users.module.js.map

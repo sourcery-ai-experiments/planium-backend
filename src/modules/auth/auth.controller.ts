@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { AuthService } from './auth.service';
-import { SignInWorkerDto } from './dto/sign-in.dto';
+import { SignInDto } from './dto/sign-in.dto';
 import { CompanyId } from '@/decorators/auth/company-id.decorator';
 
 @Controller('auth')
@@ -18,24 +18,24 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('worker/login')
-  signInWorker(@Body() signInWorkerDto: SignInWorkerDto) {
-    const { email, password } = signInWorkerDto;
-    return this.authService.signInWorker(email, password);
+  @Post('login')
+  signIn(@Body() signInUserDto: SignInDto) {
+    const { email, password } = signInUserDto;
+    return this.authService.signIn(email, password);
   }
 
-  @Get('worker/validate')
-  validateWorker(@Request() req) {
-    const workerId = req.user.sub;
+  @Get('validate')
+  validateUser(@Request() req) {
+    const userId = req.user.sub;
 
-    return this.authService.validateWorkerSession(workerId);
+    return this.authService.validateSession(userId);
   }
 
   @Get('refresh')
   refreshToken(@CompanyId() companyId: string, @Request() req) {
-    const workerId = req.user.sub;
+    const userId = req.user.sub;
     const payload = {
-      sub: workerId,
+      sub: userId,
       companyId,
     };
 

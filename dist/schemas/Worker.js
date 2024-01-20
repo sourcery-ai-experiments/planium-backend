@@ -16,29 +16,6 @@ let Worker = class Worker {
 };
 exports.Worker = Worker;
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", String)
-], Worker.prototype, "name", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", String)
-], Worker.prototype, "email", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", String)
-], Worker.prototype, "password", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", String)
-], Worker.prototype, "nationality", void 0);
-__decorate([
-    (0, mongoose_1.Prop)((0, mongoose_1.raw)({
-        number: { type: String, required: true },
-        code: { type: String, required: true },
-    })),
-    __metadata("design:type", Object)
-], Worker.prototype, "phone", void 0);
-__decorate([
     (0, mongoose_1.Prop)((0, mongoose_1.raw)({
         socialSecurityNumber: { type: String },
         fileId: { type: String },
@@ -57,6 +34,10 @@ __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Worker.prototype, "fileId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], Worker.prototype, "userId", void 0);
 exports.Worker = Worker = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true, versionKey: false })
 ], Worker);

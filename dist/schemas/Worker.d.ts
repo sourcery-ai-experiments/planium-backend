@@ -25,14 +25,10 @@
 import { HydratedDocument, Types } from 'mongoose';
 export type WorkerDocument = HydratedDocument<Worker>;
 export declare class Worker {
-    name: string;
-    email: string;
-    password: string;
-    nationality: string;
-    phone: Record<string, any>;
     personalInformation: Record<string, any>;
     emergencyContact: Record<string, any>;
     fileId: Types.ObjectId;
+    userId: Types.ObjectId;
 }
 export declare const WorkerSchema: import("mongoose").Schema<Worker, import("mongoose").Model<Worker, any, any, any, import("mongoose").Document<unknown, any, Worker> & Worker & {
     _id: Types.ObjectId;

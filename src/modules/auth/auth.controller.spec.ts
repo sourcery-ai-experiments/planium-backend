@@ -7,7 +7,7 @@ describe('AuthController', () => {
   let controller: AuthController;
 
   const mockAuthService = {
-    signInWorker: jest.fn().mockImplementation((email, password) => ({
+    signIn: jest.fn().mockImplementation((email, password) => ({
       message: 'Logueado correctamente',
       data: {
         access_token: 'token',
@@ -31,18 +31,18 @@ describe('AuthController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should sign in a worker', async () => {
-    const workerDto = {
+  it('should sign in a user', async () => {
+    const userDto = {
       email: 'kuzo.mock@gmail.com',
       password: '12345678',
     };
-    expect(await controller.signInWorker(workerDto)).toEqual({
+    expect(await controller.signIn(userDto)).toEqual({
       message: 'Logueado correctamente',
       data: {
         access_token: 'token',
       },
     });
 
-    expect(mockAuthService.signInWorker).toHaveBeenCalled();
+    expect(mockAuthService.signIn).toHaveBeenCalled();
   });
 });

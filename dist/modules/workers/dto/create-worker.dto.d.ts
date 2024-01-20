@@ -1,6 +1,6 @@
 declare class Phone {
     number: string;
-    code: string;
+    countryCode: string;
 }
 declare class PersonalInformation {
     socialSecurityNumber: string;
@@ -9,7 +9,7 @@ declare class PersonalInformation {
 declare class EmergencyContact {
     name: string;
     phone: string;
-    phoneCode: string;
+    phoneCountryCode: string;
 }
 export declare class CreateWorkerDto {
     name: string;

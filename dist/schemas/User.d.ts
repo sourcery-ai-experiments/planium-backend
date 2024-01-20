@@ -22,24 +22,18 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model } from 'mongoose';
-import { Worker, WorkerDocument } from '@schema/Worker';
-import { UsersService } from '@module/users/users.service';
-import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
-export declare class WorkersService {
-    private readonly workerModel;
-    private readonly userService;
-    constructor(workerModel: Model<WorkerDocument>, userService: UsersService);
-    create(worker: CreateWorkerDto): Promise<{
-        message: string;
-    }>;
-    findAll(): Promise<Worker[]>;
-    findById(id: string): Promise<Worker>;
-    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: import("mongoose").Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: import("mongoose").Types.ObjectId;
-    } & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }>>;
+import { HydratedDocument } from 'mongoose';
+export type UserDocument = HydratedDocument<User>;
+export declare class User {
+    name: string;
+    email: string;
+    password: string;
+    nationality: string;
+    phone: Record<string, any>;
+    type: string;
 }
+export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, import("mongoose").Document<unknown, any, User> & User & {
+    _id: import("mongoose").Types.ObjectId;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<User>> & import("mongoose").FlatRecord<User> & {
+    _id: import("mongoose").Types.ObjectId;
+}>;

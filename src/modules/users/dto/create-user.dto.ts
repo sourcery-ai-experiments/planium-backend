@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsEmail, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { UserType } from '@/types/User';
 
 class Phone {
   @ApiProperty()
@@ -34,4 +35,6 @@ export class CreateUserDto {
   @ValidateNested()
   @Type(() => Phone)
   phone: Phone;
+
+  type: UserType;
 }

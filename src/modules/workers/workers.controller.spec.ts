@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkersController } from './workers.controller';
 import { WorkersService } from './workers.service';
@@ -9,10 +10,6 @@ describe('WorkersController', () => {
     create: jest.fn((dto: CreateWorkerDto) => {
       return {
         message: 'Operario creado correctamente',
-        data: {
-          id: '507f1f77bcf86cd799439011',
-          ...dto,
-        },
       };
     }),
   };
@@ -41,7 +38,7 @@ describe('WorkersController', () => {
       nationality: 'Colombiana',
       phone: {
         number: '3003421965',
-        code: '57',
+        countryCode: '57',
       },
       personalInformation: {
         socialSecurityNumber: '123456789',
@@ -50,17 +47,13 @@ describe('WorkersController', () => {
       emergencyContact: {
         name: 'Juan Diaz',
         phone: '3003421965',
-        phoneCode: '57',
+        phoneCountryCode: '57',
       },
       fileId: '507f1f77bcf86cd799439011',
     };
 
     expect(await controller.create(dto)).toEqual({
       message: 'Operario creado correctamente',
-      data: {
-        id: '507f1f77bcf86cd799439011',
-        ...dto,
-      },
     });
 
     expect(mockWorkerService.create).toHaveBeenCalled();

@@ -15,7 +15,7 @@ class Phone {
 
   @ApiProperty()
   @IsNotEmpty()
-  code: string;
+  countryCode: string;
 }
 class PersonalInformation {
   @ApiPropertyOptional()
@@ -39,7 +39,7 @@ class EmergencyContact {
 
   @ApiPropertyOptional()
   @IsOptional()
-  phoneCode: string;
+  phoneCountryCode: string;
 }
 
 export class CreateWorkerDto {
