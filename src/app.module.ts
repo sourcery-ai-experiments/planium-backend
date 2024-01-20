@@ -5,6 +5,7 @@ import { validate } from './config/environment.validation';
 import { WorkersModule } from './modules/workers/workers.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthStatusModule } from './modules/health-status/health-status.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { HealthStatusModule } from './modules/health-status/health-status.module
     WorkersModule,
     AuthModule,
     HealthStatusModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
