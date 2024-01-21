@@ -23,6 +23,7 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     signIn(signInUserDto) {
+        console.log('signInUserDto', signInUserDto);
         const { email, password } = signInUserDto;
         return this.authService.signIn(email, password);
     }
