@@ -4,6 +4,7 @@ import {
   IsEmail,
   ValidateNested,
   IsMongoId,
+  IsMobilePhone,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -35,6 +36,7 @@ class EmergencyContact {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsMobilePhone()
   phone: string;
 
   @ApiPropertyOptional()

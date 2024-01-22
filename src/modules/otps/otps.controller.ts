@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { Public } from '@/decorators/auth/auth.decorator';
-import { OtpsService } from './otp.service';
+import { OtpsService } from './otps.service';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { Types } from 'mongoose';
 

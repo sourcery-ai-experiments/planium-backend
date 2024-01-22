@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '@module/users/users.service';
+import { OtpsService } from '../otps/otps.service';
 import { Types } from 'mongoose';
 
 describe('AuthService', () => {
   let service: AuthService;
   let jwtService: Partial<JwtService>;
   let userService: Partial<UsersService>;
+  let otpService: Partial<OtpsService>;
 
   beforeEach(async () => {
     userService = {
@@ -17,6 +19,10 @@ describe('AuthService', () => {
 
     jwtService = {
       sign: jest.fn(),
+    };
+
+    otpService = {
+      generateOTP: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +35,10 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: jwtService,
+        },
+        {
+          provide: OtpsService,
+          useValue: otpService,
         },
       ],
     }).compile();
@@ -83,6 +93,20 @@ describe('AuthService', () => {
       data: {
         access_token: accessToken,
       },
+    });
+  });
+  it('should send a recovery sms', async () => {
+    const phone = '12345678';
+
+    const mockUser = {
+      _id: new Types.ObjectId(),
+    } as any;
+
+    jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
+    jest.spyOn(otpService, 'generateOTP').mockResolvedValue('123456');
+
+    await expect(service.sendRecoverySms(phone)).resolves.toEqual({
+      message: 'SMS enviado correctamente',
     });
   });
 });

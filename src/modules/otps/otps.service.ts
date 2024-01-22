@@ -62,7 +62,7 @@ export class OtpsService {
     await this.deleteAll(userId);
 
     return {
-      message: 'Código de verificación correcto',
+      message: 'OTP verificado correctamente',
     };
   }
 

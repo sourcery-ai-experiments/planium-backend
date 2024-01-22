@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
-import { OtpsService } from '../otps/otp.service';
+import { OtpsService } from '../otps/otps.service';
 
 @Injectable()
 export class AuthService {
@@ -79,9 +79,6 @@ export class AuthService {
 
     return {
       message: 'SMS enviado correctamente',
-      data: {
-        otp,
-      },
     };
   }
 }

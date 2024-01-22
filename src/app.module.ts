@@ -6,7 +6,7 @@ import { WorkersModule } from './modules/workers/workers.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthStatusModule } from './modules/health-status/health-status.module';
 import { UsersModule } from './modules/users/users.module';
-import { OtpsModule } from './modules/otps/otp.module';
+import { OtpsModule } from './modules/otps/otps.module';
 
 @Module({
   imports: [

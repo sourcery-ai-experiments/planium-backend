@@ -1,4 +1,4 @@
-import { OtpsService } from './otp.service';
+import { OtpsService } from './otps.service';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 export declare class OtpsController {
     private readonly otpService;

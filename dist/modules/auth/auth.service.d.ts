@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { OtpsService } from '../otps/otp.service';
+import { OtpsService } from '../otps/otps.service';
 export declare class AuthService {
     private readonly userService;
     private readonly jwtService;
@@ -25,8 +25,5 @@ export declare class AuthService {
     }>;
     sendRecoverySms(phone: string): Promise<{
         message: string;
-        data: {
-            otp: string;
-        };
     }>;
 }

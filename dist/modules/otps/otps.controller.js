@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtpsController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
-const otp_service_1 = require("./otp.service");
+const otps_service_1 = require("./otps.service");
 const verify_otp_dto_1 = require("./dto/verify-otp.dto");
 const mongoose_1 = require("mongoose");
 let OtpsController = class OtpsController {
@@ -40,6 +40,6 @@ __decorate([
 ], OtpsController.prototype, "verifyOTP", null);
 exports.OtpsController = OtpsController = __decorate([
     (0, common_1.Controller)('otps'),
-    __metadata("design:paramtypes", [otp_service_1.OtpsService])
+    __metadata("design:paramtypes", [otps_service_1.OtpsService])
 ], OtpsController);
 //# sourceMappingURL=otps.controller.js.map

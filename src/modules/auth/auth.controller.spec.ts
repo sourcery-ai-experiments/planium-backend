@@ -13,6 +13,9 @@ describe('AuthController', () => {
         access_token: 'token',
       },
     })),
+    sendRecoverySms: jest.fn().mockImplementation((phone) => ({
+      message: 'SMS enviado correctamente',
+    })),
   };
 
   beforeEach(async () => {
@@ -44,5 +47,17 @@ describe('AuthController', () => {
     });
 
     expect(mockAuthService.signIn).toHaveBeenCalled();
+  });
+
+  it('should send a recovery sms', async () => {
+    const smsRecoveryDto = {
+      phone: '12345678',
+      countryCode: '56',
+    };
+    expect(await controller.sendRecoverySms(smsRecoveryDto)).toEqual({
+      message: 'SMS enviado correctamente',
+    });
+
+    expect(mockAuthService.sendRecoverySms).toHaveBeenCalled();
   });
 });

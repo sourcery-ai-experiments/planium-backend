@@ -14,7 +14,7 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const bcrypt = require("bcrypt");
 const users_service_1 = require("../users/users.service");
-const otp_service_1 = require("../otps/otp.service");
+const otps_service_1 = require("../otps/otps.service");
 let AuthService = class AuthService {
     constructor(userService, jwtService, otpService) {
         this.userService = userService;
@@ -71,9 +71,6 @@ let AuthService = class AuthService {
         const otp = await this.otpService.generateOTP(user._id);
         return {
             message: 'SMS enviado correctamente',
-            data: {
-                otp,
-            },
         };
     }
 };
@@ -82,6 +79,6 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         jwt_1.JwtService,
-        otp_service_1.OtpsService])
+        otps_service_1.OtpsService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

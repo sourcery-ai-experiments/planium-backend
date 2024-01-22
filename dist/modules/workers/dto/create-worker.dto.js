@@ -48,6 +48,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsMobilePhone)(),
     __metadata("design:type", String)
 ], EmergencyContact.prototype, "phone", void 0);
 __decorate([

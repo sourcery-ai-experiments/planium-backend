@@ -73,6 +73,8 @@ describe('UsersService', () => {
 
     jest.spyOn(service, 'verifyEmailExists').mockImplementation(() => null);
 
+    jest.spyOn(service, 'findOne').mockImplementation(() => null);
+
     const { password, ...userData } = dto;
 
     expect(await service.create(dto)).toEqual({

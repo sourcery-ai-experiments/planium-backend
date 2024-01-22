@@ -22,8 +22,5 @@ export declare class AuthController {
     }>;
     sendRecoverySms(smsRecoveryDto: SmsRecoveryDto): Promise<{
         message: string;
-        data: {
-            otp: string;
-        };
     }>;
 }

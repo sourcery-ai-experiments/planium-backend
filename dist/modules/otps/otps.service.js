@@ -59,7 +59,7 @@ let OtpsService = class OtpsService {
         }
         await this.deleteAll(userId);
         return {
-            message: 'Código de verificación correcto',
+            message: 'OTP verificado correctamente',
         };
     }
     async deleteAll(userId) {
@@ -77,4 +77,4 @@ exports.OtpsService = OtpsService = __decorate([
     __param(0, (0, mongoose_1.InjectModel)(Otp_1.Otp.name)),
     __metadata("design:paramtypes", [mongoose_2.Model])
 ], OtpsService);
-//# sourceMappingURL=otp.service.js.map
+//# sourceMappingURL=otps.service.js.map

@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@/guards/auth/auth.guard';
 import { UsersModule } from '@module/users/users.module';
-import { OtpsModule } from '../otps/otp.module';
+import { OtpsModule } from '../otps/otps.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
