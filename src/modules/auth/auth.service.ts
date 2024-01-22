@@ -1,13 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
+import { OtpsService } from '../otps/otp.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly otpService: OtpsService,
   ) {}
 
   async signIn(email: string, password: string) {
@@ -61,6 +63,24 @@ export class AuthService {
       message: 'Token actualizado',
       data: {
         access_token: token,
+      },
+    };
+  }
+
+  async sendRecoverySms(phone: string) {
+    const user = await this.userService.findOne({ 'phone.number': phone });
+    if (!user) {
+      throw new UnauthorizedException(
+        'El número de teléfono no está registrado',
+      );
+    }
+
+    const otp = await this.otpService.generateOTP(user._id);
+
+    return {
+      message: 'SMS enviado correctamente',
+      data: {
+        otp,
       },
     };
   }

@@ -6,6 +6,7 @@ import { WorkersModule } from './modules/workers/workers.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthStatusModule } from './modules/health-status/health-status.module';
 import { UsersModule } from './modules/users/users.module';
+import { OtpsModule } from './modules/otps/otp.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     HealthStatusModule,
     UsersModule,
+    OtpsModule,
   ],
   controllers: [],
   providers: [],

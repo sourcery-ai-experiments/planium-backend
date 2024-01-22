@@ -1,5 +1,6 @@
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
+import { SmsRecoveryDto } from './dto/sms-recovery.dto';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
@@ -17,6 +18,12 @@ export declare class AuthController {
         message: string;
         data: {
             access_token: string;
+        };
+    }>;
+    sendRecoverySms(smsRecoveryDto: SmsRecoveryDto): Promise<{
+        message: string;
+        data: {
+            otp: string;
         };
     }>;
 }

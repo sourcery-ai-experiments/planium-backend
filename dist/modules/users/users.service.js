@@ -27,6 +27,12 @@ let UsersService = class UsersService {
         if (existEmail) {
             throw new common_1.BadRequestException('El correo electrónico ya existe');
         }
+        const existPhone = await this.findOne({
+            'phone.number': user.phone.number,
+        });
+        if (existPhone) {
+            throw new common_1.BadRequestException('El número de teléfono ya existe');
+        }
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(user.password, salt);
         user.password = hashedPassword;

@@ -1,9 +1,11 @@
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
+import { OtpsService } from '../otps/otp.service';
 export declare class AuthService {
     private readonly userService;
     private readonly jwtService;
-    constructor(userService: UsersService, jwtService: JwtService);
+    private readonly otpService;
+    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService);
     signIn(email: string, password: string): Promise<{
         message: string;
         data: {
@@ -19,6 +21,12 @@ export declare class AuthService {
         message: string;
         data: {
             access_token: string;
+        };
+    }>;
+    sendRecoverySms(phone: string): Promise<{
+        message: string;
+        data: {
+            otp: string;
         };
     }>;
 }

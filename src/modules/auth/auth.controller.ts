@@ -7,10 +7,11 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
+import { CompanyId } from '@/decorators/auth/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
-import { CompanyId } from '@/decorators/auth/company-id.decorator';
+import { SmsRecoveryDto } from './dto/sms-recovery.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() signInUserDto: SignInDto) {
-    console.log('signInUserDto', signInUserDto);
     const { email, password } = signInUserDto;
     return this.authService.signIn(email, password);
   }
@@ -41,5 +41,13 @@ export class AuthController {
     };
 
     return this.authService.refreshToken(payload);
+  }
+
+  @Public()
+  @Post('recovery/sms')
+  sendRecoverySms(@Body() smsRecoveryDto: SmsRecoveryDto) {
+    const { phone } = smsRecoveryDto;
+
+    return this.authService.sendRecoverySms(phone);
   }
 }

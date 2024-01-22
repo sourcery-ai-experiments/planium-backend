@@ -11,13 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_1 = require("@nestjs/jwt");
 const bcrypt = require("bcrypt");
 const users_service_1 = require("../users/users.service");
-const jwt_1 = require("@nestjs/jwt");
+const otp_service_1 = require("../otps/otp.service");
 let AuthService = class AuthService {
-    constructor(userService, jwtService) {
+    constructor(userService, jwtService, otpService) {
         this.userService = userService;
         this.jwtService = jwtService;
+        this.otpService = otpService;
     }
     async signIn(email, password) {
         const user = await this.userService.findOne({ email });
@@ -61,11 +63,25 @@ let AuthService = class AuthService {
             },
         };
     }
+    async sendRecoverySms(phone) {
+        const user = await this.userService.findOne({ 'phone.number': phone });
+        if (!user) {
+            throw new common_1.UnauthorizedException('El número de teléfono no está registrado');
+        }
+        const otp = await this.otpService.generateOTP(user._id);
+        return {
+            message: 'SMS enviado correctamente',
+            data: {
+                otp,
+            },
+        };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [users_service_1.UsersService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        otp_service_1.OtpsService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

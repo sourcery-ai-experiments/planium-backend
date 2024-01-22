@@ -14,16 +14,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 const auth_service_1 = require("./auth.service");
 const sign_in_dto_1 = require("./dto/sign-in.dto");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const sms_recovery_dto_1 = require("./dto/sms-recovery.dto");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     signIn(signInUserDto) {
-        console.log('signInUserDto', signInUserDto);
         const { email, password } = signInUserDto;
         return this.authService.signIn(email, password);
     }
@@ -38,6 +38,10 @@ let AuthController = class AuthController {
             companyId,
         };
         return this.authService.refreshToken(payload);
+    }
+    sendRecoverySms(smsRecoveryDto) {
+        const { phone } = smsRecoveryDto;
+        return this.authService.sendRecoverySms(phone);
     }
 };
 exports.AuthController = AuthController;
@@ -65,6 +69,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refreshToken", null);
+__decorate([
+    (0, auth_decorator_1.Public)(),
+    (0, common_1.Post)('recovery/sms'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [sms_recovery_dto_1.SmsRecoveryDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "sendRecoverySms", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
