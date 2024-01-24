@@ -11,6 +11,21 @@ class EnvironmentVariables {
 
   @IsNotEmpty()
   JWT_SECRET: string;
+
+  @IsNotEmpty()
+  JWT_EXPIRES_IN: string;
+
+  @IsNotEmpty()
+  AWS_ACCESS_KEY: string;
+
+  @IsNotEmpty()
+  AWS_SECRET_ACCESS_KEY: string;
+
+  @IsNotEmpty()
+  AWS_BUCKET_NAME: string;
+
+  @IsNotEmpty()
+  AWS_REGION: string;
 }
 
 export function validate(config: Record<string, unknown>) {

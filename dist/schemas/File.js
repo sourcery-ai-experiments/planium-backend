@@ -21,7 +21,7 @@ __decorate([
     __metadata("design:type", String)
 ], File.prototype, "url", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], File.prototype, "companyId", void 0);
 exports.File = File = __decorate([

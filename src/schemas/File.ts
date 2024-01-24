@@ -9,7 +9,7 @@ export class File {
   @Prop({ required: true })
   url: string;
 
-  @Prop({ required: true, type: Types.ObjectId })
+  @Prop({ type: Types.ObjectId })
   companyId: Types.ObjectId;
 }
 

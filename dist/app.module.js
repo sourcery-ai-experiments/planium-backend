@@ -16,6 +16,8 @@ const auth_module_1 = require("./modules/auth/auth.module");
 const health_status_module_1 = require("./modules/health-status/health-status.module");
 const users_module_1 = require("./modules/users/users.module");
 const otps_module_1 = require("./modules/otps/otps.module");
+const aws_module_1 = require("./modules/aws/aws.module");
+const files_module_1 = require("./modules/files/files.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -39,6 +41,8 @@ exports.AppModule = AppModule = __decorate([
             health_status_module_1.HealthStatusModule,
             users_module_1.UsersModule,
             otps_module_1.OtpsModule,
+            aws_module_1.AwsModule,
+            files_module_1.FilesModule,
         ],
         controllers: [],
         providers: [],

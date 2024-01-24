@@ -7,6 +7,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { HealthStatusModule } from './modules/health-status/health-status.module';
 import { UsersModule } from './modules/users/users.module';
 import { OtpsModule } from './modules/otps/otps.module';
+import { AwsModule } from './modules/aws/aws.module';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { OtpsModule } from './modules/otps/otps.module';
     HealthStatusModule,
     UsersModule,
     OtpsModule,
+    AwsModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [],
