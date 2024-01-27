@@ -42,7 +42,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], EnvironmentVariables.prototype, "AWS_BUCKET_NAME", void 0);
+], EnvironmentVariables.prototype, "AWS_S3_BUCKET_NAME", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)

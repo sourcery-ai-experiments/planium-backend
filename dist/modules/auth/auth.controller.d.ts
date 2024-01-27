@@ -1,6 +1,5 @@
 import { AuthService } from './auth.service';
-import { SignInDto } from './dto/sign-in.dto';
-import { SmsRecoveryDto } from './dto/sms-recovery.dto';
+import { VerifyCodeDto, EmailRecoveryDto, SignInDto, SmsRecoveryDto } from './dto';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
@@ -21,6 +20,12 @@ export declare class AuthController {
         };
     }>;
     sendRecoverySms(smsRecoveryDto: SmsRecoveryDto): Promise<{
+        message: string;
+    }>;
+    sendRecoveryEmail(emailRecoveryDto: EmailRecoveryDto): Promise<{
+        message: string;
+    }>;
+    verifyRecoveryCode(verifyCodeDto: VerifyCodeDto): Promise<{
         message: string;
     }>;
 }

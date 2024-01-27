@@ -10,8 +10,12 @@ import {
 import { CompanyId } from '@/decorators/auth/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { AuthService } from './auth.service';
-import { SignInDto } from './dto/sign-in.dto';
-import { SmsRecoveryDto } from './dto/sms-recovery.dto';
+import {
+  VerifyCodeDto,
+  EmailRecoveryDto,
+  SignInDto,
+  SmsRecoveryDto,
+} from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -49,5 +53,21 @@ export class AuthController {
     const { phone } = smsRecoveryDto;
 
     return this.authService.sendRecoverySms(phone);
+  }
+
+  @Public()
+  @Post('recovery/email')
+  sendRecoveryEmail(@Body() emailRecoveryDto: EmailRecoveryDto) {
+    const { email } = emailRecoveryDto;
+
+    return this.authService.sendRecoveryEmail(email);
+  }
+
+  @Public()
+  @Post('recovery/verify')
+  verifyRecoveryCode(@Body() verifyCodeDto: VerifyCodeDto) {
+    const { otp, userId } = verifyCodeDto;
+
+    return this.authService.verifyRecoveryCode(otp, userId);
   }
 }

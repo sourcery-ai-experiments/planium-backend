@@ -22,7 +22,7 @@ class EnvironmentVariables {
   AWS_SECRET_ACCESS_KEY: string;
 
   @IsNotEmpty()
-  AWS_BUCKET_NAME: string;
+  AWS_S3_BUCKET_NAME: string;
 
   @IsNotEmpty()
   AWS_REGION: string;

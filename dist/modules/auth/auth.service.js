@@ -13,13 +13,27 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const bcrypt = require("bcrypt");
+const mongoose_1 = require("mongoose");
 const users_service_1 = require("../users/users.service");
 const otps_service_1 = require("../otps/otps.service");
+const aws_ses_service_1 = require("../aws/aws.ses.service");
 let AuthService = class AuthService {
-    constructor(userService, jwtService, otpService) {
+    constructor(userService, jwtService, otpService, sesService) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.otpService = otpService;
+        this.sesService = sesService;
+        this.sendRecoveryEmail = async (email) => {
+            const user = await this.userService.findOne({ email });
+            if (!user) {
+                throw new common_1.UnauthorizedException('El correo electrónico no está registrado');
+            }
+            const otp = await this.otpService.generateOTP(user._id);
+            await this.sesService.sendEmail(email, 'Recuperación de contraseña', `Tu código de recuperación es ${otp}`);
+            return {
+                message: 'Email enviado correctamente',
+            };
+        };
     }
     async signIn(email, password) {
         const user = await this.userService.findOne({ email });
@@ -69,8 +83,15 @@ let AuthService = class AuthService {
             throw new common_1.UnauthorizedException('El número de teléfono no está registrado');
         }
         const otp = await this.otpService.generateOTP(user._id);
+        console.log(otp);
         return {
             message: 'SMS enviado correctamente',
+        };
+    }
+    async verifyRecoveryCode(otp, userId) {
+        const response = await this.otpService.verifyOTP(otp, new mongoose_1.Types.ObjectId(userId));
+        return {
+            message: response.message,
         };
     }
 };
@@ -79,6 +100,7 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         jwt_1.JwtService,
-        otps_service_1.OtpsService])
+        otps_service_1.OtpsService,
+        aws_ses_service_1.SesService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

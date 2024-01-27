@@ -1,11 +1,13 @@
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
+import { SesService } from '../aws/aws.ses.service';
 export declare class AuthService {
     private readonly userService;
     private readonly jwtService;
     private readonly otpService;
-    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService);
+    private readonly sesService;
+    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService, sesService: SesService);
     signIn(email: string, password: string): Promise<{
         message: string;
         data: {
@@ -24,6 +26,12 @@ export declare class AuthService {
         };
     }>;
     sendRecoverySms(phone: string): Promise<{
+        message: string;
+    }>;
+    sendRecoveryEmail: (email: string) => Promise<{
+        message: string;
+    }>;
+    verifyRecoveryCode(otp: string, userId: string): Promise<{
         message: string;
     }>;
 }

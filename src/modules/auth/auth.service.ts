@@ -1,8 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Types } from 'mongoose';
 import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
+import { SesService } from '../aws/aws.ses.service';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +12,7 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     private readonly otpService: OtpsService,
+    private readonly sesService: SesService,
   ) {}
 
   async signIn(email: string, password: string) {
@@ -77,8 +80,42 @@ export class AuthService {
 
     const otp = await this.otpService.generateOTP(user._id);
 
+    console.log(otp);
+
     return {
       message: 'SMS enviado correctamente',
+    };
+  }
+
+  sendRecoveryEmail = async (email: string) => {
+    const user = await this.userService.findOne({ email });
+    if (!user) {
+      throw new UnauthorizedException(
+        'El correo electrónico no está registrado',
+      );
+    }
+
+    const otp = await this.otpService.generateOTP(user._id);
+
+    await this.sesService.sendEmail(
+      email,
+      'Recuperación de contraseña',
+      `Tu código de recuperación es ${otp}`,
+    );
+
+    return {
+      message: 'Email enviado correctamente',
+    };
+  };
+
+  async verifyRecoveryCode(otp: string, userId: string) {
+    const response = await this.otpService.verifyOTP(
+      otp,
+      new Types.ObjectId(userId),
+    );
+
+    return {
+      message: response.message,
     };
   }
 }
