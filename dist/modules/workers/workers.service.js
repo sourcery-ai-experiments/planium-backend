@@ -25,27 +25,47 @@ let WorkersService = class WorkersService {
         this.userService = userService;
     }
     async create(worker) {
-        const userBody = {
-            name: worker.name,
-            email: worker.email,
-            password: worker.password,
-            phone: worker.phone,
-            nationality: worker.nationality,
-            type: User_1.UserType.WORKER,
-        };
-        const workerBody = {
-            personalInformation: worker?.personalInformation,
-            emergencyContact: worker?.emergencyContact,
-            fileId: worker?.fileId,
-        };
-        const user = await this.userService.create(userBody);
-        await this.workerModel.create({
-            ...workerBody,
-            userId: user.data._id,
-        });
-        return {
-            message: 'Operario creado correctamente',
-        };
+        try {
+            const userBody = {
+                name: worker.name,
+                email: worker.email,
+                password: worker.password,
+                phone: worker.phone,
+                nationality: worker.nationality,
+                type: User_1.UserType.WORKER,
+            };
+            const workerBody = {
+                personalInformation: worker?.personalInformation,
+                emergencyContact: worker?.emergencyContact,
+                fileId: worker?.fileId,
+            };
+            const user = await this.userService.create(userBody);
+            await this.workerModel.create({
+                ...workerBody,
+                userId: user.data._id,
+            });
+            return {
+                message: 'Operario creado correctamente',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    async changePassword(userId, password) {
+        const user = await this.userService.findById(userId);
+        if (!user) {
+            throw new common_1.UnauthorizedException('El usuario no existe');
+        }
+        try {
+            await this.userService.changePassword(userId, password);
+            return {
+                message: 'Contraseña actualizada correctamente',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async findAll() {
         try {

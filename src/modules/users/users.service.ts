@@ -29,8 +29,7 @@ export class UsersService {
       throw new BadRequestException('El número de teléfono ya existe');
     }
 
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(user.password, salt);
+    const hashedPassword = await this.hashPassword(user.password);
 
     user.password = hashedPassword;
 
@@ -86,5 +85,22 @@ export class UsersService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async hashPassword(password: string) {
+    try {
+      const salt = await bcrypt.genSalt();
+      return await bcrypt.hash(password, salt);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async changePassword(userId: string, password: string) {
+    const hashedPassword = await this.hashPassword(password);
+
+    await this.userModel.findByIdAndUpdate(userId, {
+      password: hashedPassword,
+    });
   }
 }

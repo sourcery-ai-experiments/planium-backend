@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
@@ -15,31 +15,53 @@ export class WorkersService {
   ) {}
 
   async create(worker: CreateWorkerDto) {
-    const userBody = {
-      name: worker.name,
-      email: worker.email,
-      password: worker.password,
-      phone: worker.phone,
-      nationality: worker.nationality,
-      type: UserType.WORKER,
-    };
+    try {
+      const userBody = {
+        name: worker.name,
+        email: worker.email,
+        password: worker.password,
+        phone: worker.phone,
+        nationality: worker.nationality,
+        type: UserType.WORKER,
+      };
 
-    const workerBody = {
-      personalInformation: worker?.personalInformation,
-      emergencyContact: worker?.emergencyContact,
-      fileId: worker?.fileId,
-    };
+      const workerBody = {
+        personalInformation: worker?.personalInformation,
+        emergencyContact: worker?.emergencyContact,
+        fileId: worker?.fileId,
+      };
 
-    const user = await this.userService.create(userBody);
+      const user = await this.userService.create(userBody);
 
-    await this.workerModel.create({
-      ...workerBody,
-      userId: user.data._id,
-    });
+      await this.workerModel.create({
+        ...workerBody,
+        userId: user.data._id,
+      });
 
-    return {
-      message: 'Operario creado correctamente',
-    };
+      return {
+        message: 'Operario creado correctamente',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async changePassword(userId: string, password: string) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('El usuario no existe');
+    }
+
+    try {
+      await this.userService.changePassword(userId, password);
+
+      return {
+        message: 'Contraseña actualizada correctamente',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findAll(): Promise<Worker[]> {

@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '@module/users/users.service';
 import { OtpsService } from '../otps/otps.service';
+import { SesService } from '../aws/aws.ses.service';
 import { Types } from 'mongoose';
 
 describe('AuthService', () => {
@@ -11,6 +12,7 @@ describe('AuthService', () => {
   let jwtService: Partial<JwtService>;
   let userService: Partial<UsersService>;
   let otpService: Partial<OtpsService>;
+  let sesService: Partial<SesService>;
 
   beforeEach(async () => {
     userService = {
@@ -23,6 +25,11 @@ describe('AuthService', () => {
 
     otpService = {
       generateOTP: jest.fn(),
+      verifyOTP: jest.fn(),
+    };
+
+    sesService = {
+      sendEmail: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -39,6 +46,10 @@ describe('AuthService', () => {
         {
           provide: OtpsService,
           useValue: otpService,
+        },
+        {
+          provide: SesService,
+          useValue: sesService,
         },
       ],
     }).compile();
@@ -107,6 +118,34 @@ describe('AuthService', () => {
 
     await expect(service.sendRecoverySms(phone)).resolves.toEqual({
       message: 'SMS enviado correctamente',
+    });
+  });
+
+  it('should send a recovery email', async () => {
+    const email = 'mock.test@gmail.com';
+
+    jest.spyOn(userService, 'findOne').mockResolvedValue({
+      _id: new Types.ObjectId(),
+      email,
+    } as any);
+
+    jest.spyOn(otpService, 'generateOTP').mockResolvedValue('123456');
+
+    await expect(service.sendRecoveryEmail(email)).resolves.toEqual({
+      message: 'Email enviado correctamente',
+    });
+  });
+
+  it('should be validate code', async () => {
+    const otp = '123456';
+    const userId = '65addbe51328a245e6fd67df';
+
+    jest.spyOn(otpService, 'verifyOTP').mockResolvedValue({
+      message: 'OTP verificado correctamente',
+    });
+
+    await expect(service.verifyRecoveryCode(otp, userId)).resolves.toEqual({
+      message: 'OTP verificado correctamente',
     });
   });
 });

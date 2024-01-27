@@ -33,6 +33,9 @@ export declare class WorkersService {
     create(worker: CreateWorkerDto): Promise<{
         message: string;
     }>;
+    changePassword(userId: string, password: string): Promise<{
+        message: string;
+    }>;
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
     findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {

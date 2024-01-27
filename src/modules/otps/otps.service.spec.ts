@@ -51,4 +51,11 @@ describe('OtpService', () => {
     expect(await service.create(otp, userId)).toBeUndefined();
     expect(mockOtpModel.create).toHaveBeenCalled();
   });
+
+  it('should generate an otp', async () => {
+    const userId = new Types.ObjectId();
+
+    expect(typeof (await service.generateOTP(userId))).toBe('string');
+    expect(mockOtpModel.create).toHaveBeenCalled();
+  });
 });

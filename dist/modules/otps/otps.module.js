@@ -10,7 +10,6 @@ exports.OtpsModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const otps_service_1 = require("./otps.service");
-const otps_controller_1 = require("./otps.controller");
 const Otp_1 = require("../../schemas/Otp");
 let OtpsModule = class OtpsModule {
 };
@@ -19,7 +18,7 @@ exports.OtpsModule = OtpsModule = __decorate([
     (0, common_1.Module)({
         imports: [mongoose_1.MongooseModule.forFeature([{ name: Otp_1.Otp.name, schema: Otp_1.OtpSchema }])],
         providers: [otps_service_1.OtpsService],
-        controllers: [otps_controller_1.OtpsController],
+        controllers: [],
         exports: [otps_service_1.OtpsService],
     })
 ], OtpsModule);

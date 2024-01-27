@@ -35,7 +35,7 @@ export declare class UsersService {
             _id: import("mongoose").Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -65,7 +65,7 @@ export declare class UsersService {
             _id: import("mongoose").Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -104,4 +104,6 @@ export declare class UsersService {
     } & Required<{
         _id: import("mongoose").Types.ObjectId;
     }>>;
+    hashPassword(password: string): Promise<any>;
+    changePassword(userId: string, password: string): Promise<void>;
 }

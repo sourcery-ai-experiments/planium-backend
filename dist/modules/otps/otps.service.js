@@ -24,8 +24,8 @@ let OtpsService = class OtpsService {
     }
     async create(otp, userId) {
         try {
-            const oneMinute = 60000;
-            const expiredAt = Date.now() + oneMinute;
+            const tenMinutes = 600000;
+            const expiredAt = Date.now() + tenMinutes;
             const otpData = {
                 otp,
                 userId,
