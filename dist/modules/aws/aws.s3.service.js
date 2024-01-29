@@ -24,18 +24,22 @@ let S3Service = class S3Service {
             },
         });
     }
-    async uploadFile(key, body, folder) {
-        const bucket = this.configService.get('AWS_BUCKET_NAME');
-        const region = this.configService.get('AWS_REGION');
-        const newKey = `${folder}/${key}`;
-        const command = new client_s3_1.PutObjectCommand({
-            Bucket: bucket,
-            Key: newKey,
-            Body: body,
-        });
-        await this.s3.send(command);
-        const fileUrl = `https://${bucket}.s3.${region}.amazonaws.com/${newKey}`;
-        return fileUrl;
+    async uploadFile(key, body) {
+        try {
+            const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
+            const region = this.configService.get('AWS_REGION');
+            const command = new client_s3_1.PutObjectCommand({
+                Bucket: bucket,
+                Key: key,
+                Body: body,
+            });
+            await this.s3.send(command);
+            const fileUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+            return fileUrl;
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException(`Error uploading file to S3: ${error}`);
+        }
     }
 };
 exports.S3Service = S3Service;

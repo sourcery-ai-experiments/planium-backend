@@ -4,5 +4,5 @@ export declare class S3Service {
     private readonly configService;
     private s3;
     constructor(configService: ConfigService);
-    uploadFile(key: string, body: Buffer, folder: string): Promise<string>;
+    uploadFile(key: string, body: Buffer): Promise<string>;
 }

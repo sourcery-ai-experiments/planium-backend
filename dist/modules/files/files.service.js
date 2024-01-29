@@ -25,21 +25,18 @@ let FilesService = class FilesService {
         this.s3Service = s3Service;
     }
     async uploadOneFile(originalName, body, folder, companyId) {
-        try {
-            const key = (0, rename_file_helper_1.renameFile)(originalName);
-            const imageUrl = await this.s3Service.uploadFile(key, body, folder);
-            const newFile = await this.fileModel.create({
-                url: imageUrl,
-                companyId,
-            });
-            return {
-                id: newFile._id,
-                url: newFile.url,
-            };
-        }
-        catch (error) {
-            throw new common_1.InternalServerErrorException('Error uploading file');
-        }
+        const key = (0, rename_file_helper_1.renameFile)(originalName);
+        const newKey = `${folder}/${key}`;
+        const imageUrl = await this.s3Service.uploadFile(newKey, body);
+        const newFile = await this.fileModel.create({
+            url: imageUrl,
+            key: newKey,
+            companyId,
+        });
+        return {
+            id: newFile._id,
+            url: newFile.url,
+        };
     }
 };
 exports.FilesService = FilesService;

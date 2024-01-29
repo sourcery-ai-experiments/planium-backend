@@ -9,6 +9,9 @@ export class File {
   @Prop({ required: true })
   url: string;
 
+  @Prop({ required: true })
+  key: string;
+
   @Prop({ type: Types.ObjectId })
   companyId: Types.ObjectId;
 }

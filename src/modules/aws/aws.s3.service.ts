@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 
@@ -16,20 +16,25 @@ export class S3Service {
     });
   }
 
-  async uploadFile(key: string, body: Buffer, folder: string) {
-    const bucket = this.configService.get('AWS_BUCKET_NAME');
-    const region = this.configService.get('AWS_REGION');
-    const newKey = `${folder}/${key}`;
+  async uploadFile(key: string, body: Buffer) {
+    try {
+      const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
+      const region = this.configService.get('AWS_REGION');
 
-    const command = new PutObjectCommand({
-      Bucket: bucket,
-      Key: newKey,
-      Body: body,
-    });
+      const command = new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: body,
+      });
 
-    await this.s3.send(command);
+      await this.s3.send(command);
 
-    const fileUrl = `https://${bucket}.s3.${region}.amazonaws.com/${newKey}`;
-    return fileUrl;
+      const fileUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+      return fileUrl;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error uploading file to S3: ${error}`,
+      );
+    }
   }
 }

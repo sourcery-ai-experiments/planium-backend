@@ -26,6 +26,7 @@ import { HydratedDocument, Types } from 'mongoose';
 export type FileDocument = HydratedDocument<File>;
 export declare class File {
     url: string;
+    key: string;
     companyId: Types.ObjectId;
 }
 export declare const FileSchema: import("mongoose").Schema<File, import("mongoose").Model<File, any, any, any, import("mongoose").Document<unknown, any, File> & File & {

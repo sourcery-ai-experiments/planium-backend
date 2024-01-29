@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { S3Service } from '../aws/aws.s3.service';
@@ -19,22 +19,20 @@ export class FilesService {
     folder: string,
     companyId?: string,
   ) {
-    try {
-      const key = renameFile(originalName);
+    const key = renameFile(originalName);
+    const newKey = `${folder}/${key}`;
 
-      const imageUrl = await this.s3Service.uploadFile(key, body, folder);
+    const imageUrl = await this.s3Service.uploadFile(newKey, body);
 
-      const newFile = await this.fileModel.create({
-        url: imageUrl,
-        companyId,
-      });
+    const newFile = await this.fileModel.create({
+      url: imageUrl,
+      key: newKey,
+      companyId,
+    });
 
-      return {
-        id: newFile._id,
-        url: newFile.url,
-      };
-    } catch (error) {
-      throw new InternalServerErrorException('Error uploading file');
-    }
+    return {
+      id: newFile._id,
+      url: newFile.url,
+    };
   }
 }
