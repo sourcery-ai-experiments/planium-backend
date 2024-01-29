@@ -5,6 +5,7 @@ import { Types } from 'mongoose';
 import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
+import { SnsService } from '../aws/aws.sns.service';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly otpService: OtpsService,
     private readonly sesService: SesService,
+    private readonly snsService: SnsService,
   ) {}
 
   async signIn(email: string, password: string) {
@@ -70,8 +72,12 @@ export class AuthService {
     };
   }
 
-  async sendRecoverySms(phone: string) {
-    const user = await this.userService.findOne({ 'phone.number': phone });
+  async sendRecoverySms(phone: string, countryCode: string) {
+    const user = await this.userService.findOne({
+      'phone.number': phone,
+      'phone.countryCode': countryCode,
+    });
+
     if (!user) {
       throw new UnauthorizedException(
         'El número de teléfono no está registrado',
@@ -80,10 +86,16 @@ export class AuthService {
 
     const otp = await this.otpService.generateOTP(user._id);
 
-    console.log(otp);
+    await this.snsService.publishSmsToPhone(
+      `+${countryCode}${phone}`,
+      `Tu código de recuperación es ${otp}`,
+    );
 
     return {
       message: 'SMS enviado correctamente',
+      data: {
+        userId: user._id,
+      },
     };
   }
 
@@ -105,6 +117,9 @@ export class AuthService {
 
     return {
       message: 'Email enviado correctamente',
+      data: {
+        userId: user._id,
+      },
     };
   };
 

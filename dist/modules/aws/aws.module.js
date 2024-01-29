@@ -10,13 +10,14 @@ exports.AwsModule = void 0;
 const common_1 = require("@nestjs/common");
 const aws_s3_service_1 = require("./aws.s3.service");
 const aws_ses_service_1 = require("./aws.ses.service");
+const aws_sns_service_1 = require("./aws.sns.service");
 let AwsModule = class AwsModule {
 };
 exports.AwsModule = AwsModule;
 exports.AwsModule = AwsModule = __decorate([
     (0, common_1.Module)({
-        providers: [aws_s3_service_1.S3Service, aws_ses_service_1.SesService],
-        exports: [aws_s3_service_1.S3Service, aws_ses_service_1.SesService],
+        providers: [aws_s3_service_1.S3Service, aws_ses_service_1.SesService, aws_sns_service_1.SnsService],
+        exports: [aws_s3_service_1.S3Service, aws_ses_service_1.SesService, aws_sns_service_1.SnsService],
     })
 ], AwsModule);
 //# sourceMappingURL=aws.module.js.map

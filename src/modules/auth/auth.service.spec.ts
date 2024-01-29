@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { UsersService } from '@module/users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
+import { SnsService } from '../aws/aws.sns.service';
 import { Types } from 'mongoose';
 
 describe('AuthService', () => {
@@ -13,6 +14,7 @@ describe('AuthService', () => {
   let userService: Partial<UsersService>;
   let otpService: Partial<OtpsService>;
   let sesService: Partial<SesService>;
+  let snsService: Partial<SnsService>;
 
   beforeEach(async () => {
     userService = {
@@ -30,6 +32,10 @@ describe('AuthService', () => {
 
     sesService = {
       sendEmail: jest.fn(),
+    };
+
+    snsService = {
+      publishSmsToPhone: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -50,6 +56,10 @@ describe('AuthService', () => {
         {
           provide: SesService,
           useValue: sesService,
+        },
+        {
+          provide: SnsService,
+          useValue: snsService,
         },
       ],
     }).compile();
@@ -108,24 +118,32 @@ describe('AuthService', () => {
   });
   it('should send a recovery sms', async () => {
     const phone = '12345678';
+    const countryCode = '54';
+    const id = new Types.ObjectId();
 
     const mockUser = {
-      _id: new Types.ObjectId(),
+      _id: id,
     } as any;
 
     jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
     jest.spyOn(otpService, 'generateOTP').mockResolvedValue('123456');
 
-    await expect(service.sendRecoverySms(phone)).resolves.toEqual({
+    await expect(service.sendRecoverySms(phone, countryCode)).resolves.toEqual({
       message: 'SMS enviado correctamente',
+      data: {
+        userId: id,
+      },
     });
+
+    expect(snsService.publishSmsToPhone).toHaveBeenCalled();
   });
 
   it('should send a recovery email', async () => {
     const email = 'mock.test@gmail.com';
+    const id = new Types.ObjectId();
 
     jest.spyOn(userService, 'findOne').mockResolvedValue({
-      _id: new Types.ObjectId(),
+      _id: id,
       email,
     } as any);
 
@@ -133,6 +151,9 @@ describe('AuthService', () => {
 
     await expect(service.sendRecoveryEmail(email)).resolves.toEqual({
       message: 'Email enviado correctamente',
+      data: {
+        userId: id,
+      },
     });
   });
 

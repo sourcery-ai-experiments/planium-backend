@@ -39,8 +39,8 @@ let AuthController = class AuthController {
         return this.authService.refreshToken(payload);
     }
     sendRecoverySms(smsRecoveryDto) {
-        const { phone } = smsRecoveryDto;
-        return this.authService.sendRecoverySms(phone);
+        const { phone, countryCode } = smsRecoveryDto;
+        return this.authService.sendRecoverySms(phone, countryCode);
     }
     sendRecoveryEmail(emailRecoveryDto) {
         const { email } = emailRecoveryDto;

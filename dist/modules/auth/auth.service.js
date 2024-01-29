@@ -17,12 +17,14 @@ const mongoose_1 = require("mongoose");
 const users_service_1 = require("../users/users.service");
 const otps_service_1 = require("../otps/otps.service");
 const aws_ses_service_1 = require("../aws/aws.ses.service");
+const aws_sns_service_1 = require("../aws/aws.sns.service");
 let AuthService = class AuthService {
-    constructor(userService, jwtService, otpService, sesService) {
+    constructor(userService, jwtService, otpService, sesService, snsService) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.otpService = otpService;
         this.sesService = sesService;
+        this.snsService = snsService;
         this.sendRecoveryEmail = async (email) => {
             const user = await this.userService.findOne({ email });
             if (!user) {
@@ -32,6 +34,9 @@ let AuthService = class AuthService {
             await this.sesService.sendEmail(email, 'Recuperación de contraseña', `Tu código de recuperación es ${otp}`);
             return {
                 message: 'Email enviado correctamente',
+                data: {
+                    userId: user._id,
+                },
             };
         };
     }
@@ -77,15 +82,21 @@ let AuthService = class AuthService {
             },
         };
     }
-    async sendRecoverySms(phone) {
-        const user = await this.userService.findOne({ 'phone.number': phone });
+    async sendRecoverySms(phone, countryCode) {
+        const user = await this.userService.findOne({
+            'phone.number': phone,
+            'phone.countryCode': countryCode,
+        });
         if (!user) {
             throw new common_1.UnauthorizedException('El número de teléfono no está registrado');
         }
         const otp = await this.otpService.generateOTP(user._id);
-        console.log(otp);
+        await this.snsService.publishSmsToPhone(`+${countryCode}${phone}`, `Tu código de recuperación es ${otp}`);
         return {
             message: 'SMS enviado correctamente',
+            data: {
+                userId: user._id,
+            },
         };
     }
     async verifyRecoveryCode(otp, userId) {
@@ -101,6 +112,7 @@ exports.AuthService = AuthService = __decorate([
     __metadata("design:paramtypes", [users_service_1.UsersService,
         jwt_1.JwtService,
         otps_service_1.OtpsService,
-        aws_ses_service_1.SesService])
+        aws_ses_service_1.SesService,
+        aws_sns_service_1.SnsService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map
