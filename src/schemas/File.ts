@@ -4,7 +4,7 @@ import { findByCompany } from '@/schemas/methods';
 
 export type FileDocument = HydratedDocument<File>;
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema({ versionKey: false })
 export class File {
   @Prop({ required: true })
   url: string;
@@ -14,6 +14,12 @@ export class File {
 
   @Prop({ type: Types.ObjectId })
   companyId: Types.ObjectId;
+
+  @Prop({ default: new Date() })
+  createdAt!: number;
+
+  @Prop({ default: new Date() })
+  updatedAt!: number;
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);

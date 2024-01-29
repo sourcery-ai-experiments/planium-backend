@@ -4,7 +4,7 @@ import { UserType } from '@/types/User';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema({ versionKey: false })
 export class User {
   @Prop({ required: true })
   name: string;
@@ -28,6 +28,12 @@ export class User {
 
   @Prop({ required: true, enum: UserType })
   type: string;
+
+  @Prop({ default: new Date() })
+  createdAt!: number;
+
+  @Prop({ default: new Date() })
+  updatedAt!: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -3,7 +3,7 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type WorkerDocument = HydratedDocument<Worker>;
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema({ versionKey: false })
 export class Worker {
   @Prop(
     raw({
@@ -27,6 +27,12 @@ export class Worker {
 
   @Prop({ type: Types.ObjectId })
   userId: Types.ObjectId;
+
+  @Prop({ default: new Date() })
+  createdAt!: number;
+
+  @Prop({ default: new Date() })
+  updatedAt!: number;
 }
 
 export const WorkerSchema = SchemaFactory.createForClass(Worker);
