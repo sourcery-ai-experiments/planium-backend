@@ -28,6 +28,8 @@ export declare class File {
     url: string;
     key: string;
     companyId: Types.ObjectId;
+    createdAt: number;
+    updatedAt: number;
 }
 export declare const FileSchema: import("mongoose").Schema<File, import("mongoose").Model<File, any, any, any, import("mongoose").Document<unknown, any, File> & File & {
     _id: Types.ObjectId;

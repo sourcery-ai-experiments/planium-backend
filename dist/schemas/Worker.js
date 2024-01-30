@@ -38,8 +38,16 @@ __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Worker.prototype, "userId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Worker.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Worker.prototype, "updatedAt", void 0);
 exports.Worker = Worker = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false })
+    (0, mongoose_1.Schema)({ versionKey: false })
 ], Worker);
 exports.WorkerSchema = mongoose_1.SchemaFactory.createForClass(Worker);
 //# sourceMappingURL=Worker.js.map

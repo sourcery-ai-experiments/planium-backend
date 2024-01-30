@@ -35,7 +35,7 @@ export declare class UsersService {
             _id: import("mongoose").Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -57,6 +57,8 @@ export declare class UsersService {
             nationality: string;
             phone: Record<string, any>;
             type: string;
+            createdAt: number;
+            updatedAt: number;
         };
     }>;
     update(id: string, updateUserDto: UpdateUserDto): Promise<{
@@ -65,7 +67,7 @@ export declare class UsersService {
             _id: import("mongoose").Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -87,6 +89,8 @@ export declare class UsersService {
             nationality: string;
             phone: Record<string, any>;
             type: string;
+            createdAt: number;
+            updatedAt: number;
         };
     }>;
     findById(id: string): Promise<User>;

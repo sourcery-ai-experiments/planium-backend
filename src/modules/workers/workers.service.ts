@@ -15,24 +15,24 @@ export class WorkersService {
   ) {}
 
   async create(worker: CreateWorkerDto) {
+    const userBody = {
+      name: worker.name,
+      email: worker.email,
+      password: worker.password,
+      phone: worker.phone,
+      nationality: worker.nationality,
+      type: UserType.WORKER,
+    };
+
+    const workerBody = {
+      personalInformation: worker?.personalInformation,
+      emergencyContact: worker?.emergencyContact,
+      fileId: worker?.fileId,
+    };
+
+    const user = await this.userService.create(userBody);
+
     try {
-      const userBody = {
-        name: worker.name,
-        email: worker.email,
-        password: worker.password,
-        phone: worker.phone,
-        nationality: worker.nationality,
-        type: UserType.WORKER,
-      };
-
-      const workerBody = {
-        personalInformation: worker?.personalInformation,
-        emergencyContact: worker?.emergencyContact,
-        fileId: worker?.fileId,
-      };
-
-      const user = await this.userService.create(userBody);
-
       await this.workerModel.create({
         ...workerBody,
         userId: user.data._id,

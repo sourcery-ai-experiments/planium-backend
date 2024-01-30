@@ -4,6 +4,6 @@ exports.UserType = void 0;
 var UserType;
 (function (UserType) {
     UserType["WORKER"] = "WORKER";
-    UserType["COMPANY"] = "COMPANY";
+    UserType["COMPANY_USER"] = "COMPANY_USER";
 })(UserType || (exports.UserType = UserType = {}));
 //# sourceMappingURL=User.js.map

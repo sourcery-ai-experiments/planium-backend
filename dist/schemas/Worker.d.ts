@@ -29,6 +29,8 @@ export declare class Worker {
     emergencyContact: Record<string, any>;
     fileId: Types.ObjectId;
     userId: Types.ObjectId;
+    createdAt: number;
+    updatedAt: number;
 }
 export declare const WorkerSchema: import("mongoose").Schema<Worker, import("mongoose").Model<Worker, any, any, any, import("mongoose").Document<unknown, any, Worker> & Worker & {
     _id: Types.ObjectId;

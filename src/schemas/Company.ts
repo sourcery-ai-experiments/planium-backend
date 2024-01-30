@@ -9,10 +9,10 @@ export class Company {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, type: Types.ObjectId })
+  @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
 
-  @Prop({ required: true, type: Array })
+  @Prop({ type: Array })
   workers: Worker[];
 
   @Prop({ default: new Date() })

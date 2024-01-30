@@ -9,6 +9,9 @@ import { UsersModule } from './modules/users/users.module';
 import { OtpsModule } from './modules/otps/otps.module';
 import { AwsModule } from './modules/aws/aws.module';
 import { FilesModule } from './modules/files/files.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { CompanyUsersModule } from './modules/company_users/company_users.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -31,6 +34,9 @@ import { FilesModule } from './modules/files/files.module';
     OtpsModule,
     AwsModule,
     FilesModule,
+    CompaniesModule,
+    CompanyUsersModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

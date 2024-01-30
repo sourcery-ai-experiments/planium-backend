@@ -42,8 +42,16 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true, enum: User_1.UserType }),
     __metadata("design:type", String)
 ], User.prototype, "type", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], User.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], User.prototype, "updatedAt", void 0);
 exports.User = User = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false })
+    (0, mongoose_1.Schema)({ versionKey: false })
 ], User);
 exports.UserSchema = mongoose_1.SchemaFactory.createForClass(User);
 //# sourceMappingURL=User.js.map

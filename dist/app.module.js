@@ -18,6 +18,9 @@ const users_module_1 = require("./modules/users/users.module");
 const otps_module_1 = require("./modules/otps/otps.module");
 const aws_module_1 = require("./modules/aws/aws.module");
 const files_module_1 = require("./modules/files/files.module");
+const companies_module_1 = require("./modules/companies/companies.module");
+const company_users_module_1 = require("./modules/company_users/company_users.module");
+const roles_module_1 = require("./modules/roles/roles.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -43,6 +46,9 @@ exports.AppModule = AppModule = __decorate([
             otps_module_1.OtpsModule,
             aws_module_1.AwsModule,
             files_module_1.FilesModule,
+            companies_module_1.CompaniesModule,
+            company_users_module_1.CompanyUsersModule,
+            roles_module_1.RolesModule,
         ],
         controllers: [],
         providers: [],

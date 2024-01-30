@@ -31,6 +31,8 @@ export declare class User {
     nationality: string;
     phone: Record<string, any>;
     type: string;
+    createdAt: number;
+    updatedAt: number;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, import("mongoose").Document<unknown, any, User> & User & {
     _id: import("mongoose").Types.ObjectId;
