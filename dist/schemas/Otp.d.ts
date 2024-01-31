@@ -28,6 +28,8 @@ export declare class Otp {
     otp: string;
     userId: Types.ObjectId;
     expiredAt: number;
+    createdAt: number;
+    updatedAt: number;
 }
 export declare const OtpSchema: import("mongoose").Schema<Otp, import("mongoose").Model<Otp, any, any, any, import("mongoose").Document<unknown, any, Otp> & Otp & {
     _id: Types.ObjectId;

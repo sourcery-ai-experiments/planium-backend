@@ -35,6 +35,7 @@ let CompanyUsersService = class CompanyUsersService {
             nationality: companyUser.nationality,
             type: User_1.UserType.COMPANY_USER,
         };
+        const user = await this.usersService.create(userBody);
         const company = await this.companiesService.create({
             name: companyUser.companyName,
         });
@@ -42,7 +43,6 @@ let CompanyUsersService = class CompanyUsersService {
             roleId: new mongoose_2.Types.ObjectId(companyUser.roleId),
             companyId: company.data._id,
         };
-        const user = await this.usersService.create(userBody);
         try {
             await this.companyUserModel.create({
                 ...companyUserBody,

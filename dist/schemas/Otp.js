@@ -27,8 +27,16 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Number)
 ], Otp.prototype, "expiredAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Otp.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Otp.prototype, "updatedAt", void 0);
 exports.Otp = Otp = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false })
+    (0, mongoose_1.Schema)({ versionKey: false })
 ], Otp);
 exports.OtpSchema = mongoose_1.SchemaFactory.createForClass(Otp);
 //# sourceMappingURL=Otp.js.map

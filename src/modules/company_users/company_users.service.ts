@@ -26,6 +26,8 @@ export class CompanyUsersService {
       type: UserType.COMPANY_USER,
     };
 
+    const user = await this.usersService.create(userBody);
+
     const company = await this.companiesService.create({
       name: companyUser.companyName,
     });
@@ -34,8 +36,6 @@ export class CompanyUsersService {
       roleId: new Types.ObjectId(companyUser.roleId),
       companyId: company.data._id,
     };
-
-    const user = await this.usersService.create(userBody);
 
     try {
       await this.companyUserModel.create({

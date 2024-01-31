@@ -3,7 +3,7 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type OtpDocument = HydratedDocument<Otp>;
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema({ versionKey: false })
 export class Otp {
   @Prop({ required: true })
   otp: string;
@@ -13,6 +13,12 @@ export class Otp {
 
   @Prop({ required: true })
   expiredAt: number;
+
+  @Prop({ default: new Date() })
+  createdAt!: number;
+
+  @Prop({ default: new Date() })
+  updatedAt!: number;
 }
 
 export const OtpSchema = SchemaFactory.createForClass(Otp);
