@@ -16,5 +16,6 @@ import { CompanyUser, CompanyUserSchema } from '@/schemas/CompanyUser';
   ],
   providers: [CompanyUsersService],
   controllers: [CompanyUsersController],
+  exports: [CompanyUsersService],
 })
 export class CompanyUsersModule {}

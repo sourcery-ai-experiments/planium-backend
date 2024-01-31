@@ -6,6 +6,9 @@ import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
+import { CompanyUsersService } from '../company_users/company_users.service';
+import { UserType } from '@/types/User';
+import { UserDocument } from '@/schemas/User';
 
 @Injectable()
 export class AuthService {
@@ -15,24 +18,23 @@ export class AuthService {
     private readonly otpService: OtpsService,
     private readonly sesService: SesService,
     private readonly snsService: SnsService,
+    private readonly companyUserService: CompanyUsersService,
   ) {}
 
   async signIn(email: string, password: string) {
     const user = await this.userService.findOne({ email });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Credenciales incorrectas');
     }
 
     const isMatch = await this.comparePasswords(password, user.password);
 
     if (!isMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Credenciales incorrectas');
     }
 
-    const payload = {
-      sub: user._id,
-    };
+    const payload = await this.getPayload(user);
 
     const token = this.jwtService.sign(payload);
 
@@ -132,5 +134,29 @@ export class AuthService {
     return {
       message: response.message,
     };
+  }
+
+  async getPayload(user: UserDocument) {
+    let payload = {};
+
+    if (user.type === UserType.COMPANY_USER) {
+      const companyUser = await this.companyUserService.findByUserId(user._id);
+      if (!companyUser) {
+        throw new UnauthorizedException(
+          'Usuario no tiene una empresa asignada',
+        );
+      }
+
+      payload = {
+        sub: user._id,
+        companyId: companyUser.companyId,
+      };
+    } else {
+      payload = {
+        sub: user._id,
+      };
+    }
+
+    return payload;
   }
 }

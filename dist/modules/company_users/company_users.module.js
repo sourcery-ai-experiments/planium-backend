@@ -28,6 +28,7 @@ exports.CompanyUsersModule = CompanyUsersModule = __decorate([
         ],
         providers: [company_users_service_1.CompanyUsersService],
         controllers: [company_users_controller_1.CompanyUsersController],
+        exports: [company_users_service_1.CompanyUsersService],
     })
 ], CompanyUsersModule);
 //# sourceMappingURL=company_users.module.js.map

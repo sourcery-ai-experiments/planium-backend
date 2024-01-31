@@ -18,13 +18,16 @@ const users_service_1 = require("../users/users.service");
 const otps_service_1 = require("../otps/otps.service");
 const aws_ses_service_1 = require("../aws/aws.ses.service");
 const aws_sns_service_1 = require("../aws/aws.sns.service");
+const company_users_service_1 = require("../company_users/company_users.service");
+const User_1 = require("../../types/User");
 let AuthService = class AuthService {
-    constructor(userService, jwtService, otpService, sesService, snsService) {
+    constructor(userService, jwtService, otpService, sesService, snsService, companyUserService) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.otpService = otpService;
         this.sesService = sesService;
         this.snsService = snsService;
+        this.companyUserService = companyUserService;
         this.sendRecoveryEmail = async (email) => {
             const user = await this.userService.findOne({ email });
             if (!user) {
@@ -43,15 +46,13 @@ let AuthService = class AuthService {
     async signIn(email, password) {
         const user = await this.userService.findOne({ email });
         if (!user) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+            throw new common_1.UnauthorizedException('Credenciales incorrectas');
         }
         const isMatch = await this.comparePasswords(password, user.password);
         if (!isMatch) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+            throw new common_1.UnauthorizedException('Credenciales incorrectas');
         }
-        const payload = {
-            sub: user._id,
-        };
+        const payload = await this.getPayload(user);
         const token = this.jwtService.sign(payload);
         return {
             message: 'Logueado correctamente',
@@ -105,6 +106,25 @@ let AuthService = class AuthService {
             message: response.message,
         };
     }
+    async getPayload(user) {
+        let payload = {};
+        if (user.type === User_1.UserType.COMPANY_USER) {
+            const companyUser = await this.companyUserService.findByUserId(user._id);
+            if (!companyUser) {
+                throw new common_1.UnauthorizedException('Usuario no tiene una empresa asignada');
+            }
+            payload = {
+                sub: user._id,
+                companyId: companyUser.companyId,
+            };
+        }
+        else {
+            payload = {
+                sub: user._id,
+            };
+        }
+        return payload;
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
@@ -113,6 +133,7 @@ exports.AuthService = AuthService = __decorate([
         jwt_1.JwtService,
         otps_service_1.OtpsService,
         aws_ses_service_1.SesService,
-        aws_sns_service_1.SnsService])
+        aws_sns_service_1.SnsService,
+        company_users_service_1.CompanyUsersService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

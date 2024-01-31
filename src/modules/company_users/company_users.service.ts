@@ -50,4 +50,8 @@ export class CompanyUsersService {
       throw new Error(error);
     }
   }
+
+  async findByUserId(userId: Types.ObjectId) {
+    return await this.companyUserModel.findOne({ userId });
+  }
 }

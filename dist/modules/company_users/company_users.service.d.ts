@@ -22,8 +22,8 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model } from 'mongoose';
-import { CompanyUserDocument } from '@/schemas/CompanyUser';
+import { Model, Types } from 'mongoose';
+import { CompanyUser, CompanyUserDocument } from '@/schemas/CompanyUser';
 import { CreateCompanyUserDto } from './dto/create-company-user.dto';
 import { UsersService } from '@/modules/users/users.service';
 import { CompaniesService } from '@/modules/companies/companies.service';
@@ -35,4 +35,11 @@ export declare class CompanyUsersService {
     create(companyUser: CreateCompanyUserDto): Promise<{
         message: string;
     }>;
+    findByUserId(userId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, CompanyUser> & CompanyUser & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, CompanyUser> & CompanyUser & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
 }

@@ -6,6 +6,7 @@ import { AuthGuard } from '@/guards/auth/auth.guard';
 import { UsersModule } from '@module/users/users.module';
 import { OtpsModule } from '@module/otps/otps.module';
 import { AwsModule } from '@module/aws/aws.module';
+import { CompanyUsersModule } from '../company_users/company_users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
@@ -14,6 +15,7 @@ import { AuthService } from './auth.service';
     UsersModule,
     OtpsModule,
     AwsModule,
+    CompanyUsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

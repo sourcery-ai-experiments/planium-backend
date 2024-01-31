@@ -28,13 +28,16 @@ import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
+import { CompanyUsersService } from '../company_users/company_users.service';
+import { UserDocument } from '@/schemas/User';
 export declare class AuthService {
     private readonly userService;
     private readonly jwtService;
     private readonly otpService;
     private readonly sesService;
     private readonly snsService;
-    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService, sesService: SesService, snsService: SnsService);
+    private readonly companyUserService;
+    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService, sesService: SesService, snsService: SnsService, companyUserService: CompanyUsersService);
     signIn(email: string, password: string): Promise<{
         message: string;
         data: {
@@ -44,7 +47,7 @@ export declare class AuthService {
     comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
     validateSession(userId: string): Promise<{
         message: string;
-        data: import("../../schemas/User").User;
+        data: import("@/schemas/User").User;
     }>;
     refreshToken(payload: object): Promise<{
         message: string;
@@ -67,4 +70,5 @@ export declare class AuthService {
     verifyRecoveryCode(otp: string, userId: string): Promise<{
         message: string;
     }>;
+    getPayload(user: UserDocument): Promise<{}>;
 }

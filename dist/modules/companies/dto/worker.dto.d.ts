@@ -23,21 +23,10 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
-import { CompaniesService } from './companies.service';
-import { WorkerDto, RemoveWorkerDto } from './dto/worker.dto';
-export declare class CompaniesController {
-    private readonly companiesService;
-    constructor(companiesService: CompaniesService);
-    findAllByWorkerId(workerId: Types.ObjectId): Promise<{
-        data: any[];
-    }>;
-    addWorker(worker: WorkerDto, companyId: string): Promise<{
-        message: string;
-    }>;
-    removeWorker(worker: RemoveWorkerDto, companyId: string): Promise<{
-        message: string;
-    }>;
-    updateWorker(worker: WorkerDto, companyId: string): Promise<{
-        message: string;
-    }>;
+export declare class WorkerDto {
+    salary: string;
+    workerId: Types.ObjectId;
+}
+export declare class RemoveWorkerDto {
+    workerId: Types.ObjectId;
 }

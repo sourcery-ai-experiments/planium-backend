@@ -12,7 +12,7 @@ export class Company {
   @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
 
-  @Prop({ type: Array })
+  @Prop({ default: [], type: Array })
   workers: Worker[];
 
   @Prop({ default: new Date() })

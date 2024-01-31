@@ -56,6 +56,9 @@ let CompanyUsersService = class CompanyUsersService {
             throw new Error(error);
         }
     }
+    async findByUserId(userId) {
+        return await this.companyUserModel.findOne({ userId });
+    }
 };
 exports.CompanyUsersService = CompanyUsersService;
 exports.CompanyUsersService = CompanyUsersService = __decorate([
