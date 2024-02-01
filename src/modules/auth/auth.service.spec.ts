@@ -6,6 +6,7 @@ import { UsersService } from '@module/users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
+import { CompanyUsersService } from '../company_users/company_users.service';
 import { Types } from 'mongoose';
 
 describe('AuthService', () => {
@@ -15,6 +16,7 @@ describe('AuthService', () => {
   let otpService: Partial<OtpsService>;
   let sesService: Partial<SesService>;
   let snsService: Partial<SnsService>;
+  let companyUserService: Partial<CompanyUsersService>;
 
   beforeEach(async () => {
     userService = {
@@ -36,6 +38,10 @@ describe('AuthService', () => {
 
     snsService = {
       publishSmsToPhone: jest.fn(),
+    };
+
+    companyUserService = {
+      findByUserId: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -60,6 +66,10 @@ describe('AuthService', () => {
         {
           provide: SnsService,
           useValue: snsService,
+        },
+        {
+          provide: CompanyUsersService,
+          useValue: companyUserService,
         },
       ],
     }).compile();

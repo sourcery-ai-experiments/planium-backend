@@ -25,7 +25,7 @@
 import { Model, Types } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
 import { Worker } from '@/types/Company';
-import { WorkersService } from '../workers/workers.service';
+import { WorkersService } from '@/modules/workers/workers.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 export declare class CompaniesService {
     private readonly companyModel;
