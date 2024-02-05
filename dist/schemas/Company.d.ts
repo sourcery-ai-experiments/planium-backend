@@ -29,6 +29,8 @@ export declare class Company {
     name: string;
     fileId: Types.ObjectId;
     workers: Worker[];
+    createdAt: number;
+    updatedAt: number;
 }
 export declare const CompanySchema: import("mongoose").Schema<Company, import("mongoose").Model<Company, any, any, any, import("mongoose").Document<unknown, any, Company> & Company & {
     _id: Types.ObjectId;

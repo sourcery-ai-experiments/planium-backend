@@ -1,53 +1,89 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
-import { Worker, WorkerDocument } from '@/schemas/Worker';
-import { CreateWorkerDto } from '@/modules/workers/dto/create-worker.dto';
+import { Worker, WorkerDocument } from '@schema/Worker';
+import { UsersService } from '@module/users/users.service';
+import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
+import { UserType } from '@/types/User';
 
 @Injectable()
 export class WorkersService {
   constructor(
     @InjectModel(Worker.name)
     private readonly workerModel: Model<WorkerDocument>,
+    private readonly userService: UsersService,
   ) {}
 
   async create(worker: CreateWorkerDto) {
-    await this.verifyEmailExists(worker.email);
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(worker.password, salt);
-
-    worker.password = hashedPassword;
-
-    const newWorker = new this.workerModel(worker);
-    await newWorker.save();
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...workerData } = newWorker.toObject();
-
-    return {
-      message: 'Operario creado correctamente',
-      data: workerData,
+    const userBody = {
+      name: worker.name,
+      email: worker.email,
+      password: worker.password,
+      phone: worker.phone,
+      nationality: worker.nationality,
+      type: UserType.WORKER,
     };
+
+    const workerBody = {
+      personalInformation: worker?.personalInformation,
+      emergencyContact: worker?.emergencyContact,
+    };
+
+    const user = await this.userService.create(userBody);
+
+    try {
+      await this.workerModel.create({
+        ...workerBody,
+        userId: user.data._id,
+      });
+
+      return {
+        message: 'Operario creado correctamente',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async changePassword(userId: string, password: string) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('El usuario no existe');
+    }
+
+    try {
+      await this.userService.changePassword(userId, password);
+
+      return {
+        message: 'Contraseña actualizada correctamente',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findAll(): Promise<Worker[]> {
-    return this.workerModel.find().exec();
+    try {
+      return this.workerModel.find().exec();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findById(id: string): Promise<Worker> {
-    return this.workerModel.findById(id).exec();
+    try {
+      return this.workerModel.findById(id).exec();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findOne(where: Record<string, string>) {
-    return this.workerModel.findOne(where).exec();
-  }
-
-  private async verifyEmailExists(email: string) {
-    const worker = await this.findOne({ email });
-    if (worker) {
-      throw new BadRequestException('El correo electrónico ya existe');
+    try {
+      return this.workerModel.findOne(where).exec();
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }

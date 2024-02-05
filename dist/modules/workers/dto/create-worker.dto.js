@@ -24,37 +24,38 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], Phone.prototype, "code", void 0);
+], Phone.prototype, "countryCode", void 0);
 class PersonalInformation {
 }
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], PersonalInformation.prototype, "socialSecurityNumber", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsMongoId)(),
     __metadata("design:type", String)
 ], PersonalInformation.prototype, "fileId", void 0);
 class EmergencyContact {
 }
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], EmergencyContact.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsMobilePhone)(),
     __metadata("design:type", String)
 ], EmergencyContact.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], EmergencyContact.prototype, "phoneCode", void 0);
+], EmergencyContact.prototype, "phoneCountryCode", void 0);
 class CreateWorkerDto {
 }
 exports.CreateWorkerDto = CreateWorkerDto;
@@ -87,22 +88,16 @@ __decorate([
 ], CreateWorkerDto.prototype, "phone", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
     (0, class_transformer_1.Type)(() => PersonalInformation),
     __metadata("design:type", PersonalInformation)
 ], CreateWorkerDto.prototype, "personalInformation", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
     (0, class_transformer_1.Type)(() => EmergencyContact),
     __metadata("design:type", EmergencyContact)
 ], CreateWorkerDto.prototype, "emergencyContact", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsEmpty)(),
-    (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
-], CreateWorkerDto.prototype, "fileId", void 0);
 //# sourceMappingURL=create-worker.dto.js.map

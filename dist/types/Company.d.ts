@@ -24,6 +24,6 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
 export type Worker = {
-    salary: number;
+    salary: string;
     workerId: Types.ObjectId;
 };

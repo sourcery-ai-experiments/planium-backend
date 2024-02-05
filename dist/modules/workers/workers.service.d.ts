@@ -23,42 +23,18 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Model } from 'mongoose';
-import { Worker, WorkerDocument } from '@/schemas/Worker';
-import { CreateWorkerDto } from '@/modules/workers/dto/create-worker.dto';
+import { Worker, WorkerDocument } from '@schema/Worker';
+import { UsersService } from '@module/users/users.service';
+import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 export declare class WorkersService {
     private readonly workerModel;
-    constructor(workerModel: Model<WorkerDocument>);
+    private readonly userService;
+    constructor(workerModel: Model<WorkerDocument>, userService: UsersService);
     create(worker: CreateWorkerDto): Promise<{
         message: string;
-        data: {
-            _id: import("mongoose").Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            email: string;
-            nationality: string;
-            phone: Record<string, any>;
-            personalInformation: Record<string, any>;
-            emergencyContact: Record<string, any>;
-            fileId: import("mongoose").Types.ObjectId;
-        };
+    }>;
+    changePassword(userId: string, password: string): Promise<{
+        message: string;
     }>;
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
@@ -69,5 +45,4 @@ export declare class WorkersService {
     } & Required<{
         _id: import("mongoose").Types.ObjectId;
     }>>;
-    private verifyEmailExists;
 }

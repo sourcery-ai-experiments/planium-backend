@@ -5,6 +5,13 @@ import { validate } from './config/environment.validation';
 import { WorkersModule } from './modules/workers/workers.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthStatusModule } from './modules/health-status/health-status.module';
+import { UsersModule } from './modules/users/users.module';
+import { OtpsModule } from './modules/otps/otps.module';
+import { AwsModule } from './modules/aws/aws.module';
+import { FilesModule } from './modules/files/files.module';
+import { CompaniesModule } from './modules/companies/companies.module';
+import { CompanyUsersModule } from './modules/company_users/company_users.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -23,6 +30,13 @@ import { HealthStatusModule } from './modules/health-status/health-status.module
     WorkersModule,
     AuthModule,
     HealthStatusModule,
+    UsersModule,
+    OtpsModule,
+    AwsModule,
+    FilesModule,
+    CompaniesModule,
+    CompanyUsersModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

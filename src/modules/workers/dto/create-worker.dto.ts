@@ -1,9 +1,10 @@
 import {
   IsNotEmpty,
-  IsEmpty,
+  IsOptional,
   IsEmail,
   ValidateNested,
   IsMongoId,
+  IsMobilePhone,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -15,31 +16,32 @@ class Phone {
 
   @ApiProperty()
   @IsNotEmpty()
-  code: string;
+  countryCode: string;
 }
 class PersonalInformation {
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   socialSecurityNumber: string;
 
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsMongoId()
   fileId: string;
 }
 
 class EmergencyContact {
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   name: string;
 
-  @ApiProperty()
-  @IsEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsMobilePhone()
   phone: string;
 
-  @ApiProperty()
-  @IsEmpty()
-  phoneCode: string;
+  @ApiPropertyOptional()
+  @IsOptional()
+  phoneCountryCode: string;
 }
 
 export class CreateWorkerDto {
@@ -66,19 +68,14 @@ export class CreateWorkerDto {
   phone: Phone;
 
   @ApiPropertyOptional()
-  @IsEmpty()
+  @IsOptional()
   @ValidateNested()
   @Type(() => PersonalInformation)
   personalInformation: PersonalInformation;
 
   @ApiPropertyOptional()
-  @IsEmpty()
+  @IsOptional()
   @ValidateNested()
   @Type(() => EmergencyContact)
   emergencyContact: EmergencyContact;
-
-  @ApiPropertyOptional()
-  @IsEmpty()
-  @IsMongoId()
-  fileId: string;
 }

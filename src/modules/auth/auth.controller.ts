@@ -1,7 +1,21 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignInWorkerDto } from './dto/sign-in.dto';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+} from '@nestjs/common';
+import { CompanyId } from '@/decorators/auth/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
+import { AuthService } from './auth.service';
+import {
+  VerifyCodeDto,
+  EmailRecoveryDto,
+  SignInDto,
+  SmsRecoveryDto,
+} from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,9 +23,51 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('worker/login')
-  signInWorker(@Body() signInWorkerDto: SignInWorkerDto) {
-    const { email, password } = signInWorkerDto;
-    return this.authService.signInWorker(email, password);
+  @Post('login')
+  signIn(@Body() signInUserDto: SignInDto) {
+    const { email, password } = signInUserDto;
+    return this.authService.signIn(email, password);
+  }
+
+  @Get('validate')
+  validateUser(@Request() req) {
+    const userId = req.user.sub;
+
+    return this.authService.validateSession(userId);
+  }
+
+  @Get('refresh')
+  refreshToken(@CompanyId() companyId: string, @Request() req) {
+    const userId = req.user.sub;
+    const payload = {
+      sub: userId,
+      companyId,
+    };
+
+    return this.authService.refreshToken(payload);
+  }
+
+  @Public()
+  @Post('recovery/sms')
+  sendRecoverySms(@Body() smsRecoveryDto: SmsRecoveryDto) {
+    const { phone, countryCode } = smsRecoveryDto;
+
+    return this.authService.sendRecoverySms(phone, countryCode);
+  }
+
+  @Public()
+  @Post('recovery/email')
+  sendRecoveryEmail(@Body() emailRecoveryDto: EmailRecoveryDto) {
+    const { email } = emailRecoveryDto;
+
+    return this.authService.sendRecoveryEmail(email);
+  }
+
+  @Public()
+  @Post('recovery/verify')
+  verifyRecoveryCode(@Body() verifyCodeDto: VerifyCodeDto) {
+    const { otp, userId } = verifyCodeDto;
+
+    return this.authService.verifyRecoveryCode(otp, userId);
   }
 }

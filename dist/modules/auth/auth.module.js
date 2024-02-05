@@ -7,21 +7,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
+const core_1 = require("@nestjs/core");
 const common_1 = require("@nestjs/common");
-const workers_module_1 = require("../workers/workers.module");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
+const auth_guard_1 = require("../../guards/auth/auth.guard");
+const users_module_1 = require("../users/users.module");
+const otps_module_1 = require("../otps/otps.module");
+const aws_module_1 = require("../aws/aws.module");
+const company_users_module_1 = require("../company_users/company_users.module");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
-const core_1 = require("@nestjs/core");
-const auth_guard_1 = require("../../guards/auth/auth.guard");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            workers_module_1.WorkersModule,
+            users_module_1.UsersModule,
+            otps_module_1.OtpsModule,
+            aws_module_1.AwsModule,
+            company_users_module_1.CompanyUsersModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 useFactory: async (configService) => ({

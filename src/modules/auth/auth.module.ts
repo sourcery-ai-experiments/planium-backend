@@ -1,15 +1,21 @@
+import { APP_GUARD } from '@nestjs/core';
 import { Module } from '@nestjs/common';
-import { WorkersModule } from '@modules/workers/workers.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthGuard } from '@/guards/auth/auth.guard';
+import { UsersModule } from '@module/users/users.module';
+import { OtpsModule } from '@module/otps/otps.module';
+import { AwsModule } from '@module/aws/aws.module';
+import { CompanyUsersModule } from '../company_users/company_users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from '@/guards/auth/auth.guard';
 
 @Module({
   imports: [
-    WorkersModule,
+    UsersModule,
+    OtpsModule,
+    AwsModule,
+    CompanyUsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

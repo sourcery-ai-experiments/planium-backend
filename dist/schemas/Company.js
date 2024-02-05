@@ -20,15 +20,23 @@ __decorate([
     __metadata("design:type", String)
 ], Company.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Company.prototype, "fileId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, type: Array }),
+    (0, mongoose_1.Prop)({ default: [], type: Array }),
     __metadata("design:type", Array)
 ], Company.prototype, "workers", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Company.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Company.prototype, "updatedAt", void 0);
 exports.Company = Company = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false, collection: 'companies' })
+    (0, mongoose_1.Schema)({ versionKey: false, collection: 'companies' })
 ], Company);
 exports.CompanySchema = mongoose_1.SchemaFactory.createForClass(Company);
 //# sourceMappingURL=Company.js.map

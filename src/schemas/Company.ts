@@ -4,16 +4,22 @@ import { Worker } from '@/types/Company';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
-@Schema({ timestamps: true, versionKey: false, collection: 'companies' })
+@Schema({ versionKey: false, collection: 'companies' })
 export class Company {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, type: Types.ObjectId })
+  @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
 
-  @Prop({ required: true, type: Array })
+  @Prop({ default: [], type: Array })
   workers: Worker[];
+
+  @Prop({ default: new Date() })
+  createdAt!: number;
+
+  @Prop({ default: new Date() })
+  updatedAt!: number;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);

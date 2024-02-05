@@ -16,38 +16,78 @@ exports.WorkersService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const bcrypt = require("bcrypt");
 const Worker_1 = require("../../schemas/Worker");
+const users_service_1 = require("../users/users.service");
+const User_1 = require("../../types/User");
 let WorkersService = class WorkersService {
-    constructor(workerModel) {
+    constructor(workerModel, userService) {
         this.workerModel = workerModel;
+        this.userService = userService;
     }
     async create(worker) {
-        await this.verifyEmailExists(worker.email);
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(worker.password, salt);
-        worker.password = hashedPassword;
-        const newWorker = new this.workerModel(worker);
-        await newWorker.save();
-        const { password, ...workerData } = newWorker.toObject();
-        return {
-            message: 'Operario creado correctamente',
-            data: workerData,
+        const userBody = {
+            name: worker.name,
+            email: worker.email,
+            password: worker.password,
+            phone: worker.phone,
+            nationality: worker.nationality,
+            type: User_1.UserType.WORKER,
         };
+        const workerBody = {
+            personalInformation: worker?.personalInformation,
+            emergencyContact: worker?.emergencyContact,
+        };
+        const user = await this.userService.create(userBody);
+        try {
+            await this.workerModel.create({
+                ...workerBody,
+                userId: user.data._id,
+            });
+            return {
+                message: 'Operario creado correctamente',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    async changePassword(userId, password) {
+        const user = await this.userService.findById(userId);
+        if (!user) {
+            throw new common_1.UnauthorizedException('El usuario no existe');
+        }
+        try {
+            await this.userService.changePassword(userId, password);
+            return {
+                message: 'Contraseña actualizada correctamente',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async findAll() {
-        return this.workerModel.find().exec();
+        try {
+            return this.workerModel.find().exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async findById(id) {
-        return this.workerModel.findById(id).exec();
+        try {
+            return this.workerModel.findById(id).exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async findOne(where) {
-        return this.workerModel.findOne(where).exec();
-    }
-    async verifyEmailExists(email) {
-        const worker = await this.findOne({ email });
-        if (worker) {
-            throw new common_1.BadRequestException('El correo electrónico ya existe');
+        try {
+            return this.workerModel.findOne(where).exec();
+        }
+        catch (error) {
+            throw new Error(error);
         }
     }
 };
@@ -55,6 +95,7 @@ exports.WorkersService = WorkersService;
 exports.WorkersService = WorkersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Worker_1.Worker.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        users_service_1.UsersService])
 ], WorkersService);
 //# sourceMappingURL=workers.service.js.map
