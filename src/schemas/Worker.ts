@@ -23,9 +23,6 @@ export class Worker {
   emergencyContact: Record<string, any>;
 
   @Prop({ type: Types.ObjectId })
-  fileId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId })
   userId: Types.ObjectId;
 
   @Prop({ default: new Date() })

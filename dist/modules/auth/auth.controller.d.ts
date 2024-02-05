@@ -36,7 +36,15 @@ export declare class AuthController {
     }>;
     validateUser(req: any): Promise<{
         message: string;
-        data: import("../../schemas/User").User;
+        data: {
+            name: string;
+            email: string;
+            nationality: string;
+            phone: Record<string, any>;
+            fileId: import("mongoose").Types.ObjectId;
+            type: string;
+            _id: import("mongoose").Types.ObjectId;
+        };
     }>;
     refreshToken(companyId: string, req: any): Promise<{
         message: string;

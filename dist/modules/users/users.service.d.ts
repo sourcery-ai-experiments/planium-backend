@@ -56,6 +56,7 @@ export declare class UsersService {
             email: string;
             nationality: string;
             phone: Record<string, any>;
+            fileId: import("mongoose").Types.ObjectId;
             type: string;
             createdAt: number;
             updatedAt: number;
@@ -88,12 +89,13 @@ export declare class UsersService {
             email: string;
             nationality: string;
             phone: Record<string, any>;
+            fileId: import("mongoose").Types.ObjectId;
             type: string;
             createdAt: number;
             updatedAt: number;
         };
     }>;
-    findById(id: string): Promise<User>;
+    findById(id: string): Promise<UserDocument>;
     findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
         _id: import("mongoose").Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, User> & User & {

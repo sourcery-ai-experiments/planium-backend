@@ -19,6 +19,5 @@ export declare class CreateWorkerDto {
     phone: Phone;
     personalInformation: PersonalInformation;
     emergencyContact: EmergencyContact;
-    fileId: string;
 }
 export {};

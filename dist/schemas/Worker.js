@@ -33,10 +33,6 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
-], Worker.prototype, "fileId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
-    __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Worker.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: new Date() }),

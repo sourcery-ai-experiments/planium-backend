@@ -36,7 +36,6 @@ let WorkersService = class WorkersService {
         const workerBody = {
             personalInformation: worker?.personalInformation,
             emergencyContact: worker?.emergencyContact,
-            fileId: worker?.fileId,
         };
         const user = await this.userService.create(userBody);
         try {

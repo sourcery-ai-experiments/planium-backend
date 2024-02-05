@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import { UserType } from '@/types/User';
 
 export type UserDocument = HydratedDocument<User>;
@@ -25,6 +25,9 @@ export class User {
     }),
   )
   phone: Record<string, any>;
+
+  @Prop({ type: Types.ObjectId })
+  fileId: Types.ObjectId;
 
   @Prop({ required: true, enum: UserType })
   type: string;

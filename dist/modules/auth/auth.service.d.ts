@@ -47,7 +47,15 @@ export declare class AuthService {
     comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
     validateSession(userId: string): Promise<{
         message: string;
-        data: import("@/schemas/User").User;
+        data: {
+            name: string;
+            email: string;
+            nationality: string;
+            phone: Record<string, any>;
+            fileId: Types.ObjectId;
+            type: string;
+            _id: Types.ObjectId;
+        };
     }>;
     refreshToken(payload: object): Promise<{
         message: string;

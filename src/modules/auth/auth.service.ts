@@ -54,12 +54,15 @@ export class AuthService {
     const user = await this.userService.findById(userId);
 
     if (!user) {
-      throw new UnauthorizedException('No se encontró el usuario');
+      throw new UnauthorizedException('Sesión no válida');
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, createdAt, updatedAt, ...userData } = user.toObject();
 
     return {
       message: 'Usuario verificado correctamente',
-      data: user,
+      data: userData,
     };
   }
 

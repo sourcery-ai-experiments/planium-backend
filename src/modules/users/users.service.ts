@@ -63,7 +63,7 @@ export class UsersService {
     };
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<UserDocument> {
     try {
       return this.userModel.findById(id).exec();
     } catch (error) {

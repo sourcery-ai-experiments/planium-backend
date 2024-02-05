@@ -100,10 +100,4 @@ __decorate([
     (0, class_transformer_1.Type)(() => EmergencyContact),
     __metadata("design:type", EmergencyContact)
 ], CreateWorkerDto.prototype, "emergencyContact", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
-], CreateWorkerDto.prototype, "fileId", void 0);
 //# sourceMappingURL=create-worker.dto.js.map

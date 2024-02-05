@@ -88,7 +88,6 @@ describe('WorkersService', () => {
         phone: '3003421965',
         phoneCountryCode: '57',
       },
-      fileId: '607f1f77bcf86cd799439011',
     };
 
     expect(await service.create(dto)).toEqual({

@@ -78,9 +78,4 @@ export class CreateWorkerDto {
   @ValidateNested()
   @Type(() => EmergencyContact)
   emergencyContact: EmergencyContact;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId()
-  fileId: string;
 }

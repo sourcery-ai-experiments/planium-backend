@@ -67,11 +67,12 @@ let AuthService = class AuthService {
     async validateSession(userId) {
         const user = await this.userService.findById(userId);
         if (!user) {
-            throw new common_1.UnauthorizedException('No se encontró el usuario');
+            throw new common_1.UnauthorizedException('Sesión no válida');
         }
+        const { password, createdAt, updatedAt, ...userData } = user.toObject();
         return {
             message: 'Usuario verificado correctamente',
-            data: user,
+            data: userData,
         };
     }
     async refreshToken(payload) {

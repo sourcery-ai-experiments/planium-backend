@@ -27,7 +27,6 @@ export type WorkerDocument = HydratedDocument<Worker>;
 export declare class Worker {
     personalInformation: Record<string, any>;
     emergencyContact: Record<string, any>;
-    fileId: Types.ObjectId;
     userId: Types.ObjectId;
     createdAt: number;
     updatedAt: number;
