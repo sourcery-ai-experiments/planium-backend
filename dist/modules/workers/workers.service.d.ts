@@ -38,7 +38,7 @@ export declare class WorkersService {
     }>;
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
-    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
+    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
         _id: import("mongoose").Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, Worker> & Worker & {
         _id: import("mongoose").Types.ObjectId;

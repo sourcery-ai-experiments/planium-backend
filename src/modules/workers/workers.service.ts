@@ -79,7 +79,7 @@ export class WorkersService {
     }
   }
 
-  async findOne(where: Record<string, string>) {
+  async findOne(where: Record<string, any>) {
     try {
       return this.workerModel.findOne(where).exec();
     } catch (error) {

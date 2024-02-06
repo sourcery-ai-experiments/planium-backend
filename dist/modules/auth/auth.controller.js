@@ -27,13 +27,15 @@ let AuthController = class AuthController {
         return this.authService.signIn(email, password);
     }
     validateUser(req) {
-        const userId = req.user.sub;
+        const userId = req.user.userId;
         return this.authService.validateSession(userId);
     }
     refreshToken(companyId, req) {
-        const userId = req.user.sub;
+        const subId = req.user.sub;
+        const userId = req.user.userId;
         const payload = {
-            sub: userId,
+            sub: subId,
+            userId,
             companyId,
         };
         return this.authService.refreshToken(payload);

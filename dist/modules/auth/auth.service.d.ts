@@ -28,7 +28,8 @@ import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
-import { CompanyUsersService } from '../company_users/company_users.service';
+import { CompanyUsersService } from '@module/company_users/company_users.service';
+import { WorkersService } from '../workers/workers.service';
 import { UserDocument } from '@/schemas/User';
 export declare class AuthService {
     private readonly userService;
@@ -37,7 +38,8 @@ export declare class AuthService {
     private readonly sesService;
     private readonly snsService;
     private readonly companyUserService;
-    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService, sesService: SesService, snsService: SnsService, companyUserService: CompanyUsersService);
+    private readonly workerService;
+    constructor(userService: UsersService, jwtService: JwtService, otpService: OtpsService, sesService: SesService, snsService: SnsService, companyUserService: CompanyUsersService, workerService: WorkersService);
     signIn(email: string, password: string): Promise<{
         message: string;
         data: {

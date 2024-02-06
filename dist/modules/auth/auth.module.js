@@ -16,6 +16,7 @@ const users_module_1 = require("../users/users.module");
 const otps_module_1 = require("../otps/otps.module");
 const aws_module_1 = require("../aws/aws.module");
 const company_users_module_1 = require("../company_users/company_users.module");
+const workers_module_1 = require("../workers/workers.module");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 let AuthModule = class AuthModule {
@@ -28,6 +29,7 @@ exports.AuthModule = AuthModule = __decorate([
             otps_module_1.OtpsModule,
             aws_module_1.AwsModule,
             company_users_module_1.CompanyUsersModule,
+            workers_module_1.WorkersModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 useFactory: async (configService) => ({

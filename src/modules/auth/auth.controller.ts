@@ -30,17 +30,20 @@ export class AuthController {
   }
 
   @Get('validate')
-  validateUser(@Request() req) {
-    const userId = req.user.sub;
+  validateUser(@Request() req: any) {
+    const userId = req.user.userId;
 
     return this.authService.validateSession(userId);
   }
 
   @Get('refresh')
-  refreshToken(@CompanyId() companyId: string, @Request() req) {
-    const userId = req.user.sub;
+  refreshToken(@CompanyId() companyId: string, @Request() req: any) {
+    // En el sub se encuentra el id del worker o company user
+    const subId = req.user.sub;
+    const userId = req.user.userId;
     const payload = {
-      sub: userId,
+      sub: subId,
+      userId,
       companyId,
     };
 
