@@ -12,6 +12,7 @@ import { FilesModule } from './modules/files/files.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { CompanyUsersModule } from './modules/company_users/company_users.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { WorkdaysModule } from './modules/workdays/workdays.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { RolesModule } from './modules/roles/roles.module';
     CompaniesModule,
     CompanyUsersModule,
     RolesModule,
+    WorkdaysModule,
   ],
   controllers: [],
   providers: [],
