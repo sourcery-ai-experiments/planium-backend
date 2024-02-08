@@ -17,7 +17,7 @@ export class Worker {
     raw({
       name: { type: String },
       phone: { type: String },
-      phoneCode: { type: String },
+      phoneCountryCode: { type: String },
     }),
   )
   emergencyContact: Record<string, any>;
