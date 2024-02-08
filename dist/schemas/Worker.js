@@ -18,7 +18,7 @@ exports.Worker = Worker;
 __decorate([
     (0, mongoose_1.Prop)((0, mongoose_1.raw)({
         socialSecurityNumber: { type: String },
-        fileId: { type: String },
+        fileId: { type: mongoose_2.Types.ObjectId },
     })),
     __metadata("design:type", Object)
 ], Worker.prototype, "personalInformation", void 0);
@@ -26,7 +26,7 @@ __decorate([
     (0, mongoose_1.Prop)((0, mongoose_1.raw)({
         name: { type: String },
         phone: { type: String },
-        phoneCode: { type: String },
+        phoneCountryCode: { type: String },
     })),
     __metadata("design:type", Object)
 ], Worker.prototype, "emergencyContact", void 0);

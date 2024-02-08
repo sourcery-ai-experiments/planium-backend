@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
 import { UsersService } from '@module/users/users.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
@@ -39,10 +39,10 @@ export declare class WorkersService {
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
     findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     } & Required<{
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }>>;
 }

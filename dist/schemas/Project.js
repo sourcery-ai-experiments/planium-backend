@@ -9,34 +9,58 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RoleSchema = exports.Role = void 0;
+exports.ProjectSchema = exports.Project = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-let Role = class Role {
+let Project = class Project {
 };
-exports.Role = Role;
+exports.Project = Project;
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Role.prototype, "name", void 0);
+], Project.prototype, "name", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: new Date() }),
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Project.prototype, "address", void 0);
+__decorate([
+    (0, mongoose_1.Prop)((0, mongoose_1.raw)({
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        phoneCountryCode: { type: String, required: true },
+    })),
+    __metadata("design:type", Object)
+], Project.prototype, "manager", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Number)
-], Role.prototype, "createdAt", void 0);
+], Project.prototype, "startDate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: Array, default: [] }),
+    __metadata("design:type", Array)
+], Project.prototype, "workers", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
-], Role.prototype, "createdBy", void 0);
+], Project.prototype, "companyId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: new Date() }),
     __metadata("design:type", Number)
-], Role.prototype, "updatedAt", void 0);
+], Project.prototype, "createdAt", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
-], Role.prototype, "updatedBy", void 0);
-exports.Role = Role = __decorate([
+], Project.prototype, "createdBy", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], Project.prototype, "updatedAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], Project.prototype, "updatedBy", void 0);
+exports.Project = Project = __decorate([
     (0, mongoose_1.Schema)({ versionKey: false })
-], Role);
-exports.RoleSchema = mongoose_1.SchemaFactory.createForClass(Role);
-//# sourceMappingURL=Role.js.map
+], Project);
+exports.ProjectSchema = mongoose_1.SchemaFactory.createForClass(Project);
+//# sourceMappingURL=Project.js.map

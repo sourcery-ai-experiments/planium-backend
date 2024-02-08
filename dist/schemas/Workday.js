@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkdaySchema = exports.Workday = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const methods_1 = require("./methods");
 const Workday_1 = require("../types/Workday");
 let Workday = class Workday {
 };
@@ -69,5 +68,4 @@ exports.Workday = Workday = __decorate([
     (0, mongoose_1.Schema)({ versionKey: false })
 ], Workday);
 exports.WorkdaySchema = mongoose_1.SchemaFactory.createForClass(Workday);
-exports.WorkdaySchema.statics.findByCompany = methods_1.findByCompany;
 //# sourceMappingURL=Workday.js.map

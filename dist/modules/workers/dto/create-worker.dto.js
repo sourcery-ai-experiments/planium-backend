@@ -13,6 +13,7 @@ exports.CreateWorkerDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
+const mongoose_1 = require("mongoose");
 class Phone {
 }
 __decorate([
@@ -36,7 +37,7 @@ __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
+    __metadata("design:type", mongoose_1.Types.ObjectId)
 ], PersonalInformation.prototype, "fileId", void 0);
 class EmergencyContact {
 }

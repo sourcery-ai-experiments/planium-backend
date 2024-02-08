@@ -33,6 +33,9 @@ let WorkersService = class WorkersService {
             nationality: worker.nationality,
             type: User_1.UserType.WORKER,
         };
+        if (worker?.personalInformation?.fileId) {
+            worker.personalInformation.fileId = new mongoose_2.Types.ObjectId(worker.personalInformation.fileId);
+        }
         const workerBody = {
             personalInformation: worker?.personalInformation,
             emergencyContact: worker?.emergencyContact,

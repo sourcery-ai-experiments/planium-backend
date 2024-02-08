@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
 import { UsersService } from '@module/users/users.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
@@ -23,6 +23,12 @@ export class WorkersService {
       nationality: worker.nationality,
       type: UserType.WORKER,
     };
+
+    if (worker?.personalInformation?.fileId) {
+      worker.personalInformation.fileId = new Types.ObjectId(
+        worker.personalInformation.fileId,
+      );
+    }
 
     const workerBody = {
       personalInformation: worker?.personalInformation,

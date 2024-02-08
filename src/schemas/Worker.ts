@@ -8,7 +8,7 @@ export class Worker {
   @Prop(
     raw({
       socialSecurityNumber: { type: String },
-      fileId: { type: String },
+      fileId: { type: Types.ObjectId },
     }),
   )
   personalInformation: Record<string, any>;
