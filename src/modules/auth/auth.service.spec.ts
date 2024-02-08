@@ -7,6 +7,7 @@ import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
 import { CompanyUsersService } from '../company_users/company_users.service';
+import { WorkersService } from '@/modules/workers/workers.service';
 import { Types } from 'mongoose';
 
 describe('AuthService', () => {
@@ -17,6 +18,7 @@ describe('AuthService', () => {
   let sesService: Partial<SesService>;
   let snsService: Partial<SnsService>;
   let companyUserService: Partial<CompanyUsersService>;
+  let workerService: Partial<WorkersService>;
 
   beforeEach(async () => {
     userService = {
@@ -42,6 +44,10 @@ describe('AuthService', () => {
 
     companyUserService = {
       findByUserId: jest.fn(),
+    };
+
+    workerService = {
+      findOne: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -70,6 +76,10 @@ describe('AuthService', () => {
         {
           provide: CompanyUsersService,
           useValue: companyUserService,
+        },
+        {
+          provide: WorkersService,
+          useValue: workerService,
         },
       ],
     }).compile();
@@ -114,8 +124,9 @@ describe('AuthService', () => {
     const accessToken = 'access-token';
 
     jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
-    jest.spyOn(jwtService, 'sign').mockReturnValue(accessToken);
     jest.spyOn(service, 'comparePasswords').mockResolvedValue(true);
+    jest.spyOn(service, 'getPayload').mockResolvedValue({ sub: mockUser._id });
+    jest.spyOn(jwtService, 'sign').mockReturnValue(accessToken);
 
     await expect(
       service.signIn('pepe.mock@gmail.com', '123456789'),

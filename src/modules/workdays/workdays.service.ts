@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Workday, WorkdayDocument } from '@/schemas/Workday';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
-import { WorkersService } from '../workers/workers.service';
+import { WorkersService } from '@module/workers/workers.service';
 
 @Injectable()
 export class WorkdaysService {

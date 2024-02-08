@@ -7,7 +7,7 @@ import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
 import { CompanyUsersService } from '@module/company_users/company_users.service';
-import { WorkersService } from '../workers/workers.service';
+import { WorkersService } from '@/modules/workers/workers.service';
 import { UserType } from '@/types/User';
 import { UserDocument } from '@/schemas/User';
 

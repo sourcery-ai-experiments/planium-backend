@@ -25,7 +25,7 @@
 import { Model, Types } from 'mongoose';
 import { WorkdayDocument } from '@/schemas/Workday';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
-import { WorkersService } from '../workers/workers.service';
+import { WorkersService } from '@module/workers/workers.service';
 export declare class WorkdaysService {
     private readonly workdayModel;
     private readonly workersService;
