@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { findByCompany } from '@/schemas/methods';
 
 export type FileDocument = HydratedDocument<File>;
 
@@ -23,9 +22,3 @@ export class File {
 }
 
 export const FileSchema = SchemaFactory.createForClass(File);
-
-FileSchema.methods.getUrl = function () {
-  return this.url;
-};
-
-FileSchema.statics.findByCompany = findByCompany;

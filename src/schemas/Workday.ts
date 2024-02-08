@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { findByCompany } from '@/schemas/methods';
 import { WorkdayType } from '@/types/Workday';
 
 export type WorkdayDocument = HydratedDocument<Workday>;
@@ -45,5 +44,3 @@ export class Workday {
 }
 
 export const WorkdaySchema = SchemaFactory.createForClass(Workday);
-
-WorkdaySchema.statics.findByCompany = findByCompany;
