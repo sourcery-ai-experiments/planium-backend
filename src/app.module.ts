@@ -13,6 +13,7 @@ import { CompaniesModule } from './modules/companies/companies.module';
 import { CompanyUsersModule } from './modules/company_users/company_users.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { WorkdaysModule } from './modules/workdays/workdays.module';
+import { ProjectsModule } from './modules/projects/projects.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { WorkdaysModule } from './modules/workdays/workdays.module';
     CompanyUsersModule,
     RolesModule,
     WorkdaysModule,
+    ProjectsModule,
   ],
   controllers: [],
   providers: [],

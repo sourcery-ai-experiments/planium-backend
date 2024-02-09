@@ -9,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Types } from 'mongoose';
 import { Express } from 'express';
 import { FilesService } from './files.service';
 import { CompanyId } from '@/decorators/auth/company-id.decorator';
@@ -23,7 +24,7 @@ export class FilesController {
   uploadOneFile(
     @Query('folder', new ParseEnumPipe(Folder))
     folder: Folder,
-    @CompanyId() companyId: string,
+    @CompanyId() companyId: Types.ObjectId,
     @UploadedFile(
       new ParseFilePipe({
         validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],

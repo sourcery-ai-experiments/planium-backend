@@ -31,13 +31,13 @@ export declare class CompaniesController {
     findAllByWorkerId(workerId: Types.ObjectId): Promise<{
         data: any[];
     }>;
-    addWorker(worker: WorkerDto, companyId: string): Promise<{
+    addWorker(worker: WorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    removeWorker(worker: RemoveWorkerDto, companyId: string): Promise<{
+    removeWorker(worker: RemoveWorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    updateWorker(worker: WorkerDto, companyId: string): Promise<{
+    updateWorker(worker: WorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
 }

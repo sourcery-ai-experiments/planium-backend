@@ -52,7 +52,7 @@ export class AuthService {
     return bcrypt.compare(password, storedPasswordHash);
   }
 
-  async validateSession(userId: string) {
+  async validateSession(userId: Types.ObjectId) {
     const user = await this.userService.findById(userId);
 
     if (!user) {

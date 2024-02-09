@@ -21,8 +21,8 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
+import { Types } from 'mongoose';
 import { AuthService } from './auth.service';
 import { VerifyCodeDto, EmailRecoveryDto, SignInDto, SmsRecoveryDto } from './dto';
 export declare class AuthController {
@@ -41,12 +41,12 @@ export declare class AuthController {
             email: string;
             nationality: string;
             phone: Record<string, any>;
-            fileId: import("mongoose").Types.ObjectId;
+            fileId: Types.ObjectId;
             type: string;
-            _id: import("mongoose").Types.ObjectId;
+            _id: Types.ObjectId;
         };
     }>;
-    refreshToken(companyId: string, req: any): Promise<{
+    refreshToken(companyId: Types.ObjectId, req: any): Promise<{
         message: string;
         data: {
             access_token: string;
@@ -55,13 +55,13 @@ export declare class AuthController {
     sendRecoverySms(smsRecoveryDto: SmsRecoveryDto): Promise<{
         message: string;
         data: {
-            userId: import("mongoose").Types.ObjectId;
+            userId: Types.ObjectId;
         };
     }>;
     sendRecoveryEmail(emailRecoveryDto: EmailRecoveryDto): Promise<{
         message: string;
         data: {
-            userId: import("mongoose").Types.ObjectId;
+            userId: Types.ObjectId;
         };
     }>;
     verifyRecoveryCode(verifyCodeDto: VerifyCodeDto): Promise<{

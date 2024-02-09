@@ -22,16 +22,16 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
+import { Types } from 'mongoose';
 import { WorkdaysService } from './workdays.service';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
-import { Types } from 'mongoose';
 export declare class WorkdaysController {
     private readonly workdaysService;
     constructor(workdaysService: WorkdaysService);
-    create(createWorkdayDto: CreateWorkdayDto, req: any, companyId: string): Promise<{
+    create(createWorkdayDto: CreateWorkdayDto, req: any, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    endWorkday(workdayId: Types.ObjectId, companyId: string): Promise<{
+    endWorkday(workdayId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
 }

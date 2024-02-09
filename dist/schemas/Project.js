@@ -36,6 +36,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Project.prototype, "startDate", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", Number)
+], Project.prototype, "endDate", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ required: true, type: Array, default: [] }),
     __metadata("design:type", Array)
 ], Project.prototype, "workers", void 0);

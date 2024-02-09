@@ -22,15 +22,15 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
+import { Types } from 'mongoose';
 import { FilesService } from './files.service';
 import { Folder } from '@/types/File';
 export declare class FilesController {
     private readonly filesService;
     constructor(filesService: FilesService);
-    uploadOneFile(folder: Folder, companyId: string, file: Express.Multer.File): Promise<{
-        id: import("mongoose").Types.ObjectId;
+    uploadOneFile(folder: Folder, companyId: Types.ObjectId, file: Express.Multer.File): Promise<{
+        id: Types.ObjectId;
         url: string;
     }>;
 }

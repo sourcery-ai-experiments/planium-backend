@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
+import { Types } from 'mongoose';
 
 export const CompanyId = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
@@ -15,6 +16,6 @@ export const CompanyId = createParamDecorator(
       throw new BadRequestException('Company ID not found');
     }
 
-    return request['user'].companyId ?? request.headers['company-id'];
+    return new Types.ObjectId(companyId);
   },
 );

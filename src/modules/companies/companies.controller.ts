@@ -16,7 +16,10 @@ export class CompaniesController {
   }
 
   @Patch('workers/add')
-  async addWorker(@Body() worker: WorkerDto, @CompanyId() companyId: string) {
+  async addWorker(
+    @Body() worker: WorkerDto,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
     worker.workerId = new Types.ObjectId(worker.workerId);
 
     return this.companiesService.addWorker(companyId, worker);
@@ -25,7 +28,7 @@ export class CompaniesController {
   @Patch('workers/remove')
   async removeWorker(
     @Body() worker: RemoveWorkerDto,
-    @CompanyId() companyId: string,
+    @CompanyId() companyId: Types.ObjectId,
   ) {
     worker.workerId = new Types.ObjectId(worker.workerId);
 
@@ -35,7 +38,7 @@ export class CompaniesController {
   @Patch('workers/update')
   async updateWorker(
     @Body() worker: WorkerDto,
-    @CompanyId() companyId: string,
+    @CompanyId() companyId: Types.ObjectId,
   ) {
     worker.workerId = new Types.ObjectId(worker.workerId);
 

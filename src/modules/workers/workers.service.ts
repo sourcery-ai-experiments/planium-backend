@@ -51,7 +51,7 @@ export class WorkersService {
     }
   }
 
-  async changePassword(userId: string, password: string) {
+  async changePassword(userId: Types.ObjectId, password: string) {
     const user = await this.userService.findById(userId);
 
     if (!user) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { S3Service } from '../aws/aws.s3.service';
 import { File, FileDocument } from '@/schemas/File';
 import { renameFile } from './helpers/rename-file.helper';
@@ -17,7 +17,7 @@ export class FilesService {
     originalName: string,
     body: Buffer,
     folder: string,
-    companyId?: string,
+    companyId?: Types.ObjectId,
   ) {
     const key = renameFile(originalName);
     const newKey = `${folder}/${key}`;

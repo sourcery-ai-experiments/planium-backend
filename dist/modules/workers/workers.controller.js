@@ -14,8 +14,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkersController = void 0;
 const common_1 = require("@nestjs/common");
-const workers_service_1 = require("./workers.service");
+const mongoose_1 = require("mongoose");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
+const workers_service_1 = require("./workers.service");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
 const change_password_dto_1 = require("./dto/change-password.dto");
 let WorkersController = class WorkersController {
@@ -27,7 +28,7 @@ let WorkersController = class WorkersController {
     }
     async changePassword(changePasswordDto) {
         const { userId, password } = changePasswordDto;
-        return this.workersService.changePassword(userId, password);
+        return this.workersService.changePassword(new mongoose_1.Types.ObjectId(userId), password);
     }
 };
 exports.WorkersController = WorkersController;

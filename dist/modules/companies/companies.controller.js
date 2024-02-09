@@ -52,7 +52,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, String]),
+    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], CompaniesController.prototype, "addWorker", null);
 __decorate([
@@ -60,7 +60,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.RemoveWorkerDto, String]),
+    __metadata("design:paramtypes", [worker_dto_1.RemoveWorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], CompaniesController.prototype, "removeWorker", null);
 __decorate([
@@ -68,7 +68,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, String]),
+    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], CompaniesController.prototype, "updateWorker", null);
 exports.CompaniesController = CompaniesController = __decorate([

@@ -47,7 +47,7 @@ export declare class AuthService {
         };
     }>;
     comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
-    validateSession(userId: string): Promise<{
+    validateSession(userId: Types.ObjectId): Promise<{
         message: string;
         data: {
             name: string;

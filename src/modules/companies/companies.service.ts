@@ -50,8 +50,18 @@ export class CompaniesService {
     }
   }
 
-  async addWorker(companyId: string, worker: Worker) {
-    const company = await this.findCompany(companyId);
+  async findCompanyById(companyId: Types.ObjectId) {
+    const company = await this.companyModel.findById(companyId);
+
+    if (!company) {
+      throw new NotFoundException('Empresa no encontrada');
+    }
+
+    return company;
+  }
+
+  async addWorker(companyId: Types.ObjectId, worker: Worker) {
+    const company = await this.findCompanyById(companyId);
 
     await this.verifyExistsWorker(worker.workerId.toString());
 
@@ -68,8 +78,8 @@ export class CompaniesService {
     };
   }
 
-  async removeWorker(companyId: string, workerId: Types.ObjectId) {
-    const company = await this.findCompany(companyId);
+  async removeWorker(companyId: Types.ObjectId, workerId: Types.ObjectId) {
+    const company = await this.findCompanyById(companyId);
 
     await this.verifyExistsWorker(workerId.toString());
 
@@ -89,8 +99,8 @@ export class CompaniesService {
     };
   }
 
-  async updateWorker(companyId: string, worker: Worker) {
-    const company = await this.findCompany(companyId);
+  async updateWorker(companyId: Types.ObjectId, worker: Worker) {
+    const company = await this.findCompanyById(companyId);
 
     await this.verifyExistsWorker(worker.workerId.toString());
 
@@ -108,16 +118,6 @@ export class CompaniesService {
     return {
       message: 'Operario actualizado correctamente',
     };
-  }
-
-  async findCompany(companyId: string) {
-    const company = await this.companyModel.findById(companyId);
-
-    if (!company) {
-      throw new NotFoundException('Empresa no encontrada');
-    }
-
-    return company;
   }
 
   async verifyExistsWorker(workerId: string) {

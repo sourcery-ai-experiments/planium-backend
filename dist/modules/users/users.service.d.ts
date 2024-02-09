@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User, UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -32,10 +32,10 @@ export declare class UsersService {
     create(user: CreateUserDto): Promise<{
         message: string;
         data: {
-            _id: import("mongoose").Types.ObjectId;
+            _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -56,19 +56,19 @@ export declare class UsersService {
             email: string;
             nationality: string;
             phone: Record<string, any>;
-            fileId: import("mongoose").Types.ObjectId;
+            fileId: Types.ObjectId;
             type: string;
             createdAt: number;
             updatedAt: number;
         };
     }>;
-    update(id: string, updateUserDto: UpdateUserDto): Promise<{
+    update(id: Types.ObjectId, updateUserDto: UpdateUserDto): Promise<{
         message: string;
         data: {
-            _id: import("mongoose").Types.ObjectId;
+            _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -89,27 +89,27 @@ export declare class UsersService {
             email: string;
             nationality: string;
             phone: Record<string, any>;
-            fileId: import("mongoose").Types.ObjectId;
+            fileId: Types.ObjectId;
             type: string;
             createdAt: number;
             updatedAt: number;
         };
     }>;
-    findById(id: string): Promise<UserDocument>;
+    findById(id: Types.ObjectId): Promise<UserDocument>;
     findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     } & Required<{
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }>>;
     verifyEmailExists(email: string): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     } & Required<{
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }>>;
     hashPassword(password: string): Promise<any>;
-    changePassword(userId: string, password: string): Promise<void>;
+    changePassword(userId: Types.ObjectId, password: string): Promise<void>;
 }

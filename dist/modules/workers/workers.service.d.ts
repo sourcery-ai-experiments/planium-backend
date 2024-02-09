@@ -33,7 +33,7 @@ export declare class WorkersService {
     create(worker: CreateWorkerDto): Promise<{
         message: string;
     }>;
-    changePassword(userId: string, password: string): Promise<{
+    changePassword(userId: Types.ObjectId, password: string): Promise<{
         message: string;
     }>;
     findAll(): Promise<Worker[]>;

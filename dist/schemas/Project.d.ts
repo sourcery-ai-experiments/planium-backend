@@ -29,6 +29,7 @@ export declare class Project {
     address: string;
     manager: Record<string, any>;
     startDate: number;
+    endDate: number;
     workers: Types.ObjectId[];
     companyId: Types.ObjectId;
     createdAt: number;

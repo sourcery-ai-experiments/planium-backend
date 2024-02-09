@@ -23,15 +23,15 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { S3Service } from '../aws/aws.s3.service';
 import { FileDocument } from '@/schemas/File';
 export declare class FilesService {
     private readonly fileModel;
     private readonly s3Service;
     constructor(fileModel: Model<FileDocument>, s3Service: S3Service);
-    uploadOneFile(originalName: string, body: Buffer, folder: string, companyId?: string): Promise<{
-        id: import("mongoose").Types.ObjectId;
+    uploadOneFile(originalName: string, body: Buffer, folder: string, companyId?: Types.ObjectId): Promise<{
+        id: Types.ObjectId;
         url: string;
     }>;
 }

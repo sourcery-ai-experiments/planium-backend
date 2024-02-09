@@ -7,6 +7,7 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { CompanyId } from '@/decorators/auth/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { AuthService } from './auth.service';
@@ -37,7 +38,7 @@ export class AuthController {
   }
 
   @Get('refresh')
-  refreshToken(@CompanyId() companyId: string, @Request() req: any) {
+  refreshToken(@CompanyId() companyId: Types.ObjectId, @Request() req: any) {
     // En el sub se encuentra el id del worker o company user
     const subId = req.user.sub;
     const userId = req.user.userId;

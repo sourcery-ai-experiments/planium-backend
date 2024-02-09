@@ -8,10 +8,10 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { CompanyId } from '@/decorators/auth/company-id.decorator';
 import { WorkdaysService } from './workdays.service';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
-import { Types } from 'mongoose';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 @Controller('workdays')
 export class WorkdaysController {
@@ -22,25 +22,25 @@ export class WorkdaysController {
   async create(
     @Body() createWorkdayDto: CreateWorkdayDto,
     @Request() req: any,
-    @CompanyId() companyId: string,
+    @CompanyId() companyId: Types.ObjectId,
   ) {
     const workerId = req.user.sub;
 
     return await this.workdaysService.create(
       createWorkdayDto,
       new Types.ObjectId(workerId),
-      new Types.ObjectId(companyId),
+      companyId,
     );
   }
 
   @Patch('/end/:id')
   async endWorkday(
     @Param('id', ParseMongoIdPipe) workdayId: Types.ObjectId,
-    @CompanyId() companyId: string,
+    @CompanyId() companyId: Types.ObjectId,
   ) {
     return await this.workdaysService.endWorkday(
       new Types.ObjectId(workdayId),
-      new Types.ObjectId(companyId),
+      companyId,
     );
   }
 }
