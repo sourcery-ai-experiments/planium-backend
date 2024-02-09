@@ -39,7 +39,10 @@ export class ProjectsService {
     workers: string[],
     companyId: Types.ObjectId,
   ) {
-    const project = this.projectModel.findById({ _id: projectId, companyId });
+    const project = await this.projectModel.findOne({
+      _id: projectId,
+      companyId,
+    });
 
     if (!project) {
       throw new NotFoundException('El proyecto no existe');
@@ -60,7 +63,7 @@ export class ProjectsService {
       );
 
       return {
-        message: 'Operarios añadidos correctamente',
+        message: 'Operario(s) agregado(s) correctamente',
       };
     } catch (error) {
       throw new Error(error);

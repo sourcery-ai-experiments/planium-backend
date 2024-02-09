@@ -43,7 +43,10 @@ let ProjectsService = class ProjectsService {
         }
     }
     async addWorkers(projectId, workers, companyId) {
-        const project = this.projectModel.findById({ _id: projectId, companyId });
+        const project = await this.projectModel.findOne({
+            _id: projectId,
+            companyId,
+        });
         if (!project) {
             throw new common_1.NotFoundException('El proyecto no existe');
         }
@@ -56,7 +59,7 @@ let ProjectsService = class ProjectsService {
                 },
             });
             return {
-                message: 'Operarios añadidos correctamente',
+                message: 'Operario(s) agregado(s) correctamente',
             };
         }
         catch (error) {
