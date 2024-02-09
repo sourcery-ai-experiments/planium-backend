@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkdaysController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
+const User_1 = require("../../types/User");
 const workdays_service_1 = require("./workdays.service");
 const create_workday_dto_1 = require("./dto/create-workday.dto");
 const mongo_id_pipe_1 = require("../../pipes/mongo-id.pipe");
@@ -34,6 +36,7 @@ let WorkdaysController = class WorkdaysController {
 exports.WorkdaysController = WorkdaysController;
 __decorate([
     (0, common_1.Post)(),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
@@ -44,6 +47,7 @@ __decorate([
 ], WorkdaysController.prototype, "create", null);
 __decorate([
     (0, common_1.Patch)('/end/:id'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),

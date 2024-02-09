@@ -8,13 +8,16 @@ import {
   Post,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { CompanyId } from '@/decorators/auth/company-id.decorator';
+import { CompanyId } from '@/decorators/company-id.decorator';
+import { UserTypes } from '@/decorators/auth/user-type.decorator';
+import { UserType } from '@/types/User';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { AddWorkersDto } from './dto/add-workers.dto';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 
 @Controller('projects')
+@UserTypes(UserType.COMPANY_USER)
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 

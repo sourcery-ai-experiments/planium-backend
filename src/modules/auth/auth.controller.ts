@@ -8,7 +8,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { CompanyId } from '@/decorators/auth/company-id.decorator';
+import { CompanyId } from '@/decorators/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { AuthService } from './auth.service';
 import {
@@ -42,10 +42,12 @@ export class AuthController {
     // En el sub se encuentra el id del worker o company user
     const subId = req.user.sub;
     const userId = req.user.userId;
+    const type = req.user.type;
     const payload = {
       sub: subId,
       userId,
       companyId,
+      type,
     };
 
     return this.authService.refreshToken(payload);

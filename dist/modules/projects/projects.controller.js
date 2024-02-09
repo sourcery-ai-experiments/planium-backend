@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProjectsController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
+const User_1 = require("../../types/User");
 const projects_service_1 = require("./projects.service");
 const create_project_dto_1 = require("./dto/create-project.dto");
 const add_workers_dto_1 = require("./dto/add-workers.dto");
@@ -53,6 +55,7 @@ __decorate([
 ], ProjectsController.prototype, "addWorkers", null);
 exports.ProjectsController = ProjectsController = __decorate([
     (0, common_1.Controller)('projects'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __metadata("design:paramtypes", [projects_service_1.ProjectsService])
 ], ProjectsController);
 //# sourceMappingURL=projects.controller.js.map

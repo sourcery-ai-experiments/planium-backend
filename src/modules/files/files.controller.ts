@@ -12,7 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Types } from 'mongoose';
 import { Express } from 'express';
 import { FilesService } from './files.service';
-import { CompanyId } from '@/decorators/auth/company-id.decorator';
+import { CompanyId } from '@/decorators/company-id.decorator';
 import { Folder } from '@/types/File';
 
 @Controller('files')

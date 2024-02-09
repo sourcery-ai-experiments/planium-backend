@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 const auth_service_1 = require("./auth.service");
 const dto_1 = require("./dto");
@@ -34,10 +34,12 @@ let AuthController = class AuthController {
     refreshToken(companyId, req) {
         const subId = req.user.sub;
         const userId = req.user.userId;
+        const type = req.user.type;
         const payload = {
             sub: subId,
             userId,
             companyId,
+            type,
         };
         return this.authService.refreshToken(payload);
     }

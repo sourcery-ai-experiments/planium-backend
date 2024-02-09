@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const mongoose_1 = require("mongoose");
 const files_service_1 = require("./files.service");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const File_1 = require("../../types/File");
 let FilesController = class FilesController {
     constructor(filesService) {

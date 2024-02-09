@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@/guards/auth/auth.guard';
+import { UserTypeGuard } from '@/guards/auth/user-type.guard';
 import { UsersModule } from '@module/users/users.module';
 import { OtpsModule } from '@module/otps/otps.module';
 import { AwsModule } from '@module/aws/aws.module';
@@ -30,7 +31,11 @@ import { AuthService } from './auth.service';
       inject: [ConfigService],
     }),
   ],
-  providers: [{ provide: APP_GUARD, useClass: AuthGuard }, AuthService],
+  providers: [
+    AuthService,
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: UserTypeGuard },
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

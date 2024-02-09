@@ -9,7 +9,9 @@ import {
   Request,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { CompanyId } from '@/decorators/auth/company-id.decorator';
+import { CompanyId } from '@/decorators/company-id.decorator';
+import { UserTypes } from '@/decorators/auth/user-type.decorator';
+import { UserType } from '@/types/User';
 import { WorkdaysService } from './workdays.service';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
@@ -18,6 +20,7 @@ export class WorkdaysController {
   constructor(private readonly workdaysService: WorkdaysService) {}
 
   @Post()
+  @UserTypes(UserType.WORKER)
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createWorkdayDto: CreateWorkdayDto,
@@ -34,6 +37,7 @@ export class WorkdaysController {
   }
 
   @Patch('/end/:id')
+  @UserTypes(UserType.WORKER)
   async endWorkday(
     @Param('id', ParseMongoIdPipe) workdayId: Types.ObjectId,
     @CompanyId() companyId: Types.ObjectId,

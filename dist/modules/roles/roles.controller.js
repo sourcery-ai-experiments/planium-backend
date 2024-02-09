@@ -16,6 +16,8 @@ exports.RolesController = void 0;
 const common_1 = require("@nestjs/common");
 const create_role_dto_1 = require("./dto/create-role.dto");
 const roles_service_1 = require("./roles.service");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
+const User_1 = require("../../types/User");
 let RolesController = class RolesController {
     constructor(rolesService) {
         this.rolesService = rolesService;
@@ -39,6 +41,7 @@ let RolesController = class RolesController {
 };
 exports.RolesController = RolesController;
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

@@ -131,6 +131,7 @@ let AuthService = class AuthService {
             };
         }
         payload['userId'] = user._id;
+        payload['type'] = user.type;
         return payload;
     }
 };
