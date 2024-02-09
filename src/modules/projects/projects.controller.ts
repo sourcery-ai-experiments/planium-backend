@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -28,6 +29,14 @@ export class ProjectsController {
     @CompanyId() companyId: Types.ObjectId,
   ) {
     return await this.projectsService.create(createProjectDto, companyId);
+  }
+
+  @Get('by-worker/:id')
+  async getByWorkerId(
+    @Param('id', ParseMongoIdPipe) workerId: Types.ObjectId,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    return await this.projectsService.getByWorkerId(workerId, companyId);
   }
 
   @Patch(':id/workers')

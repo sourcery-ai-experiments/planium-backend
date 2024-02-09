@@ -32,6 +32,7 @@ export declare class ProjectsController {
     create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
+    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     addWorkers(addWorkersDto: AddWorkersDto, projectId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

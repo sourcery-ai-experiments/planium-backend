@@ -29,6 +29,9 @@ let ProjectsController = class ProjectsController {
     async create(createProjectDto, companyId) {
         return await this.projectsService.create(createProjectDto, companyId);
     }
+    async getByWorkerId(workerId, companyId) {
+        return await this.projectsService.getByWorkerId(workerId, companyId);
+    }
     async addWorkers(addWorkersDto, projectId, companyId) {
         const { workers } = addWorkersDto;
         return await this.projectsService.addWorkers(projectId, workers, companyId);
@@ -44,6 +47,14 @@ __decorate([
     __metadata("design:paramtypes", [create_project_dto_1.CreateProjectDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)('by-worker/:id'),
+    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId]),
+    __metadata("design:returntype", Promise)
+], ProjectsController.prototype, "getByWorkerId", null);
 __decorate([
     (0, common_1.Patch)(':id/workers'),
     __param(0, (0, common_1.Body)()),

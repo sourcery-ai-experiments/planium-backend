@@ -34,6 +34,24 @@ export class ProjectsService {
     }
   }
 
+  async getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId) {
+    const projects = await this.projectModel.aggregate([
+      {
+        $match: {
+          companyId,
+          workers: workerId,
+        },
+      },
+      {
+        $project: {
+          name: 1,
+        },
+      },
+    ]);
+
+    return projects;
+  }
+
   async addWorkers(
     projectId: Types.ObjectId,
     workers: string[],
