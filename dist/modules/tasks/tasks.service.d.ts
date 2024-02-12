@@ -34,4 +34,7 @@ export declare class TasksService {
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
+    taskReview(files: string[], taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
 }

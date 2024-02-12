@@ -1,7 +1,7 @@
 export enum TaskStatus {
   TO_DO = 'TO_DO',
   IN_PROGRESS = 'IN_PROGRESS',
-  WAITING = 'WAITING',
+  WAITING_APPROVAL = 'WAITING_APPROVAL',
   DONE = 'DONE',
 }
 

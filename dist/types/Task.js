@@ -5,7 +5,7 @@ var TaskStatus;
 (function (TaskStatus) {
     TaskStatus["TO_DO"] = "TO_DO";
     TaskStatus["IN_PROGRESS"] = "IN_PROGRESS";
-    TaskStatus["WAITING"] = "WAITING";
+    TaskStatus["WAITING_APPROVAL"] = "WAITING_APPROVAL";
     TaskStatus["DONE"] = "DONE";
 })(TaskStatus || (exports.TaskStatus = TaskStatus = {}));
 var TaskType;

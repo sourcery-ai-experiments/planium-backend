@@ -25,10 +25,14 @@
 import { Types } from 'mongoose';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { TaskReviewDto } from './dto/task-review.dto';
 export declare class TasksController {
     private readonly tasksService;
     constructor(tasksService: TasksService);
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    taskReview(taskReviewDto: TaskReviewDto, taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
 }

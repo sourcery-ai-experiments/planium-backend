@@ -19,6 +19,7 @@ const core_1 = require("@nestjs/core");
 const mongoose_2 = require("mongoose");
 const Task_1 = require("../../schemas/Task");
 const projects_service_1 = require("../projects/projects.service");
+const Task_2 = require("../../types/Task");
 let TasksService = class TasksService {
     constructor(taskModel, request, projectsService) {
         this.taskModel = taskModel;
@@ -50,6 +51,31 @@ let TasksService = class TasksService {
         catch (error) {
             throw new Error(error);
         }
+    }
+    async taskReview(files, taskId, companyId) {
+        const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
+        const task = await this.taskModel.findOne({
+            _id: taskId,
+            companyId,
+        });
+        if (!task) {
+            throw new common_1.NotFoundException('La tarea no existe');
+        }
+        if (task.status === Task_2.TaskStatus.WAITING_APPROVAL) {
+            throw new common_1.BadRequestException('La tarea ya fue enviada para revisión');
+        }
+        if (task.status === Task_2.TaskStatus.DONE) {
+            throw new common_1.BadRequestException('La tarea ya fue completada');
+        }
+        const filesObjectIds = files.map((file) => new mongoose_2.Types.ObjectId(file));
+        task.files = filesObjectIds;
+        task.status = Task_2.TaskStatus.WAITING_APPROVAL;
+        task.updatedAt = new Date().getTime();
+        task.updatedBy = userId;
+        await task.save();
+        return {
+            message: 'Tarea enviada para revisión.',
+        };
     }
 };
 exports.TasksService = TasksService;

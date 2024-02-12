@@ -15,7 +15,7 @@ let ParseMongoIdPipe = class ParseMongoIdPipe {
             return value;
         }
         if (!(0, mongoose_1.isValidObjectId)(value)) {
-            throw new common_1.BadRequestException('El id no es válido.');
+            throw new common_1.BadRequestException('El id debe ser un mongo ObjectId válido');
         }
         return new mongoose_1.Types.ObjectId(value);
     }

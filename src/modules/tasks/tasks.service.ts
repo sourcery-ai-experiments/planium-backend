@@ -1,10 +1,16 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { REQUEST } from '@nestjs/core';
 import { Model, Types } from 'mongoose';
 import { Task, TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
+import { TaskStatus } from '@/types/Task';
 
 @Injectable()
 export class TasksService {
@@ -46,5 +52,41 @@ export class TasksService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async taskReview(
+    files: string[],
+    taskId: Types.ObjectId,
+    companyId: Types.ObjectId,
+  ) {
+    const userId = new Types.ObjectId(this.request.user['userId']);
+
+    const task = await this.taskModel.findOne({
+      _id: taskId,
+      companyId,
+    });
+
+    if (!task) {
+      throw new NotFoundException('La tarea no existe');
+    }
+
+    if (task.status === TaskStatus.WAITING_APPROVAL) {
+      throw new BadRequestException('La tarea ya fue enviada para revisión');
+    }
+
+    if (task.status === TaskStatus.DONE) {
+      throw new BadRequestException('La tarea ya fue completada');
+    }
+    const filesObjectIds = files.map((file) => new Types.ObjectId(file));
+    task.files = filesObjectIds;
+    task.status = TaskStatus.WAITING_APPROVAL;
+    task.updatedAt = new Date().getTime();
+    task.updatedBy = userId;
+
+    await task.save();
+
+    return {
+      message: 'Tarea enviada para revisión.',
+    };
   }
 }
