@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { User } from '@/schemas/User';
 import { getModelToken } from '@nestjs/mongoose';
 import { UserType } from '@/types/User';
+import { Types } from 'mongoose';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -93,7 +94,7 @@ describe('UsersService', () => {
   });
 
   it('should update a user', async () => {
-    const userId = '507f1f77bcf86cd799439011';
+    const userId = new Types.ObjectId('507f1f77bcf86cd799439011');
     const updateDto = {
       name: 'Pepe Díaz',
       email: 'pepe@gmail.com',
@@ -110,7 +111,7 @@ describe('UsersService', () => {
     expect(await service.update(userId, updateDto)).toEqual({
       message: 'Usuario actualizado correctamente',
       data: {
-        id: '507f1f77bcf86cd799439011',
+        id: new Types.ObjectId('507f1f77bcf86cd799439011'),
         ...userData,
       },
     });

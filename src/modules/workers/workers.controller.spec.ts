@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WorkersController } from './workers.controller';
 import { WorkersService } from './workers.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
+import { Types } from 'mongoose';
 
 describe('WorkersController', () => {
   let controller: WorkersController;
@@ -42,14 +43,14 @@ describe('WorkersController', () => {
       },
       personalInformation: {
         socialSecurityNumber: '123456789',
-        fileId: '507f1f77bcf86cd799439011',
+        fileId: new Types.ObjectId('507f1f77bcf86cd799439011'),
       },
       emergencyContact: {
         name: 'Juan Diaz',
         phone: '3003421965',
         phoneCountryCode: '57',
       },
-      fileId: '507f1f77bcf86cd799439011',
+      fileId: new Types.ObjectId('507f1f77bcf86cd799439011'),
     };
 
     expect(await controller.create(dto)).toEqual({

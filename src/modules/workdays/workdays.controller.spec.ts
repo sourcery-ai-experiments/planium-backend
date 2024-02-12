@@ -52,7 +52,7 @@ describe('WorkdaysController', () => {
       fileId: new Types.ObjectId(),
     };
     const workerId = '507f1f77bcf86cd799439011';
-    const companyId = '507f1f77bcf86cd799439011';
+    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
 
     expect(
       await controller.create(dto, { user: { sub: workerId } }, companyId),
@@ -65,7 +65,7 @@ describe('WorkdaysController', () => {
 
   it('should end a workday', async () => {
     const workerId = new Types.ObjectId();
-    const companyId = '507f1f77bcf86cd799439011';
+    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
 
     expect(await controller.endWorkday(workerId, companyId)).toEqual({
       message: 'La jornada ya ha sido finalizada',

@@ -58,7 +58,7 @@ describe('CompaniesController', () => {
   });
 
   it('should add a worker', async () => {
-    const companyId = '507f1f77bcf86cd799439011';
+    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
     const worker = {
       salary: '12',
       workerId: new Types.ObjectId(),
@@ -72,7 +72,7 @@ describe('CompaniesController', () => {
   });
 
   it('should remove a worker', async () => {
-    const companyId = '507f1f77bcf86cd799439011';
+    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
     const worker = {
       salary: '12',
       workerId: new Types.ObjectId(),
@@ -86,7 +86,7 @@ describe('CompaniesController', () => {
   });
 
   it('should update a worker', async () => {
-    const companyId = '507f1f77bcf86cd799439011';
+    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
     const worker = {
       salary: '12',
       workerId: new Types.ObjectId(),

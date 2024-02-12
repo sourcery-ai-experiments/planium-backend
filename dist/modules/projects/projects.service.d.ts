@@ -25,7 +25,7 @@
 import { Model, Types } from 'mongoose';
 import { ProjectDocument } from '@schema/Project';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { CompaniesService } from '../companies/companies.service';
+import { CompaniesService } from '@module/companies/companies.service';
 export declare class ProjectsService {
     private readonly projectModel;
     private readonly companiesService;

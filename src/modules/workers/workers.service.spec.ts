@@ -4,6 +4,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Worker } from '@/schemas/Worker';
 import { UsersService } from '@module/users/users.service';
 import { WorkersService } from './workers.service';
+import { Types } from 'mongoose';
 
 describe('WorkersService', () => {
   let service: WorkersService;
@@ -81,7 +82,7 @@ describe('WorkersService', () => {
       },
       personalInformation: {
         socialSecurityNumber: '123456789',
-        fileId: '707f1f77bcf86cd799439011',
+        fileId: new Types.ObjectId('507f1f77bcf86cd799439011'),
       },
       emergencyContact: {
         name: 'Juan Diaz',

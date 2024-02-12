@@ -4,7 +4,7 @@ import { REQUEST } from '@nestjs/core';
 import { Model, Types } from 'mongoose';
 import { Project, ProjectDocument } from '@schema/Project';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { CompaniesService } from '../companies/companies.service';
+import { CompaniesService } from '@module/companies/companies.service';
 
 @Injectable()
 export class ProjectsService {
