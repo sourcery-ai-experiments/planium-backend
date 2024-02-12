@@ -34,6 +34,14 @@ export class ProjectsService {
     }
   }
 
+  async findById(id: Types.ObjectId): Promise<Project> {
+    try {
+      return this.projectModel.findById(id).exec();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   async getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId) {
     const projects = await this.projectModel.aggregate([
       {

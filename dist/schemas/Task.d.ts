@@ -22,22 +22,29 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
-import { Project, ProjectDocument } from '@schema/Project';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { CompaniesService } from '@module/companies/companies.service';
-export declare class ProjectsService {
-    private readonly projectModel;
-    private readonly companiesService;
-    private readonly request;
-    constructor(projectModel: Model<ProjectDocument>, companiesService: CompaniesService, request: Record<string, unknown>);
-    create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    findById(id: Types.ObjectId): Promise<Project>;
-    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
-    addWorkers(projectId: Types.ObjectId, workers: string[], companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    verifyWorkers(workers: Types.ObjectId[], companyId: Types.ObjectId): Promise<void>;
+import { HydratedDocument, Types } from 'mongoose';
+export type TaskDocument = HydratedDocument<Task>;
+export declare class Task {
+    title: string;
+    description: string;
+    status: string;
+    type: string;
+    supervisor: string;
+    floor: string;
+    cost: Record<string, any>;
+    startDate: number;
+    endDate: number;
+    files: Types.ObjectId[];
+    workerId: Types.ObjectId;
+    projectId: Types.ObjectId;
+    companyId: Types.ObjectId;
+    createdAt: number;
+    createdBy: Types.ObjectId;
+    updatedAt: number;
+    updatedBy: Types.ObjectId;
 }
+export declare const TaskSchema: import("mongoose").Schema<Task, import("mongoose").Model<Task, any, any, any, import("mongoose").Document<unknown, any, Task> & Task & {
+    _id: Types.ObjectId;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Task, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Task>> & import("mongoose").FlatRecord<Task> & {
+    _id: Types.ObjectId;
+}>;

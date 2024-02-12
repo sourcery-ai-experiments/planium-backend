@@ -42,6 +42,14 @@ let ProjectsService = class ProjectsService {
             throw new Error(error);
         }
     }
+    async findById(id) {
+        try {
+            return this.projectModel.findById(id).exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
     async getByWorkerId(workerId, companyId) {
         const projects = await this.projectModel.aggregate([
             {

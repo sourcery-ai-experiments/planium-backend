@@ -22,22 +22,20 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
-import { Project, ProjectDocument } from '@schema/Project';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { CompaniesService } from '@module/companies/companies.service';
-export declare class ProjectsService {
-    private readonly projectModel;
-    private readonly companiesService;
-    private readonly request;
-    constructor(projectModel: Model<ProjectDocument>, companiesService: CompaniesService, request: Record<string, unknown>);
-    create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    findById(id: Types.ObjectId): Promise<Project>;
-    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
-    addWorkers(projectId: Types.ObjectId, workers: string[], companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    verifyWorkers(workers: Types.ObjectId[], companyId: Types.ObjectId): Promise<void>;
+import { Types } from 'mongoose';
+declare class Cost {
+    amount: string;
+    isPaid: string;
 }
+export declare class CreateTaskDto {
+    title: string;
+    description: string;
+    supervisor: string;
+    floor: string;
+    cost: Cost;
+    startDate: number;
+    endDate: number;
+    workerId: Types.ObjectId;
+    projectId: Types.ObjectId;
+}
+export {};
