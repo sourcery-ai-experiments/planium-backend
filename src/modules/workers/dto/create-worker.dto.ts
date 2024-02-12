@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { Types } from 'mongoose';
 
 class Phone {
   @ApiProperty()
@@ -26,7 +27,7 @@ class PersonalInformation {
   @ApiPropertyOptional()
   @IsOptional()
   @IsMongoId()
-  fileId: string;
+  fileId: Types.ObjectId;
 }
 
 class EmergencyContact {

@@ -15,7 +15,7 @@ export class RolesService {
 
   async create(createRoleDto: CreateRoleDto) {
     try {
-      const userId = new Types.ObjectId(this.request.user['sub']);
+      const userId = new Types.ObjectId(this.request.user['userId']);
 
       const data = {
         ...createRoleDto,

@@ -21,6 +21,8 @@ const files_module_1 = require("./modules/files/files.module");
 const companies_module_1 = require("./modules/companies/companies.module");
 const company_users_module_1 = require("./modules/company_users/company_users.module");
 const roles_module_1 = require("./modules/roles/roles.module");
+const workdays_module_1 = require("./modules/workdays/workdays.module");
+const projects_module_1 = require("./modules/projects/projects.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -49,6 +51,8 @@ exports.AppModule = AppModule = __decorate([
             companies_module_1.CompaniesModule,
             company_users_module_1.CompanyUsersModule,
             roles_module_1.RolesModule,
+            workdays_module_1.WorkdaysModule,
+            projects_module_1.ProjectsModule,
         ],
         controllers: [],
         providers: [],

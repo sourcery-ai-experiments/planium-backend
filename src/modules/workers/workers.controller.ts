@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { WorkersService } from './workers.service';
+import { Types } from 'mongoose';
 import { Public } from '@/decorators/auth/auth.decorator';
+import { WorkersService } from './workers.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
@@ -19,6 +20,9 @@ export class WorkersController {
   async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     const { userId, password } = changePasswordDto;
 
-    return this.workersService.changePassword(userId, password);
+    return this.workersService.changePassword(
+      new Types.ObjectId(userId),
+      password,
+    );
   }
 }

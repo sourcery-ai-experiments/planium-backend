@@ -44,21 +44,21 @@ export declare class CompaniesService {
     findAllByWorkerId(workerId: Types.ObjectId): Promise<{
         data: any[];
     }>;
-    addWorker(companyId: string, worker: Worker): Promise<{
-        message: string;
-    }>;
-    removeWorker(companyId: string, workerId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    updateWorker(companyId: string, worker: Worker): Promise<{
-        message: string;
-    }>;
-    findCompany(companyId: string): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
+    findCompanyById(companyId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
         _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, Company> & Company & {
         _id: Types.ObjectId;
     } & Required<{
         _id: Types.ObjectId;
     }>>;
+    addWorker(companyId: Types.ObjectId, worker: Worker): Promise<{
+        message: string;
+    }>;
+    removeWorker(companyId: Types.ObjectId, workerId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    updateWorker(companyId: Types.ObjectId, worker: Worker): Promise<{
+        message: string;
+    }>;
     verifyExistsWorker(workerId: string): Promise<void>;
 }

@@ -8,11 +8,14 @@ import {
 } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RolesService } from './roles.service';
+import { UserTypes } from '@/decorators/auth/user-type.decorator';
+import { UserType } from '@/types/User';
 
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
+  @UserTypes(UserType.COMPANY_USER)
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {

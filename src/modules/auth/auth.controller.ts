@@ -7,7 +7,8 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { CompanyId } from '@/decorators/auth/company-id.decorator';
+import { Types } from 'mongoose';
+import { CompanyId } from '@/decorators/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { AuthService } from './auth.service';
 import {
@@ -30,18 +31,23 @@ export class AuthController {
   }
 
   @Get('validate')
-  validateUser(@Request() req) {
-    const userId = req.user.sub;
+  validateUser(@Request() req: any) {
+    const userId = req.user.userId;
 
     return this.authService.validateSession(userId);
   }
 
   @Get('refresh')
-  refreshToken(@CompanyId() companyId: string, @Request() req) {
-    const userId = req.user.sub;
+  refreshToken(@CompanyId() companyId: Types.ObjectId, @Request() req: any) {
+    // En el sub se encuentra el id del worker o company user
+    const subId = req.user.sub;
+    const userId = req.user.userId;
+    const type = req.user.type;
     const payload = {
-      sub: userId,
+      sub: subId,
+      userId,
       companyId,
+      type,
     };
 
     return this.authService.refreshToken(payload);

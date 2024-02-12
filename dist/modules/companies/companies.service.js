@@ -57,8 +57,15 @@ let CompaniesService = class CompaniesService {
             throw new Error(error);
         }
     }
+    async findCompanyById(companyId) {
+        const company = await this.companyModel.findById(companyId);
+        if (!company) {
+            throw new common_1.NotFoundException('Empresa no encontrada');
+        }
+        return company;
+    }
     async addWorker(companyId, worker) {
-        const company = await this.findCompany(companyId);
+        const company = await this.findCompanyById(companyId);
         await this.verifyExistsWorker(worker.workerId.toString());
         if (company.workers.some((w) => w.workerId.equals(worker.workerId))) {
             throw new common_1.NotFoundException('El operario ya existe');
@@ -70,7 +77,7 @@ let CompaniesService = class CompaniesService {
         };
     }
     async removeWorker(companyId, workerId) {
-        const company = await this.findCompany(companyId);
+        const company = await this.findCompanyById(companyId);
         await this.verifyExistsWorker(workerId.toString());
         const workerIndex = company.workers.findIndex((worker) => worker.workerId.equals(workerId));
         if (workerIndex === -1) {
@@ -83,7 +90,7 @@ let CompaniesService = class CompaniesService {
         };
     }
     async updateWorker(companyId, worker) {
-        const company = await this.findCompany(companyId);
+        const company = await this.findCompanyById(companyId);
         await this.verifyExistsWorker(worker.workerId.toString());
         const workerIndex = company.workers.findIndex((w) => w.workerId.equals(worker.workerId));
         if (workerIndex === -1) {
@@ -94,13 +101,6 @@ let CompaniesService = class CompaniesService {
         return {
             message: 'Operario actualizado correctamente',
         };
-    }
-    async findCompany(companyId) {
-        const company = await this.companyModel.findById(companyId);
-        if (!company) {
-            throw new common_1.NotFoundException('Empresa no encontrada');
-        }
-        return company;
     }
     async verifyExistsWorker(workerId) {
         const worker = await this.workersService.findById(workerId);

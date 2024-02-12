@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,7 +43,7 @@ export class UsersService {
     };
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: Types.ObjectId, updateUserDto: UpdateUserDto) {
     const user = await this.findById(id);
 
     if (!user) {
@@ -63,7 +63,7 @@ export class UsersService {
     };
   }
 
-  async findById(id: string): Promise<UserDocument> {
+  async findById(id: Types.ObjectId): Promise<UserDocument> {
     try {
       return this.userModel.findById(id).exec();
     } catch (error) {
@@ -96,7 +96,7 @@ export class UsersService {
     }
   }
 
-  async changePassword(userId: string, password: string) {
+  async changePassword(userId: Types.ObjectId, password: string) {
     const hashedPassword = await this.hashPassword(password);
 
     await this.userModel.findByIdAndUpdate(userId, {

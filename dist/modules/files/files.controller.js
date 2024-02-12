@@ -15,8 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FilesController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
+const mongoose_1 = require("mongoose");
 const files_service_1 = require("./files.service");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const File_1 = require("../../types/File");
 let FilesController = class FilesController {
     constructor(filesService) {
@@ -37,7 +38,7 @@ __decorate([
         validators: [new common_1.MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
     }))),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [String, mongoose_1.Types.ObjectId, Object]),
     __metadata("design:returntype", void 0)
 ], FilesController.prototype, "uploadOneFile", null);
 exports.FilesController = FilesController = __decorate([

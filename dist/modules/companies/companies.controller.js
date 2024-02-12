@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompaniesController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
+const User_1 = require("../../types/User");
 const mongo_id_pipe_1 = require("../../pipes/mongo-id.pipe");
 const companies_service_1 = require("./companies.service");
 const worker_dto_1 = require("./dto/worker.dto");
@@ -49,26 +51,29 @@ __decorate([
 ], CompaniesController.prototype, "findAllByWorkerId", null);
 __decorate([
     (0, common_1.Patch)('workers/add'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, String]),
+    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], CompaniesController.prototype, "addWorker", null);
 __decorate([
     (0, common_1.Patch)('workers/remove'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.RemoveWorkerDto, String]),
+    __metadata("design:paramtypes", [worker_dto_1.RemoveWorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], CompaniesController.prototype, "removeWorker", null);
 __decorate([
     (0, common_1.Patch)('workers/update'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, String]),
+    __metadata("design:paramtypes", [worker_dto_1.WorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], CompaniesController.prototype, "updateWorker", null);
 exports.CompaniesController = CompaniesController = __decorate([

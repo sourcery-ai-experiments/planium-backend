@@ -8,7 +8,7 @@ export class Worker {
   @Prop(
     raw({
       socialSecurityNumber: { type: String },
-      fileId: { type: String },
+      fileId: { type: Types.ObjectId },
     }),
   )
   personalInformation: Record<string, any>;
@@ -17,7 +17,7 @@ export class Worker {
     raw({
       name: { type: String },
       phone: { type: String },
-      phoneCode: { type: String },
+      phoneCountryCode: { type: String },
     }),
   )
   emergencyContact: Record<string, any>;

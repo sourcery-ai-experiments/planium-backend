@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileSchema = exports.File = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const methods_1 = require("./methods");
 let File = class File {
 };
 exports.File = File;
@@ -40,8 +39,4 @@ exports.File = File = __decorate([
     (0, mongoose_1.Schema)({ versionKey: false })
 ], File);
 exports.FileSchema = mongoose_1.SchemaFactory.createForClass(File);
-exports.FileSchema.methods.getUrl = function () {
-    return this.url;
-};
-exports.FileSchema.statics.findByCompany = methods_1.findByCompany;
 //# sourceMappingURL=File.js.map

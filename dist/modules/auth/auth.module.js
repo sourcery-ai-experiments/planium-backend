@@ -12,10 +12,12 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const auth_guard_1 = require("../../guards/auth/auth.guard");
+const user_type_guard_1 = require("../../guards/auth/user-type.guard");
 const users_module_1 = require("../users/users.module");
 const otps_module_1 = require("../otps/otps.module");
 const aws_module_1 = require("../aws/aws.module");
 const company_users_module_1 = require("../company_users/company_users.module");
+const workers_module_1 = require("../workers/workers.module");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 let AuthModule = class AuthModule {
@@ -28,6 +30,7 @@ exports.AuthModule = AuthModule = __decorate([
             otps_module_1.OtpsModule,
             aws_module_1.AwsModule,
             company_users_module_1.CompanyUsersModule,
+            workers_module_1.WorkersModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 useFactory: async (configService) => ({
@@ -39,7 +42,11 @@ exports.AuthModule = AuthModule = __decorate([
                 inject: [config_1.ConfigService],
             }),
         ],
-        providers: [{ provide: core_1.APP_GUARD, useClass: auth_guard_1.AuthGuard }, auth_service_1.AuthService],
+        providers: [
+            auth_service_1.AuthService,
+            { provide: core_1.APP_GUARD, useClass: auth_guard_1.AuthGuard },
+            { provide: core_1.APP_GUARD, useClass: user_type_guard_1.UserTypeGuard },
+        ],
         controllers: [auth_controller_1.AuthController],
     })
 ], AuthModule);

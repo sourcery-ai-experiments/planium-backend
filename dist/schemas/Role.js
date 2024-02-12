@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleSchema = exports.Role = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const methods_1 = require("./methods");
 let Role = class Role {
 };
 exports.Role = Role;
@@ -40,5 +39,4 @@ exports.Role = Role = __decorate([
     (0, mongoose_1.Schema)({ versionKey: false })
 ], Role);
 exports.RoleSchema = mongoose_1.SchemaFactory.createForClass(Role);
-exports.RoleSchema.statics.findByCompany = methods_1.findByCompany;
 //# sourceMappingURL=Role.js.map

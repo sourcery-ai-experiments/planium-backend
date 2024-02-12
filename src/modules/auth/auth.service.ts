@@ -6,7 +6,8 @@ import { UsersService } from '../users/users.service';
 import { OtpsService } from '../otps/otps.service';
 import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
-import { CompanyUsersService } from '../company_users/company_users.service';
+import { CompanyUsersService } from '@module/company_users/company_users.service';
+import { WorkersService } from '@/modules/workers/workers.service';
 import { UserType } from '@/types/User';
 import { UserDocument } from '@/schemas/User';
 
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly sesService: SesService,
     private readonly snsService: SnsService,
     private readonly companyUserService: CompanyUsersService,
+    private readonly workerService: WorkersService,
   ) {}
 
   async signIn(email: string, password: string) {
@@ -50,7 +52,7 @@ export class AuthService {
     return bcrypt.compare(password, storedPasswordHash);
   }
 
-  async validateSession(userId: string) {
+  async validateSession(userId: Types.ObjectId) {
     const user = await this.userService.findById(userId);
 
     if (!user) {
@@ -151,14 +153,25 @@ export class AuthService {
       }
 
       payload = {
-        sub: user._id,
+        sub: companyUser._id,
         companyId: companyUser.companyId,
       };
     } else {
+      const worker = await this.workerService.findOne({ userId: user._id });
+
+      if (!worker) {
+        throw new UnauthorizedException(
+          'Usuario no tiene un operario asignado',
+        );
+      }
+
       payload = {
-        sub: user._id,
+        sub: worker._id,
       };
     }
+
+    payload['userId'] = user._id;
+    payload['type'] = user.type;
 
     return payload;
   }

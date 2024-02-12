@@ -14,7 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const company_id_decorator_1 = require("../../decorators/auth/company-id.decorator");
+const mongoose_1 = require("mongoose");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 const auth_service_1 = require("./auth.service");
 const dto_1 = require("./dto");
@@ -27,14 +28,18 @@ let AuthController = class AuthController {
         return this.authService.signIn(email, password);
     }
     validateUser(req) {
-        const userId = req.user.sub;
+        const userId = req.user.userId;
         return this.authService.validateSession(userId);
     }
     refreshToken(companyId, req) {
-        const userId = req.user.sub;
+        const subId = req.user.sub;
+        const userId = req.user.userId;
+        const type = req.user.type;
         const payload = {
-            sub: userId,
+            sub: subId,
+            userId,
             companyId,
+            type,
         };
         return this.authService.refreshToken(payload);
     }
@@ -73,7 +78,7 @@ __decorate([
     __param(0, (0, company_id_decorator_1.CompanyId)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refreshToken", null);
 __decorate([
