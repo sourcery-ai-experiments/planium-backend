@@ -54,6 +54,49 @@ export class TasksService {
     }
   }
 
+  async getById(taskId: Types.ObjectId, companyId: Types.ObjectId) {
+    const task = await this.taskModel.aggregate([
+      {
+        $match: {
+          _id: taskId,
+          companyId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'files',
+          foreignField: '_id',
+          as: 'files',
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          status: 1,
+          type: 1,
+          supervisor: 1,
+          floor: 1,
+          cost: 1,
+          startDate: 1,
+          endDate: 1,
+          files: {
+            _id: 1,
+            url: 1,
+          },
+        },
+      },
+    ]);
+
+    if (!task) {
+      throw new NotFoundException('La tarea no existe');
+    }
+
+    return task;
+  }
+
   async taskReview(
     files: string[],
     taskId: Types.ObjectId,

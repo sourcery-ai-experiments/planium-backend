@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -25,6 +26,14 @@ export class TasksController {
     @CompanyId() companyId: Types.ObjectId,
   ) {
     return await this.tasksService.create(createTaskDto, companyId);
+  }
+
+  @Get(':id')
+  async getTaskById(
+    @Param('id', ParseMongoIdPipe) taskId: Types.ObjectId,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    return await this.tasksService.getById(taskId, companyId);
   }
 
   @Patch('review/:id')

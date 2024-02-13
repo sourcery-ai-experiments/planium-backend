@@ -52,6 +52,46 @@ let TasksService = class TasksService {
             throw new Error(error);
         }
     }
+    async getById(taskId, companyId) {
+        const task = await this.taskModel.aggregate([
+            {
+                $match: {
+                    _id: taskId,
+                    companyId,
+                },
+            },
+            {
+                $lookup: {
+                    from: 'files',
+                    localField: 'files',
+                    foreignField: '_id',
+                    as: 'files',
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    description: 1,
+                    status: 1,
+                    type: 1,
+                    supervisor: 1,
+                    floor: 1,
+                    cost: 1,
+                    startDate: 1,
+                    endDate: 1,
+                    files: {
+                        _id: 1,
+                        url: 1,
+                    },
+                },
+            },
+        ]);
+        if (!task) {
+            throw new common_1.NotFoundException('La tarea no existe');
+        }
+        return task;
+    }
     async taskReview(files, taskId, companyId) {
         const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
         const task = await this.taskModel.findOne({

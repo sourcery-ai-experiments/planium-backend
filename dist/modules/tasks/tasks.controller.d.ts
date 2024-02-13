@@ -32,6 +32,7 @@ export declare class TasksController {
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
+    getTaskById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     taskReview(taskReviewDto: TaskReviewDto, taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
