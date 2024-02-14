@@ -25,7 +25,7 @@ __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBoolean)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Boolean)
 ], Cost.prototype, "isPaid", void 0);
 class CreateTaskDto {
 }

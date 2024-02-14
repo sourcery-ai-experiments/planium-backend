@@ -25,17 +25,17 @@
 import { Types } from 'mongoose';
 declare class Cost {
     amount: string;
-    isPaid: string;
+    isPaid: boolean;
 }
 export declare class CreateTaskDto {
     title: string;
     description: string;
     supervisor: string;
     floor: string;
-    cost: Cost;
+    cost?: Cost;
     startDate: number;
     endDate: number;
-    workerId: Types.ObjectId;
+    workerId?: Types.ObjectId;
     projectId: Types.ObjectId;
 }
 export {};

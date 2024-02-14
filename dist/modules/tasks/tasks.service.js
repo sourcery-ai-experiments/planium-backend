@@ -52,6 +52,24 @@ let TasksService = class TasksService {
             throw new Error(error);
         }
     }
+    async getAll(companyId) {
+        const tasks = await this.taskModel.aggregate([
+            {
+                $match: {
+                    companyId,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    description: 1,
+                    status: 1,
+                },
+            },
+        ]);
+        return tasks;
+    }
     async getById(taskId, companyId) {
         const task = await this.taskModel.aggregate([
             {

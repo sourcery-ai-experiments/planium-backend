@@ -54,6 +54,27 @@ export class TasksService {
     }
   }
 
+  async getAll(companyId: Types.ObjectId) {
+    const tasks = await this.taskModel.aggregate([
+      {
+        $match: {
+          companyId,
+        },
+      },
+
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          status: 1,
+        },
+      },
+    ]);
+
+    return tasks;
+  }
+
   async getById(taskId: Types.ObjectId, companyId: Types.ObjectId) {
     const task = await this.taskModel.aggregate([
       {

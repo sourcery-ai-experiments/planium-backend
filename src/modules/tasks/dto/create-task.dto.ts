@@ -18,7 +18,7 @@ class Cost {
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
-  isPaid: string;
+  isPaid: boolean;
 }
 
 export class CreateTaskDto {
@@ -42,7 +42,7 @@ export class CreateTaskDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => Cost)
-  cost: Cost;
+  cost?: Cost;
 
   @ApiProperty()
   @IsNumber()
@@ -55,7 +55,7 @@ export class CreateTaskDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsMongoId()
-  workerId: Types.ObjectId;
+  workerId?: Types.ObjectId;
 
   @ApiProperty()
   @IsMongoId()
