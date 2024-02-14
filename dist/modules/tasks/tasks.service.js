@@ -29,10 +29,7 @@ let TasksService = class TasksService {
     async create(createTaskDto, companyId) {
         const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
         createTaskDto.projectId = new mongoose_2.Types.ObjectId(createTaskDto.projectId);
-        const existProject = await this.projectsService.findById(createTaskDto.projectId);
-        if (!existProject) {
-            throw new common_1.NotFoundException('El id del proyecto no existe');
-        }
+        await this.verifyExistProject(createTaskDto.projectId);
         if (createTaskDto?.workerId) {
             createTaskDto.workerId = new mongoose_2.Types.ObjectId(createTaskDto.workerId);
         }
@@ -52,12 +49,19 @@ let TasksService = class TasksService {
             throw new Error(error);
         }
     }
-    async getAll(companyId) {
+    async getAll(companyId, projectId, status, type) {
+        const query = {
+            companyId,
+            projectId,
+        };
+        if (status)
+            query['status'] = status;
+        if (type)
+            query['type'] = type;
+        await this.verifyExistProject(projectId);
         const tasks = await this.taskModel.aggregate([
             {
-                $match: {
-                    companyId,
-                },
+                $match: query,
             },
             {
                 $project: {
@@ -65,6 +69,7 @@ let TasksService = class TasksService {
                     title: 1,
                     description: 1,
                     status: 1,
+                    type: 1,
                 },
             },
         ]);
@@ -134,6 +139,12 @@ let TasksService = class TasksService {
         return {
             message: 'Tarea enviada para revisión.',
         };
+    }
+    async verifyExistProject(projectId) {
+        const existProject = await this.projectsService.findById(projectId);
+        if (!existProject) {
+            throw new common_1.NotFoundException('El id del proyecto no existe');
+        }
     }
 };
 exports.TasksService = TasksService;

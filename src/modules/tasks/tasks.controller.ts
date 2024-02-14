@@ -5,8 +5,10 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseEnumPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { CompanyId } from '@/decorators/company-id.decorator';
@@ -14,6 +16,7 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 import { TaskReviewDto } from './dto/task-review.dto';
+import { TaskStatus, TaskType } from '@/types/Task';
 
 @Controller('tasks')
 export class TasksController {
@@ -26,6 +29,18 @@ export class TasksController {
     @CompanyId() companyId: Types.ObjectId,
   ) {
     return await this.tasksService.create(createTaskDto, companyId);
+  }
+
+  @Get()
+  async getAll(
+    @Query('projectId', ParseMongoIdPipe) projectId: Types.ObjectId,
+    @Query('status', new ParseEnumPipe(TaskStatus, { optional: true }))
+    status: TaskStatus,
+    @Query('type', new ParseEnumPipe(TaskType, { optional: true }))
+    type: TaskType,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    return await this.tasksService.getAll(companyId, projectId, status, type);
   }
 
   @Get(':id')

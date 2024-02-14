@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { WorkersService } from './workers.service';
@@ -16,7 +16,7 @@ export class WorkersController {
   }
 
   @Public()
-  @Post('change-password')
+  @Patch('change-password')
   async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     const { userId, password } = changePasswordDto;
 

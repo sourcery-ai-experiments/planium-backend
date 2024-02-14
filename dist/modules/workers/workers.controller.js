@@ -42,7 +42,7 @@ __decorate([
 ], WorkersController.prototype, "create", null);
 __decorate([
     (0, auth_decorator_1.Public)(),
-    (0, common_1.Post)('change-password'),
+    (0, common_1.Patch)('change-password'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [change_password_dto_1.ChangePasswordDto]),

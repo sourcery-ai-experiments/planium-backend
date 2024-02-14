@@ -10,7 +10,7 @@ import { Model, Types } from 'mongoose';
 import { Task, TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
-import { TaskStatus } from '@/types/Task';
+import { TaskStatus, TaskType } from '@/types/Task';
 
 @Injectable()
 export class TasksService {
@@ -25,13 +25,7 @@ export class TasksService {
     const userId = new Types.ObjectId(this.request.user['userId']);
     createTaskDto.projectId = new Types.ObjectId(createTaskDto.projectId);
 
-    const existProject = await this.projectsService.findById(
-      createTaskDto.projectId,
-    );
-
-    if (!existProject) {
-      throw new NotFoundException('El id del proyecto no existe');
-    }
+    await this.verifyExistProject(createTaskDto.projectId);
 
     if (createTaskDto?.workerId) {
       createTaskDto.workerId = new Types.ObjectId(createTaskDto.workerId);
@@ -54,12 +48,25 @@ export class TasksService {
     }
   }
 
-  async getAll(companyId: Types.ObjectId) {
+  async getAll(
+    companyId: Types.ObjectId,
+    projectId: Types.ObjectId,
+    status: TaskStatus,
+    type: TaskType,
+  ) {
+    const query = {
+      companyId,
+      projectId,
+    };
+
+    if (status) query['status'] = status;
+    if (type) query['type'] = type;
+
+    await this.verifyExistProject(projectId);
+
     const tasks = await this.taskModel.aggregate([
       {
-        $match: {
-          companyId,
-        },
+        $match: query,
       },
 
       {
@@ -68,6 +75,7 @@ export class TasksService {
           title: 1,
           description: 1,
           status: 1,
+          type: 1,
         },
       },
     ]);
@@ -152,5 +160,13 @@ export class TasksService {
     return {
       message: 'Tarea enviada para revisión.',
     };
+  }
+
+  private async verifyExistProject(projectId: Types.ObjectId) {
+    const existProject = await this.projectsService.findById(projectId);
+
+    if (!existProject) {
+      throw new NotFoundException('El id del proyecto no existe');
+    }
   }
 }

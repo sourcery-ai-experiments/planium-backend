@@ -26,12 +26,14 @@ import { Types } from 'mongoose';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskReviewDto } from './dto/task-review.dto';
+import { TaskStatus, TaskType } from '@/types/Task';
 export declare class TasksController {
     private readonly tasksService;
     constructor(tasksService: TasksService);
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
+    getAll(projectId: Types.ObjectId, status: TaskStatus, type: TaskType, companyId: Types.ObjectId): Promise<any[]>;
     getTaskById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     taskReview(taskReviewDto: TaskReviewDto, taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;

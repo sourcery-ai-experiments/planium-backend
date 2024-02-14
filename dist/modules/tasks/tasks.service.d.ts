@@ -26,6 +26,7 @@ import { Model, Types } from 'mongoose';
 import { TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
+import { TaskStatus, TaskType } from '@/types/Task';
 export declare class TasksService {
     private readonly taskModel;
     private readonly request;
@@ -34,9 +35,10 @@ export declare class TasksService {
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    getAll(companyId: Types.ObjectId): Promise<any[]>;
+    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<any[]>;
     getById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     taskReview(files: string[], taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
+    private verifyExistProject;
 }
