@@ -52,7 +52,7 @@ export declare class AuthService {
         data: {
             name: string;
             email: string;
-            nationality: string;
+            countryId: string;
             phone: Record<string, any>;
             fileId: Types.ObjectId;
             type: string;

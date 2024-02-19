@@ -32,7 +32,7 @@ export class CreateCompanyUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  nationality: string;
+  countryId: string;
 
   @ApiProperty()
   @IsNotEmpty()

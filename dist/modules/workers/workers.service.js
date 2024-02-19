@@ -30,7 +30,7 @@ let WorkersService = class WorkersService {
             email: worker.email,
             password: worker.password,
             phone: worker.phone,
-            nationality: worker.nationality,
+            countryId: worker.countryId,
             type: User_1.UserType.WORKER,
         };
         if (worker?.personalInformation?.fileId) {

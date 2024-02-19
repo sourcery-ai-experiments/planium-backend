@@ -28,7 +28,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  nationality: string;
+  countryId: string;
 
   @ApiProperty()
   @IsNotEmpty()

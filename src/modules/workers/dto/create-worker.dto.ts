@@ -60,7 +60,7 @@ export class CreateWorkerDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  nationality: string;
+  countryId: string;
 
   @ApiProperty()
   @IsNotEmpty()

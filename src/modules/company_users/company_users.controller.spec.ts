@@ -36,7 +36,7 @@ describe('CompanyUsersController', () => {
       name: 'Daniel Perez',
       email: 'company2@gmail.com',
       password: '12345678',
-      nationality: 'Colombiana',
+      countryId: 'Colombiana',
       phone: {
         number: '3209561247',
         countryCode: '57',

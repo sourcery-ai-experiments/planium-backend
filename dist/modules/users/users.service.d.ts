@@ -35,7 +35,7 @@ export declare class UsersService {
             _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -54,7 +54,7 @@ export declare class UsersService {
             }>>;
             name: string;
             email: string;
-            nationality: string;
+            countryId: string;
             phone: Record<string, any>;
             fileId: Types.ObjectId;
             type: string;
@@ -68,7 +68,7 @@ export declare class UsersService {
             _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -87,7 +87,7 @@ export declare class UsersService {
             }>>;
             name: string;
             email: string;
-            nationality: string;
+            countryId: string;
             phone: Record<string, any>;
             fileId: Types.ObjectId;
             type: string;

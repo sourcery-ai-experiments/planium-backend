@@ -36,7 +36,7 @@ describe('WorkersController', () => {
       name: 'Pepe Díaz',
       email: 'pepe@gmail.com',
       password: '12345678',
-      nationality: 'Colombiana',
+      countryId: 'Colombiana',
       phone: {
         number: '3003421965',
         countryCode: '57',

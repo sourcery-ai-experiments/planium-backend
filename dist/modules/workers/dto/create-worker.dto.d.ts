@@ -40,7 +40,7 @@ export declare class CreateWorkerDto {
     name: string;
     email: string;
     password: string;
-    nationality: string;
+    countryId: string;
     phone: Phone;
     personalInformation: PersonalInformation;
     emergencyContact: EmergencyContact;

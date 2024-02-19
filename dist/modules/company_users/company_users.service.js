@@ -32,7 +32,7 @@ let CompanyUsersService = class CompanyUsersService {
             email: companyUser.email,
             password: companyUser.password,
             phone: companyUser.phone,
-            nationality: companyUser.nationality,
+            countryId: companyUser.countryId,
             type: User_1.UserType.COMPANY_USER,
         };
         const user = await this.usersService.create(userBody);

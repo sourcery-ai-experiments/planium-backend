@@ -16,7 +16,7 @@ export class User {
   password: string;
 
   @Prop({ required: true })
-  nationality: string;
+  countryId: string;
 
   @Prop(
     raw({

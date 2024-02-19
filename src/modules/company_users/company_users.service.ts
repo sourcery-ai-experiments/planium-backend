@@ -22,7 +22,7 @@ export class CompanyUsersService {
       email: companyUser.email,
       password: companyUser.password,
       phone: companyUser.phone,
-      nationality: companyUser.nationality,
+      countryId: companyUser.countryId,
       type: UserType.COMPANY_USER,
     };
 

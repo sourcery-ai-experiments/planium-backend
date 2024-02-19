@@ -28,7 +28,7 @@ export declare class User {
     name: string;
     email: string;
     password: string;
-    nationality: string;
+    countryId: string;
     phone: Record<string, any>;
     fileId: Types.ObjectId;
     type: string;

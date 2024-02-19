@@ -20,7 +20,7 @@ export class WorkersService {
       email: worker.email,
       password: worker.password,
       phone: worker.phone,
-      nationality: worker.nationality,
+      countryId: worker.countryId,
       type: UserType.WORKER,
     };
 
