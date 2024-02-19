@@ -24,6 +24,7 @@ const roles_module_1 = require("./modules/roles/roles.module");
 const workdays_module_1 = require("./modules/workdays/workdays.module");
 const projects_module_1 = require("./modules/projects/projects.module");
 const tasks_module_1 = require("./modules/tasks/tasks.module");
+const countries_module_1 = require("./modules/countries/countries.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -55,6 +56,7 @@ exports.AppModule = AppModule = __decorate([
             workdays_module_1.WorkdaysModule,
             projects_module_1.ProjectsModule,
             tasks_module_1.TasksModule,
+            countries_module_1.CountriesModule,
         ],
         controllers: [],
         providers: [],
