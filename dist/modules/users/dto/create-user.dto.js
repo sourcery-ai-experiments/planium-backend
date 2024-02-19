@@ -13,6 +13,8 @@ exports.CreateUserDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
+const User_1 = require("../../../types/User");
+const mongoose_1 = require("mongoose");
 class Phone {
 }
 __decorate([
@@ -45,8 +47,8 @@ __decorate([
 ], CreateUserDto.prototype, "password", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
+    (0, class_validator_1.IsMongoId)(),
+    __metadata("design:type", mongoose_1.Types.ObjectId)
 ], CreateUserDto.prototype, "countryId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
@@ -55,4 +57,14 @@ __decorate([
     (0, class_transformer_1.Type)(() => Phone),
     __metadata("design:type", Phone)
 ], CreateUserDto.prototype, "phone", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsEnum)(User_1.UserType),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "type", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsMongoId)(),
+    __metadata("design:type", mongoose_1.Types.ObjectId)
+], CreateUserDto.prototype, "companyId", void 0);
 //# sourceMappingURL=create-user.dto.js.map

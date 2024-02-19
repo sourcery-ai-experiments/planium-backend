@@ -54,8 +54,9 @@ export declare class AuthService {
             email: string;
             countryId: string;
             phone: Record<string, any>;
-            fileId: Types.ObjectId;
             type: string;
+            fileId: Types.ObjectId;
+            companyId: Types.ObjectId;
             _id: Types.ObjectId;
         };
     }>;

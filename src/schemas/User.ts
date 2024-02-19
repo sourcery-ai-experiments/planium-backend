@@ -26,11 +26,14 @@ export class User {
   )
   phone: Record<string, any>;
 
+  @Prop({ required: true, enum: UserType })
+  type: string;
+
   @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
 
-  @Prop({ required: true, enum: UserType })
-  type: string;
+  @Prop({ required: true, type: Types.ObjectId })
+  companyId: Types.ObjectId;
 
   @Prop({ default: new Date() })
   createdAt!: number;

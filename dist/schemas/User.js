@@ -40,13 +40,17 @@ __decorate([
     __metadata("design:type", Object)
 ], User.prototype, "phone", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: true, enum: User_1.UserType }),
+    __metadata("design:type", String)
+], User.prototype, "type", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], User.prototype, "fileId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, enum: User_1.UserType }),
-    __metadata("design:type", String)
-], User.prototype, "type", void 0);
+    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], User.prototype, "companyId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: new Date() }),
     __metadata("design:type", Number)

@@ -24,14 +24,15 @@ let WorkersService = class WorkersService {
         this.workerModel = workerModel;
         this.userService = userService;
     }
-    async create(worker) {
+    async create(worker, companyId) {
         const userBody = {
             name: worker.name,
             email: worker.email,
             password: worker.password,
             phone: worker.phone,
-            countryId: worker.countryId,
+            countryId: new mongoose_2.Types.ObjectId(worker.countryId),
             type: User_1.UserType.WORKER,
+            companyId,
         };
         if (worker?.personalInformation?.fileId) {
             worker.personalInformation.fileId = new mongoose_2.Types.ObjectId(worker.personalInformation.fileId);
@@ -39,6 +40,7 @@ let WorkersService = class WorkersService {
         const workerBody = {
             personalInformation: worker?.personalInformation,
             emergencyContact: worker?.emergencyContact,
+            companyId,
         };
         const user = await this.userService.create(userBody);
         try {

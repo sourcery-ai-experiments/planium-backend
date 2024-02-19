@@ -30,7 +30,7 @@ export declare class WorkersService {
     private readonly workerModel;
     private readonly userService;
     constructor(workerModel: Model<WorkerDocument>, userService: UsersService);
-    create(worker: CreateWorkerDto): Promise<{
+    create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     changePassword(userId: Types.ObjectId, password: string): Promise<{

@@ -27,18 +27,19 @@ let CompanyUsersService = class CompanyUsersService {
         this.companiesService = companiesService;
     }
     async create(companyUser) {
+        const company = await this.companiesService.create({
+            name: companyUser.companyName,
+        });
         const userBody = {
             name: companyUser.name,
             email: companyUser.email,
             password: companyUser.password,
             phone: companyUser.phone,
-            countryId: companyUser.countryId,
+            countryId: new mongoose_2.Types.ObjectId(companyUser.countryId),
             type: User_1.UserType.COMPANY_USER,
+            companyId: company.data._id,
         };
         const user = await this.usersService.create(userBody);
-        const company = await this.companiesService.create({
-            name: companyUser.companyName,
-        });
         const companyUserBody = {
             roleId: new mongoose_2.Types.ObjectId(companyUser.roleId),
             companyId: company.data._id,

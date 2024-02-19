@@ -4,15 +4,18 @@ import { Public } from '@/decorators/auth/auth.decorator';
 import { WorkersService } from './workers.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CompanyId } from '@/decorators/company-id.decorator';
 
 @Controller('workers')
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
-  @Public()
   @Post()
-  async create(@Body() createWorkerDto: CreateWorkerDto) {
-    return this.workersService.create(createWorkerDto);
+  async create(
+    @Body() createWorkerDto: CreateWorkerDto,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    return this.workersService.create(createWorkerDto, companyId);
   }
 
   @Public()

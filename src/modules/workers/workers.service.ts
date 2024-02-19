@@ -14,14 +14,15 @@ export class WorkersService {
     private readonly userService: UsersService,
   ) {}
 
-  async create(worker: CreateWorkerDto) {
+  async create(worker: CreateWorkerDto, companyId: Types.ObjectId) {
     const userBody = {
       name: worker.name,
       email: worker.email,
       password: worker.password,
       phone: worker.phone,
-      countryId: worker.countryId,
+      countryId: new Types.ObjectId(worker.countryId),
       type: UserType.WORKER,
+      companyId,
     };
 
     if (worker?.personalInformation?.fileId) {
@@ -33,6 +34,7 @@ export class WorkersService {
     const workerBody = {
       personalInformation: worker?.personalInformation,
       emergencyContact: worker?.emergencyContact,
+      companyId,
     };
 
     const user = await this.userService.create(userBody);

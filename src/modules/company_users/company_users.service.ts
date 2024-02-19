@@ -16,21 +16,23 @@ export class CompanyUsersService {
     private readonly companiesService: CompaniesService,
   ) {}
 
+  // TODO: Persiste el error de crear primero el company y luego el usuario hay que implementar un rollback
   async create(companyUser: CreateCompanyUserDto) {
+    const company = await this.companiesService.create({
+      name: companyUser.companyName,
+    });
+
     const userBody = {
       name: companyUser.name,
       email: companyUser.email,
       password: companyUser.password,
       phone: companyUser.phone,
-      countryId: companyUser.countryId,
+      countryId: new Types.ObjectId(companyUser.countryId),
       type: UserType.COMPANY_USER,
+      companyId: company.data._id,
     };
 
     const user = await this.usersService.create(userBody);
-
-    const company = await this.companiesService.create({
-      name: companyUser.companyName,
-    });
 
     const companyUserBody = {
       roleId: new Types.ObjectId(companyUser.roleId),

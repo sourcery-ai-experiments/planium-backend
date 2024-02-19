@@ -19,12 +19,13 @@ const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 const workers_service_1 = require("./workers.service");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
 const change_password_dto_1 = require("./dto/change-password.dto");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 let WorkersController = class WorkersController {
     constructor(workersService) {
         this.workersService = workersService;
     }
-    async create(createWorkerDto) {
-        return this.workersService.create(createWorkerDto);
+    async create(createWorkerDto, companyId) {
+        return this.workersService.create(createWorkerDto, companyId);
     }
     async changePassword(changePasswordDto) {
         const { userId, password } = changePasswordDto;
@@ -33,11 +34,11 @@ let WorkersController = class WorkersController {
 };
 exports.WorkersController = WorkersController;
 __decorate([
-    (0, auth_decorator_1.Public)(),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_worker_dto_1.CreateWorkerDto]),
+    __metadata("design:paramtypes", [create_worker_dto_1.CreateWorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], WorkersController.prototype, "create", null);
 __decorate([
