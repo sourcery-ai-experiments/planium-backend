@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Model, Types, Connection } from 'mongoose';
 import { CompanyUser, CompanyUserDocument } from '@/schemas/CompanyUser';
 import { CreateCompanyUserDto } from './dto/create-company-user.dto';
 import { UserType } from '@/types/User';
@@ -14,13 +14,19 @@ export class CompanyUsersService {
     private readonly companyUserModel: Model<CompanyUserDocument>,
     private readonly usersService: UsersService,
     private readonly companiesService: CompaniesService,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  // TODO: Persiste el error de crear primero el company y luego el usuario hay que implementar un rollback
   async create(companyUser: CreateCompanyUserDto) {
-    const company = await this.companiesService.create({
-      name: companyUser.companyName,
-    });
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    const company = await this.companiesService.create(
+      {
+        name: companyUser.companyName,
+      },
+      session,
+    );
 
     const userBody = {
       name: companyUser.name,
@@ -32,7 +38,7 @@ export class CompanyUsersService {
       companyId: company.data._id,
     };
 
-    const user = await this.usersService.create(userBody);
+    const user = await this.usersService.create(userBody, session);
 
     const companyUserBody = {
       roleId: new Types.ObjectId(companyUser.roleId),
@@ -40,16 +46,26 @@ export class CompanyUsersService {
     };
 
     try {
-      await this.companyUserModel.create({
-        ...companyUserBody,
-        userId: user.data._id,
-      });
+      await this.companyUserModel.create(
+        [
+          {
+            ...companyUserBody,
+            userId: user.data._id,
+          },
+        ],
+        { session },
+      );
+
+      await session.commitTransaction();
 
       return {
         message: 'Usuario creado correctamente',
       };
     } catch (error) {
+      await session.abortTransaction();
       throw new Error(error);
+    } finally {
+      session.endSession();
     }
   }
 

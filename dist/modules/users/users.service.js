@@ -22,7 +22,7 @@ let UsersService = class UsersService {
     constructor(userModel) {
         this.userModel = userModel;
     }
-    async create(user) {
+    async create(user, session = null) {
         const existEmail = await this.verifyEmailExists(user.email);
         if (existEmail) {
             throw new common_1.BadRequestException('El correo electrónico ya existe');
@@ -35,8 +35,8 @@ let UsersService = class UsersService {
         }
         const hashedPassword = await this.hashPassword(user.password);
         user.password = hashedPassword;
-        const newUser = await this.userModel.create(user);
-        const { password, ...userData } = newUser.toObject();
+        const newUser = await this.userModel.create([user], { session });
+        const { password, ...userData } = newUser[0].toObject();
         return {
             message: 'Usuario creado correctamente',
             data: userData,

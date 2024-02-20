@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,7 +14,7 @@ export class UsersService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async create(user: CreateUserDto) {
+  async create(user: CreateUserDto, session: ClientSession | null = null) {
     const existEmail = await this.verifyEmailExists(user.email);
 
     if (existEmail) {
@@ -33,9 +33,9 @@ export class UsersService {
 
     user.password = hashedPassword;
 
-    const newUser = await this.userModel.create(user);
+    const newUser = await this.userModel.create([user], { session });
 
-    const { password, ...userData } = newUser.toObject();
+    const { password, ...userData } = newUser[0].toObject();
 
     return {
       message: 'Usuario creado correctamente',

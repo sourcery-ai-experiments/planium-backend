@@ -23,12 +23,14 @@ let CompaniesService = class CompaniesService {
         this.companyModel = companyModel;
         this.workersService = workersService;
     }
-    async create(company) {
+    async create(company, session = null) {
         try {
-            const newCompany = await this.companyModel.create(company);
+            const newCompany = await this.companyModel.create([company], {
+                session,
+            });
             return {
                 message: 'Empresa creada correctamente',
-                data: newCompany,
+                data: newCompany[0],
             };
         }
         catch (error) {

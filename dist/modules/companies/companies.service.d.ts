@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
 import { Worker } from '@/types/Company';
 import { WorkersService } from '@/modules/workers/workers.service';
@@ -31,7 +31,7 @@ export declare class CompaniesService {
     private readonly companyModel;
     private readonly workersService;
     constructor(companyModel: Model<CompanyDocument>, workersService: WorkersService);
-    create(company: CreateCompanyDto): Promise<{
+    create(company: CreateCompanyDto, session?: ClientSession | null): Promise<{
         message: string;
         data: import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
             _id: Types.ObjectId;

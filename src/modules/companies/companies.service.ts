@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
 import { Worker } from '@/types/Company';
 import { WorkersService } from '@/modules/workers/workers.service';
@@ -14,13 +14,18 @@ export class CompaniesService {
     private readonly workersService: WorkersService,
   ) {}
 
-  async create(company: CreateCompanyDto) {
+  async create(
+    company: CreateCompanyDto,
+    session: ClientSession | null = null,
+  ) {
     try {
-      const newCompany = await this.companyModel.create(company);
+      const newCompany = await this.companyModel.create([company], {
+        session,
+      });
 
       return {
         message: 'Empresa creada correctamente',
-        data: newCompany,
+        data: newCompany[0],
       };
     } catch (error) {
       throw new Error(error);
