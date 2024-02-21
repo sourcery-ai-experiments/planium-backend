@@ -23,27 +23,8 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
-declare class Phone {
-    number: string;
-    countryCode: string;
-}
-declare class PersonalInformation {
-    socialSecurityNumber: string;
-    fileId: Types.ObjectId;
-}
-declare class EmergencyContact {
-    name: string;
-    phone: string;
-    phoneCountryCode: string;
-}
 export declare class CreateWorkerDto {
     name: string;
     email: string;
-    password: string;
-    countryId: Types.ObjectId;
     projectId: Types.ObjectId;
-    phone: Phone;
-    personalInformation: PersonalInformation;
-    emergencyContact: EmergencyContact;
 }
-export {};

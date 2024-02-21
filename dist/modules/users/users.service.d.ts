@@ -105,13 +105,6 @@ export declare class UsersService {
     } & Required<{
         _id: Types.ObjectId;
     }>>;
-    verifyEmailExists(email: string): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    } & Required<{
-        _id: Types.ObjectId;
-    }>>;
     hashPassword(password: string): Promise<any>;
     changePassword(userId: Types.ObjectId, password: string): Promise<void>;
 }

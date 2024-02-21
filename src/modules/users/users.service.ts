@@ -15,18 +15,13 @@ export class UsersService {
   ) {}
 
   async create(user: CreateUserDto, session: ClientSession | null = null) {
-    const existEmail = await this.verifyEmailExists(user.email);
+    const existEmail = await this.userModel.findOne({
+      email: user.email,
+      companyId: user.companyId,
+    });
 
     if (existEmail) {
       throw new BadRequestException('El correo electrónico ya existe');
-    }
-
-    const existPhone = await this.findOne({
-      'phone.number': user.phone.number,
-    });
-
-    if (existPhone) {
-      throw new BadRequestException('El número de teléfono ya existe');
     }
 
     const hashedPassword = await this.hashPassword(user.password);
@@ -74,14 +69,6 @@ export class UsersService {
   async findOne(where: Record<string, string>) {
     try {
       return this.userModel.findOne(where).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
-  async verifyEmailExists(email: string) {
-    try {
-      return await this.findOne({ email });
     } catch (error) {
       throw new Error(error);
     }

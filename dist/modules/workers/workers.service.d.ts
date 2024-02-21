@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
 import { UsersService } from '@module/users/users.service';
 import { ProjectsService } from '../projects/projects.service';
@@ -31,11 +31,9 @@ export declare class WorkersService {
     private readonly workerModel;
     private readonly userService;
     private readonly projectsService;
-    constructor(workerModel: Model<WorkerDocument>, userService: UsersService, projectsService: ProjectsService);
+    private readonly connection;
+    constructor(workerModel: Model<WorkerDocument>, userService: UsersService, projectsService: ProjectsService, connection: Connection);
     create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    changePassword(userId: Types.ObjectId, password: string): Promise<{
         message: string;
     }>;
     findAll(): Promise<Worker[]>;
@@ -47,4 +45,8 @@ export declare class WorkersService {
     } & Required<{
         _id: Types.ObjectId;
     }>>;
+    changePassword(userId: Types.ObjectId, password: string): Promise<{
+        message: string;
+    }>;
+    private generateTemporalPassword;
 }

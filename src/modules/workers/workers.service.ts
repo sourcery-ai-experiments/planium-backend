@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
 import { UsersService } from '@module/users/users.service';
 import { ProjectsService } from '../projects/projects.service';
@@ -14,66 +14,57 @@ export class WorkersService {
     private readonly workerModel: Model<WorkerDocument>,
     private readonly userService: UsersService,
     private readonly projectsService: ProjectsService,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
   async create(worker: CreateWorkerDto, companyId: Types.ObjectId) {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
     const userBody = {
       name: worker.name,
       email: worker.email,
-      password: worker.password,
-      phone: worker.phone,
-      countryId: new Types.ObjectId(worker.countryId),
+      password: this.generateTemporalPassword(),
       type: UserType.WORKER,
       companyId,
     };
 
-    if (worker?.personalInformation?.fileId) {
-      worker.personalInformation.fileId = new Types.ObjectId(
-        worker.personalInformation.fileId,
-      );
-    }
-
     const workerBody = {
-      personalInformation: worker?.personalInformation,
-      emergencyContact: worker?.emergencyContact,
       companyId,
     };
-
-    const user = await this.userService.create(userBody);
-
-    const newWorker = await this.workerModel.create({
-      ...workerBody,
-      userId: user.data._id,
-    });
-
-    worker.projectId = new Types.ObjectId(worker.projectId);
-
-    await this.projectsService.addWorkers(
-      worker.projectId,
-      [newWorker._id.toString()],
-      companyId,
-    );
-
-    return {
-      message: 'Operario creado correctamente',
-    };
-  }
-
-  async changePassword(userId: Types.ObjectId, password: string) {
-    const user = await this.userService.findById(userId);
-
-    if (!user) {
-      throw new UnauthorizedException('El usuario no existe');
-    }
 
     try {
-      await this.userService.changePassword(userId, password);
+      const user = await this.userService.create(userBody, session);
+
+      const newWorker = await this.workerModel.create(
+        [
+          {
+            ...workerBody,
+            userId: user.data._id,
+          },
+        ],
+        { session },
+      );
+
+      worker.projectId = new Types.ObjectId(worker.projectId);
+
+      await this.projectsService.addWorkers(
+        worker.projectId,
+        [newWorker[0]._id.toString()],
+        companyId,
+        session,
+      );
+
+      await session.commitTransaction();
 
       return {
-        message: 'Contraseña actualizada correctamente',
+        message: 'Operario creado correctamente',
       };
     } catch (error) {
-      throw new Error(error);
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
   }
 
@@ -99,5 +90,27 @@ export class WorkersService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async changePassword(userId: Types.ObjectId, password: string) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('El usuario no existe');
+    }
+
+    try {
+      await this.userService.changePassword(userId, password);
+
+      return {
+        message: 'Contraseña actualizada correctamente',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  private generateTemporalPassword() {
+    return Math.random().toString(36).slice(-8);
   }
 }

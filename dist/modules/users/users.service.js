@@ -23,15 +23,12 @@ let UsersService = class UsersService {
         this.userModel = userModel;
     }
     async create(user, session = null) {
-        const existEmail = await this.verifyEmailExists(user.email);
+        const existEmail = await this.userModel.findOne({
+            email: user.email,
+            companyId: user.companyId,
+        });
         if (existEmail) {
             throw new common_1.BadRequestException('El correo electrónico ya existe');
-        }
-        const existPhone = await this.findOne({
-            'phone.number': user.phone.number,
-        });
-        if (existPhone) {
-            throw new common_1.BadRequestException('El número de teléfono ya existe');
         }
         const hashedPassword = await this.hashPassword(user.password);
         user.password = hashedPassword;
@@ -65,14 +62,6 @@ let UsersService = class UsersService {
     async findOne(where) {
         try {
             return this.userModel.findOne(where).exec();
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    }
-    async verifyEmailExists(email) {
-        try {
-            return await this.findOne({ email });
         }
         catch (error) {
             throw new Error(error);

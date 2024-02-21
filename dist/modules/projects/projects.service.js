@@ -64,11 +64,11 @@ let ProjectsService = class ProjectsService {
         ]);
         return projects;
     }
-    async addWorkers(projectId, workers, companyId) {
+    async addWorkers(projectId, workers, companyId, session = null) {
         const project = await this.projectModel.findOne({
             _id: projectId,
             companyId,
-        });
+        }, null, { session });
         if (!project) {
             throw new common_1.NotFoundException('El proyecto no existe');
         }

@@ -22,12 +22,27 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { UserType } from '@/types/User';
 import { Types } from 'mongoose';
-export declare class CreateUserDto {
+declare class Phone {
+    number: string;
+    countryCode: string;
+}
+declare class PersonalInformation {
+    socialSecurityNumber: string;
+    fileId: Types.ObjectId;
+}
+declare class EmergencyContact {
+    name: string;
+    phone: string;
+    phoneCountryCode: string;
+}
+export declare class UpdateWorkerDto {
     name: string;
     email: string;
-    password: string;
-    type: UserType;
-    companyId: Types.ObjectId;
+    countryId: Types.ObjectId;
+    projectId: Types.ObjectId;
+    phone: Phone;
+    personalInformation: PersonalInformation;
+    emergencyContact: EmergencyContact;
 }
+export {};

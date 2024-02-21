@@ -22,7 +22,7 @@ export class Worker {
   )
   emergencyContact: Record<string, any>;
 
-  @Prop({ type: Types.ObjectId })
+  @Prop({ required: true, type: Types.ObjectId })
   userId: Types.ObjectId;
 
   @Prop({ required: true, type: Types.ObjectId })

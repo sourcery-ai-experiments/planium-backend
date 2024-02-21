@@ -15,13 +15,13 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true })
+  @Prop({})
   countryId: string;
 
   @Prop(
     raw({
-      number: { type: String, required: true },
-      countryCode: { type: String, required: true },
+      number: { type: String },
+      countryCode: { type: String },
     }),
   )
   phone: Record<string, any>;

@@ -21,53 +21,46 @@ const users_service_1 = require("../users/users.service");
 const projects_service_1 = require("../projects/projects.service");
 const User_1 = require("../../types/User");
 let WorkersService = class WorkersService {
-    constructor(workerModel, userService, projectsService) {
+    constructor(workerModel, userService, projectsService, connection) {
         this.workerModel = workerModel;
         this.userService = userService;
         this.projectsService = projectsService;
+        this.connection = connection;
     }
     async create(worker, companyId) {
+        const session = await this.connection.startSession();
+        session.startTransaction();
         const userBody = {
             name: worker.name,
             email: worker.email,
-            password: worker.password,
-            phone: worker.phone,
-            countryId: new mongoose_2.Types.ObjectId(worker.countryId),
+            password: this.generateTemporalPassword(),
             type: User_1.UserType.WORKER,
             companyId,
         };
-        if (worker?.personalInformation?.fileId) {
-            worker.personalInformation.fileId = new mongoose_2.Types.ObjectId(worker.personalInformation.fileId);
-        }
         const workerBody = {
-            personalInformation: worker?.personalInformation,
-            emergencyContact: worker?.emergencyContact,
             companyId,
         };
-        const user = await this.userService.create(userBody);
-        const newWorker = await this.workerModel.create({
-            ...workerBody,
-            userId: user.data._id,
-        });
-        worker.projectId = new mongoose_2.Types.ObjectId(worker.projectId);
-        await this.projectsService.addWorkers(worker.projectId, [newWorker._id.toString()], companyId);
-        return {
-            message: 'Operario creado correctamente',
-        };
-    }
-    async changePassword(userId, password) {
-        const user = await this.userService.findById(userId);
-        if (!user) {
-            throw new common_1.UnauthorizedException('El usuario no existe');
-        }
         try {
-            await this.userService.changePassword(userId, password);
+            const user = await this.userService.create(userBody, session);
+            const newWorker = await this.workerModel.create([
+                {
+                    ...workerBody,
+                    userId: user.data._id,
+                },
+            ], { session });
+            worker.projectId = new mongoose_2.Types.ObjectId(worker.projectId);
+            await this.projectsService.addWorkers(worker.projectId, [newWorker[0]._id.toString()], companyId, session);
+            await session.commitTransaction();
             return {
-                message: 'Contraseña actualizada correctamente',
+                message: 'Operario creado correctamente',
             };
         }
         catch (error) {
-            throw new Error(error);
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
         }
     }
     async findAll() {
@@ -94,13 +87,33 @@ let WorkersService = class WorkersService {
             throw new Error(error);
         }
     }
+    async changePassword(userId, password) {
+        const user = await this.userService.findById(userId);
+        if (!user) {
+            throw new common_1.UnauthorizedException('El usuario no existe');
+        }
+        try {
+            await this.userService.changePassword(userId, password);
+            return {
+                message: 'Contraseña actualizada correctamente',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    generateTemporalPassword() {
+        return Math.random().toString(36).slice(-8);
+    }
 };
 exports.WorkersService = WorkersService;
 exports.WorkersService = WorkersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Worker_1.Worker.name)),
+    __param(3, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
         users_service_1.UsersService,
-        projects_service_1.ProjectsService])
+        projects_service_1.ProjectsService,
+        mongoose_2.Connection])
 ], WorkersService);
 //# sourceMappingURL=workers.service.js.map

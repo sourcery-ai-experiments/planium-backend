@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 import { Project, ProjectDocument } from '@schema/Project';
 import { CreateProjectDto } from './dto/create-project.dto';
 export declare class ProjectsService {
@@ -34,7 +34,7 @@ export declare class ProjectsService {
     }>;
     findById(id: Types.ObjectId): Promise<Project>;
     getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
-    addWorkers(projectId: Types.ObjectId, workers: string[], companyId: Types.ObjectId): Promise<{
+    addWorkers(projectId: Types.ObjectId, workers: string[], companyId: Types.ObjectId, session?: ClientSession | null): Promise<{
         message: string;
     }>;
 }

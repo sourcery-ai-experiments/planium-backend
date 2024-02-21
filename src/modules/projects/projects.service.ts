@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { REQUEST } from '@nestjs/core';
-import { Model, Types } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 import { Project, ProjectDocument } from '@schema/Project';
 import { CreateProjectDto } from './dto/create-project.dto';
 
@@ -62,11 +62,16 @@ export class ProjectsService {
     projectId: Types.ObjectId,
     workers: string[],
     companyId: Types.ObjectId,
+    session: ClientSession | null = null,
   ) {
-    const project = await this.projectModel.findOne({
-      _id: projectId,
-      companyId,
-    });
+    const project = await this.projectModel.findOne(
+      {
+        _id: projectId,
+        companyId,
+      },
+      null,
+      { session },
+    );
 
     if (!project) {
       throw new NotFoundException('El proyecto no existe');

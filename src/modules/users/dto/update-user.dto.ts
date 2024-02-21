@@ -1,4 +1,53 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+import {
+  IsNotEmpty,
+  IsEmail,
+  ValidateNested,
+  IsMongoId,
+  IsEnum,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { UserType } from '@/types/User';
+import { Types } from 'mongoose';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+class Phone {
+  @ApiProperty()
+  @IsNotEmpty()
+  number: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  countryCode: string;
+}
+
+export class UpdateUserDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty()
+  @IsMongoId()
+  countryId: Types.ObjectId;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => Phone)
+  phone: Phone;
+
+  @ApiProperty()
+  @IsEnum(UserType)
+  type: UserType;
+
+  @ApiProperty()
+  @IsMongoId()
+  companyId: Types.ObjectId;
+}

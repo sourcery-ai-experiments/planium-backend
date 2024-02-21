@@ -29,13 +29,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({}),
     __metadata("design:type", String)
 ], User.prototype, "countryId", void 0);
 __decorate([
     (0, mongoose_1.Prop)((0, mongoose_1.raw)({
-        number: { type: String, required: true },
-        countryCode: { type: String, required: true },
+        number: { type: String },
+        countryCode: { type: String },
     })),
     __metadata("design:type", Object)
 ], User.prototype, "phone", void 0);
