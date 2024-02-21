@@ -77,9 +77,14 @@ __decorate([
 ], CreateWorkerDto.prototype, "password", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
+    (0, class_validator_1.IsMongoId)(),
+    __metadata("design:type", mongoose_1.Types.ObjectId)
 ], CreateWorkerDto.prototype, "countryId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsMongoId)(),
+    __metadata("design:type", mongoose_1.Types.ObjectId)
+], CreateWorkerDto.prototype, "projectId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),

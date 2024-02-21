@@ -28,10 +28,6 @@ __decorate([
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Company.prototype, "fileId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: [], type: Array }),
-    __metadata("design:type", Array)
-], Company.prototype, "workers", void 0);
-__decorate([
     (0, mongoose_1.Prop)({ default: new Date() }),
     __metadata("design:type", Number)
 ], Company.prototype, "createdAt", void 0);

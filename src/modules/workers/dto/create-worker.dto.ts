@@ -59,8 +59,12 @@ export class CreateWorkerDto {
   password: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  countryId: string;
+  @IsMongoId()
+  countryId: Types.ObjectId;
+
+  @ApiProperty()
+  @IsMongoId()
+  projectId: Types.ObjectId;
 
   @ApiProperty()
   @IsNotEmpty()

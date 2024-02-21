@@ -25,11 +25,13 @@
 import { Model, Types } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
 import { UsersService } from '@module/users/users.service';
+import { ProjectsService } from '../projects/projects.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 export declare class WorkersService {
     private readonly workerModel;
     private readonly userService;
-    constructor(workerModel: Model<WorkerDocument>, userService: UsersService);
+    private readonly projectsService;
+    constructor(workerModel: Model<WorkerDocument>, userService: UsersService, projectsService: ProjectsService);
     create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

@@ -6,8 +6,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
-import { Worker } from '@/types/Company';
-import { WorkersService } from '@/modules/workers/workers.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { generateRandomCode } from '@/helpers/random-code';
 
@@ -16,7 +14,6 @@ export class CompaniesService {
   constructor(
     @InjectModel(Company.name)
     private readonly companyModel: Model<CompanyDocument>,
-    private readonly workersService: WorkersService,
   ) {}
 
   async create(
@@ -80,74 +77,6 @@ export class CompaniesService {
     }
 
     return company;
-  }
-
-  async addWorker(companyId: Types.ObjectId, worker: Worker) {
-    const company = await this.findCompanyById(companyId);
-
-    await this.verifyExistsWorker(worker.workerId.toString());
-
-    if (company.workers.some((w) => w.workerId.equals(worker.workerId))) {
-      throw new NotFoundException('El operario ya existe');
-    }
-
-    company.workers.push(worker);
-
-    await this.companyModel.findByIdAndUpdate(companyId, company);
-
-    return {
-      message: 'Operario agregado correctamente',
-    };
-  }
-
-  async removeWorker(companyId: Types.ObjectId, workerId: Types.ObjectId) {
-    const company = await this.findCompanyById(companyId);
-
-    await this.verifyExistsWorker(workerId.toString());
-
-    const workerIndex = company.workers.findIndex((worker) =>
-      worker.workerId.equals(workerId),
-    );
-
-    if (workerIndex === -1) {
-      throw new NotFoundException('Operario no encontrado');
-    }
-
-    company.workers.splice(workerIndex, 1);
-    await this.companyModel.findByIdAndUpdate(companyId, company);
-
-    return {
-      message: 'Operario eliminado correctamente',
-    };
-  }
-
-  async updateWorker(companyId: Types.ObjectId, worker: Worker) {
-    const company = await this.findCompanyById(companyId);
-
-    await this.verifyExistsWorker(worker.workerId.toString());
-
-    const workerIndex = company.workers.findIndex((w) =>
-      w.workerId.equals(worker.workerId),
-    );
-
-    if (workerIndex === -1) {
-      throw new NotFoundException('Operario no encontrado');
-    }
-
-    company.workers[workerIndex] = worker;
-    await this.companyModel.findByIdAndUpdate(companyId, company);
-
-    return {
-      message: 'Operario actualizado correctamente',
-    };
-  }
-
-  async verifyExistsWorker(workerId: string) {
-    const worker = await this.workersService.findById(workerId);
-
-    if (!worker) {
-      throw new NotFoundException('Operario no encontrado');
-    }
   }
 
   private async verifyExistsPublicId(publicId: string) {

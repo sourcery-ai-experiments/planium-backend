@@ -25,12 +25,10 @@
 import { Model, Types } from 'mongoose';
 import { Project, ProjectDocument } from '@schema/Project';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { CompaniesService } from '@module/companies/companies.service';
 export declare class ProjectsService {
     private readonly projectModel;
-    private readonly companiesService;
     private readonly request;
-    constructor(projectModel: Model<ProjectDocument>, companiesService: CompaniesService, request: Record<string, unknown>);
+    constructor(projectModel: Model<ProjectDocument>, request: Record<string, unknown>);
     create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
@@ -39,5 +37,4 @@ export declare class ProjectsService {
     addWorkers(projectId: Types.ObjectId, workers: string[], companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    verifyWorkers(workers: Types.ObjectId[], companyId: Types.ObjectId): Promise<void>;
 }

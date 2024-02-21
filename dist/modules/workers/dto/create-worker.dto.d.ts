@@ -40,7 +40,8 @@ export declare class CreateWorkerDto {
     name: string;
     email: string;
     password: string;
-    countryId: string;
+    countryId: Types.ObjectId;
+    projectId: Types.ObjectId;
     phone: Phone;
     personalInformation: PersonalInformation;
     emergencyContact: EmergencyContact;

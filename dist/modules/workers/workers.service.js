@@ -18,11 +18,13 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Worker_1 = require("../../schemas/Worker");
 const users_service_1 = require("../users/users.service");
+const projects_service_1 = require("../projects/projects.service");
 const User_1 = require("../../types/User");
 let WorkersService = class WorkersService {
-    constructor(workerModel, userService) {
+    constructor(workerModel, userService, projectsService) {
         this.workerModel = workerModel;
         this.userService = userService;
+        this.projectsService = projectsService;
     }
     async create(worker, companyId) {
         const userBody = {
@@ -43,18 +45,15 @@ let WorkersService = class WorkersService {
             companyId,
         };
         const user = await this.userService.create(userBody);
-        try {
-            await this.workerModel.create({
-                ...workerBody,
-                userId: user.data._id,
-            });
-            return {
-                message: 'Operario creado correctamente',
-            };
-        }
-        catch (error) {
-            throw new Error(error);
-        }
+        const newWorker = await this.workerModel.create({
+            ...workerBody,
+            userId: user.data._id,
+        });
+        worker.projectId = new mongoose_2.Types.ObjectId(worker.projectId);
+        await this.projectsService.addWorkers(worker.projectId, [newWorker._id.toString()], companyId);
+        return {
+            message: 'Operario creado correctamente',
+        };
     }
     async changePassword(userId, password) {
         const user = await this.userService.findById(userId);
@@ -101,6 +100,7 @@ exports.WorkersService = WorkersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Worker_1.Worker.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        users_service_1.UsersService])
+        users_service_1.UsersService,
+        projects_service_1.ProjectsService])
 ], WorkersService);
 //# sourceMappingURL=workers.service.js.map

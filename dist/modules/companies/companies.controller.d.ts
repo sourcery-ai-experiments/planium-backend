@@ -24,20 +24,10 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
 import { CompaniesService } from './companies.service';
-import { WorkerDto, RemoveWorkerDto } from './dto/worker.dto';
 export declare class CompaniesController {
     private readonly companiesService;
     constructor(companiesService: CompaniesService);
     findAllByWorkerId(workerId: Types.ObjectId): Promise<{
         data: any[];
-    }>;
-    addWorker(worker: WorkerDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    removeWorker(worker: RemoveWorkerDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    updateWorker(worker: WorkerDto, companyId: Types.ObjectId): Promise<{
-        message: string;
     }>;
 }

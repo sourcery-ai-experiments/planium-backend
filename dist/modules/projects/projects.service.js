@@ -18,11 +18,9 @@ const mongoose_1 = require("@nestjs/mongoose");
 const core_1 = require("@nestjs/core");
 const mongoose_2 = require("mongoose");
 const Project_1 = require("../../schemas/Project");
-const companies_service_1 = require("../companies/companies.service");
 let ProjectsService = class ProjectsService {
-    constructor(projectModel, companiesService, request) {
+    constructor(projectModel, request) {
         this.projectModel = projectModel;
-        this.companiesService = companiesService;
         this.request = request;
     }
     async create(createProjectDto, companyId) {
@@ -75,7 +73,6 @@ let ProjectsService = class ProjectsService {
             throw new common_1.NotFoundException('El proyecto no existe');
         }
         const workersObjectId = workers.map((id) => new mongoose_2.Types.ObjectId(id));
-        await this.verifyWorkers(workersObjectId, companyId);
         try {
             await this.projectModel.updateOne({ _id: projectId }, {
                 $addToSet: {
@@ -90,21 +87,12 @@ let ProjectsService = class ProjectsService {
             throw new Error(error);
         }
     }
-    async verifyWorkers(workers, companyId) {
-        const company = await this.companiesService.findCompanyById(companyId);
-        workers.forEach((workerId) => {
-            if (!company.workers.find((worker) => worker.workerId.equals(workerId))) {
-                throw new common_1.NotFoundException('El operario no pertenece a la empresa');
-            }
-        });
-    }
 };
 exports.ProjectsService = ProjectsService;
 exports.ProjectsService = ProjectsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Project_1.Project.name)),
-    __param(2, (0, common_1.Inject)(core_1.REQUEST)),
-    __metadata("design:paramtypes", [mongoose_2.Model,
-        companies_service_1.CompaniesService, Object])
+    __param(1, (0, common_1.Inject)(core_1.REQUEST)),
+    __metadata("design:paramtypes", [mongoose_2.Model, Object])
 ], ProjectsService);
 //# sourceMappingURL=projects.service.js.map

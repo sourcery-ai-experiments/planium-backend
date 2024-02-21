@@ -24,13 +24,10 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
-import { Worker } from '@/types/Company';
-import { WorkersService } from '@/modules/workers/workers.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 export declare class CompaniesService {
     private readonly companyModel;
-    private readonly workersService;
-    constructor(companyModel: Model<CompanyDocument>, workersService: WorkersService);
+    constructor(companyModel: Model<CompanyDocument>);
     create(company: CreateCompanyDto, session?: ClientSession | null): Promise<{
         message: string;
         data: import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
@@ -51,15 +48,5 @@ export declare class CompaniesService {
     } & Required<{
         _id: Types.ObjectId;
     }>>;
-    addWorker(companyId: Types.ObjectId, worker: Worker): Promise<{
-        message: string;
-    }>;
-    removeWorker(companyId: Types.ObjectId, workerId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    updateWorker(companyId: Types.ObjectId, worker: Worker): Promise<{
-        message: string;
-    }>;
-    verifyExistsWorker(workerId: string): Promise<void>;
     private verifyExistsPublicId;
 }
