@@ -9,6 +9,9 @@ export class Company {
   @Prop({ required: true })
   name: string;
 
+  @Prop({ required: true })
+  publicId: string;
+
   @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
 

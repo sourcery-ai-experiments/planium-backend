@@ -18,6 +18,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Company_1 = require("../../schemas/Company");
 const workers_service_1 = require("../workers/workers.service");
+const random_code_1 = require("../../helpers/random-code");
 let CompaniesService = class CompaniesService {
     constructor(companyModel, workersService) {
         this.companyModel = companyModel;
@@ -25,7 +26,14 @@ let CompaniesService = class CompaniesService {
     }
     async create(company, session = null) {
         try {
-            const newCompany = await this.companyModel.create([company], {
+            const publicId = (0, random_code_1.generateRandomCode)(4);
+            await this.verifyExistsPublicId(publicId);
+            const newCompany = await this.companyModel.create([
+                {
+                    ...company,
+                    publicId,
+                },
+            ], {
                 session,
             });
             return {
@@ -108,6 +116,12 @@ let CompaniesService = class CompaniesService {
         const worker = await this.workersService.findById(workerId);
         if (!worker) {
             throw new common_1.NotFoundException('Operario no encontrado');
+        }
+    }
+    async verifyExistsPublicId(publicId) {
+        const exist = await this.companyModel.findOne({ publicId });
+        if (exist) {
+            throw new common_1.BadRequestException('Ocurrió un error, intente de nuevo');
         }
     }
 };

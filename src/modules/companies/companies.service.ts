@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
 import { Worker } from '@/types/Company';
 import { WorkersService } from '@/modules/workers/workers.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { generateRandomCode } from '@/helpers/random-code';
 
 @Injectable()
 export class CompaniesService {
@@ -19,9 +24,21 @@ export class CompaniesService {
     session: ClientSession | null = null,
   ) {
     try {
-      const newCompany = await this.companyModel.create([company], {
-        session,
-      });
+      const publicId = generateRandomCode(4);
+
+      await this.verifyExistsPublicId(publicId);
+
+      const newCompany = await this.companyModel.create(
+        [
+          {
+            ...company,
+            publicId,
+          },
+        ],
+        {
+          session,
+        },
+      );
 
       return {
         message: 'Empresa creada correctamente',
@@ -130,6 +147,14 @@ export class CompaniesService {
 
     if (!worker) {
       throw new NotFoundException('Operario no encontrado');
+    }
+  }
+
+  private async verifyExistsPublicId(publicId: string) {
+    const exist = await this.companyModel.findOne({ publicId });
+
+    if (exist) {
+      throw new BadRequestException('Ocurrió un error, intente de nuevo');
     }
   }
 }

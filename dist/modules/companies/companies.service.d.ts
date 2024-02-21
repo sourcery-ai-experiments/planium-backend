@@ -61,4 +61,5 @@ export declare class CompaniesService {
         message: string;
     }>;
     verifyExistsWorker(workerId: string): Promise<void>;
+    private verifyExistsPublicId;
 }

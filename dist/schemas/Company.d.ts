@@ -27,6 +27,7 @@ import { Worker } from '@/types/Company';
 export type CompanyDocument = HydratedDocument<Company>;
 export declare class Company {
     name: string;
+    publicId: string;
     fileId: Types.ObjectId;
     workers: Worker[];
     createdAt: number;

@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { randomBytes } from 'crypto';
 import { Otp, OtpDocument } from '@/schemas/Otp';
+import { generateRandomCode } from '@/helpers/random-code';
 
 @Injectable()
 export class OtpsService {
@@ -31,13 +31,7 @@ export class OtpsService {
   async generateOTP(userId: Types.ObjectId) {
     const length = 5;
 
-    const buffer = randomBytes(length);
-
-    let otp = '';
-    for (let i = 0; i < length; i++) {
-      const digit = buffer[i] % 10;
-      otp += digit.toString();
-    }
+    const otp = generateRandomCode(length);
 
     await this.create(otp, userId);
 

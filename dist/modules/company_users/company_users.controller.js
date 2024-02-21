@@ -16,6 +16,7 @@ exports.CompanyUsersController = void 0;
 const common_1 = require("@nestjs/common");
 const company_users_service_1 = require("./company_users.service");
 const create_company_user_dto_1 = require("./dto/create-company-user.dto");
+const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 let CompanyUsersController = class CompanyUsersController {
     constructor(companyUsersService) {
         this.companyUsersService = companyUsersService;
@@ -26,6 +27,7 @@ let CompanyUsersController = class CompanyUsersController {
 };
 exports.CompanyUsersController = CompanyUsersController;
 __decorate([
+    (0, auth_decorator_1.Public)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
