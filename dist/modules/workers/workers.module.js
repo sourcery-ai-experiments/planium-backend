@@ -14,15 +14,17 @@ const users_module_1 = require("../users/users.module");
 const Worker_1 = require("../../schemas/Worker");
 const workers_controller_1 = require("./workers.controller");
 const projects_module_1 = require("../projects/projects.module");
+const companies_module_1 = require("../companies/companies.module");
 let WorkersModule = class WorkersModule {
 };
 exports.WorkersModule = WorkersModule;
 exports.WorkersModule = WorkersModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            companies_module_1.CompaniesModule,
             projects_module_1.ProjectsModule,
-            mongoose_1.MongooseModule.forFeature([{ name: Worker_1.Worker.name, schema: Worker_1.WorkerSchema }]),
             users_module_1.UsersModule,
+            mongoose_1.MongooseModule.forFeature([{ name: Worker_1.Worker.name, schema: Worker_1.WorkerSchema }]),
         ],
         providers: [workers_service_1.WorkersService],
         controllers: [workers_controller_1.WorkersController],

@@ -19,10 +19,13 @@ const mongoose_2 = require("mongoose");
 const Worker_1 = require("../../schemas/Worker");
 const users_service_1 = require("../users/users.service");
 const projects_service_1 = require("../projects/projects.service");
+const companies_service_1 = require("../companies/companies.service");
 const User_1 = require("../../types/User");
+const generate_data_1 = require("../../helpers/generate-data");
 let WorkersService = class WorkersService {
-    constructor(workerModel, userService, projectsService, connection) {
+    constructor(workerModel, companiesService, userService, projectsService, connection) {
         this.workerModel = workerModel;
+        this.companiesService = companiesService;
         this.userService = userService;
         this.projectsService = projectsService;
         this.connection = connection;
@@ -30,8 +33,14 @@ let WorkersService = class WorkersService {
     async create(worker, companyId) {
         const session = await this.connection.startSession();
         session.startTransaction();
+        const company = await this.companiesService.findById(companyId);
+        if (!company) {
+            throw new common_1.UnauthorizedException('La empresa no existe');
+        }
+        const username = (0, generate_data_1.generateUsername)(worker.username, company.publicId);
         const userBody = {
             name: worker.name,
+            username,
             email: worker.email,
             password: this.generateTemporalPassword(),
             type: User_1.UserType.WORKER,
@@ -110,8 +119,9 @@ exports.WorkersService = WorkersService;
 exports.WorkersService = WorkersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Worker_1.Worker.name)),
-    __param(3, (0, mongoose_1.InjectConnection)()),
+    __param(4, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        companies_service_1.CompaniesService,
         users_service_1.UsersService,
         projects_service_1.ProjectsService,
         mongoose_2.Connection])

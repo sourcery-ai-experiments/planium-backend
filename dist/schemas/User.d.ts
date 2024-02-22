@@ -26,6 +26,7 @@ import { HydratedDocument, Types } from 'mongoose';
 export type UserDocument = HydratedDocument<User>;
 export declare class User {
     name: string;
+    username: string;
     email: string;
     password: string;
     countryId: string;

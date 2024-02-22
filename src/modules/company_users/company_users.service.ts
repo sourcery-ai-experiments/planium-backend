@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Model, Types, Connection } from 'mongoose';
 import { CompanyUser, CompanyUserDocument } from '@/schemas/CompanyUser';
@@ -6,6 +6,7 @@ import { CreateCompanyUserDto } from './dto/create-company-user.dto';
 import { UserType } from '@/types/User';
 import { UsersService } from '@/modules/users/users.service';
 import { CompaniesService } from '@/modules/companies/companies.service';
+import { generateUsername } from '@/helpers/generate-data';
 
 @Injectable()
 export class CompanyUsersService {
@@ -21,6 +22,17 @@ export class CompanyUsersService {
     const session = await this.connection.startSession();
     session.startTransaction();
 
+    const existCompany = await this.companiesService.findOne(
+      {
+        name: companyUser.companyName,
+      },
+      session,
+    );
+
+    if (existCompany) {
+      throw new BadRequestException('Ya existe una empresa con ese nombre');
+    }
+
     const company = await this.companiesService.create(
       {
         name: companyUser.companyName,
@@ -28,8 +40,14 @@ export class CompanyUsersService {
       session,
     );
 
+    const username = generateUsername(
+      companyUser.username,
+      company.data.publicId,
+    );
+
     const userBody = {
       name: companyUser.name,
+      username,
       email: companyUser.email,
       password: companyUser.password,
       phone: companyUser.phone,

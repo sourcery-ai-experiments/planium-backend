@@ -51,6 +51,7 @@ export declare class AuthService {
         message: string;
         data: {
             name: string;
+            username: string;
             email: string;
             countryId: string;
             phone: Record<string, any>;

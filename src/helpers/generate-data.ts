@@ -11,3 +11,7 @@ export function generateRandomCode(length: number) {
 
   return code;
 }
+
+export function generateUsername(username: string, publicCompanyId: string) {
+  return `${username}#${publicCompanyId}`;
+}

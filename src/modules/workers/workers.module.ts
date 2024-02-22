@@ -5,12 +5,14 @@ import { UsersModule } from '@module/users/users.module';
 import { Worker, WorkerSchema } from '@schema/Worker';
 import { WorkersController } from './workers.controller';
 import { ProjectsModule } from '@module/projects/projects.module';
+import { CompaniesModule } from '../companies/companies.module';
 
 @Module({
   imports: [
+    CompaniesModule,
     ProjectsModule,
-    MongooseModule.forFeature([{ name: Worker.name, schema: WorkerSchema }]),
     UsersModule,
+    MongooseModule.forFeature([{ name: Worker.name, schema: WorkerSchema }]),
   ],
   providers: [WorkersService],
   controllers: [WorkersController],

@@ -23,6 +23,11 @@ __decorate([
 ], CreateWorkerDto.prototype, "name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateWorkerDto.prototype, "username", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], CreateWorkerDto.prototype, "email", void 0);

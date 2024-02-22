@@ -25,6 +25,7 @@
 import { Types } from 'mongoose';
 export declare class CreateWorkerDto {
     name: string;
+    username: string;
     email: string;
     projectId: Types.ObjectId;
 }

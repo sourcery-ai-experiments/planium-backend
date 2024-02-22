@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Otp, OtpDocument } from '@/schemas/Otp';
-import { generateRandomCode } from '@/helpers/random-code';
+import { generateRandomCode } from '@/helpers/generate-data';
 
 @Injectable()
 export class OtpsService {

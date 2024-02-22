@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Otp_1 = require("../../schemas/Otp");
-const random_code_1 = require("../../helpers/random-code");
+const generate_data_1 = require("../../helpers/generate-data");
 let OtpsService = class OtpsService {
     constructor(otpModel) {
         this.otpModel = otpModel;
@@ -39,7 +39,7 @@ let OtpsService = class OtpsService {
     }
     async generateOTP(userId) {
         const length = 5;
-        const otp = (0, random_code_1.generateRandomCode)(length);
+        const otp = (0, generate_data_1.generateRandomCode)(length);
         await this.create(otp, userId);
         return otp;
     }

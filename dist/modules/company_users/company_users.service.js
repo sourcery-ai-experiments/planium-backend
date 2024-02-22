@@ -20,6 +20,7 @@ const CompanyUser_1 = require("../../schemas/CompanyUser");
 const User_1 = require("../../types/User");
 const users_service_1 = require("../users/users.service");
 const companies_service_1 = require("../companies/companies.service");
+const generate_data_1 = require("../../helpers/generate-data");
 let CompanyUsersService = class CompanyUsersService {
     constructor(companyUserModel, usersService, companiesService, connection) {
         this.companyUserModel = companyUserModel;
@@ -30,11 +31,19 @@ let CompanyUsersService = class CompanyUsersService {
     async create(companyUser) {
         const session = await this.connection.startSession();
         session.startTransaction();
+        const existCompany = await this.companiesService.findOne({
+            name: companyUser.companyName,
+        }, session);
+        if (existCompany) {
+            throw new common_1.BadRequestException('Ya existe una empresa con ese nombre');
+        }
         const company = await this.companiesService.create({
             name: companyUser.companyName,
         }, session);
+        const username = (0, generate_data_1.generateUsername)(companyUser.username, company.data.publicId);
         const userBody = {
             name: companyUser.name,
+            username,
             email: companyUser.email,
             password: companyUser.password,
             phone: companyUser.phone,

@@ -17,14 +17,14 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Company_1 = require("../../schemas/Company");
-const random_code_1 = require("../../helpers/random-code");
+const generate_data_1 = require("../../helpers/generate-data");
 let CompaniesService = class CompaniesService {
     constructor(companyModel) {
         this.companyModel = companyModel;
     }
     async create(company, session = null) {
         try {
-            const publicId = (0, random_code_1.generateRandomCode)(4);
+            const publicId = (0, generate_data_1.generateRandomCode)(4);
             await this.verifyExistsPublicId(publicId);
             const newCompany = await this.companyModel.create([
                 {
@@ -42,6 +42,12 @@ let CompaniesService = class CompaniesService {
         catch (error) {
             throw new Error(error);
         }
+    }
+    async findById(companyId) {
+        return await this.companyModel.findById(companyId);
+    }
+    async findOne(where, session = null) {
+        return this.companyModel.findOne(where, null, { session });
     }
     async findAllByWorkerId(workerId) {
         try {

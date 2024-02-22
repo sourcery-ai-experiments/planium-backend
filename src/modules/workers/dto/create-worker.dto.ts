@@ -8,6 +8,10 @@ export class CreateWorkerDto {
   name: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  username: string;
+
+  @ApiProperty()
   @IsEmail()
   email: string;
 

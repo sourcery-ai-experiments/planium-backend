@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import { generateRandomCode } from '@/helpers/random-code';
+import { generateRandomCode } from '@/helpers/generate-data';
 
 @Injectable()
 export class CompaniesService {
@@ -44,6 +44,17 @@ export class CompaniesService {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async findById(companyId: Types.ObjectId) {
+    return await this.companyModel.findById(companyId);
+  }
+
+  async findOne(
+    where: Record<string, string>,
+    session: ClientSession | null = null,
+  ) {
+    return this.companyModel.findOne(where, null, { session });
   }
 
   async findAllByWorkerId(workerId: Types.ObjectId) {

@@ -24,10 +24,18 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { UserType } from '@/types/User';
 import { Types } from 'mongoose';
+declare class Phone {
+    number: string;
+    countryCode: string;
+}
 export declare class CreateUserDto {
     name: string;
+    username: string;
     email: string;
     password: string;
+    countryId?: Types.ObjectId;
+    phone?: Phone;
     type: UserType;
     companyId: Types.ObjectId;
 }
+export {};

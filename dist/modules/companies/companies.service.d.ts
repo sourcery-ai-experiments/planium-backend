@@ -38,6 +38,20 @@ export declare class CompaniesService {
             _id: Types.ObjectId;
         }>;
     }>;
+    findById(companyId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
+    findOne(where: Record<string, string>, session?: ClientSession | null): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
     findAllByWorkerId(workerId: Types.ObjectId): Promise<{
         data: any[];
     }>;
