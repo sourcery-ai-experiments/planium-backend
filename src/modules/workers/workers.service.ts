@@ -1,7 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model, Types } from 'mongoose';
+import { ClientSession, Connection, Model, Types } from 'mongoose';
 import { Worker, WorkerDocument } from '@schema/Worker';
+import { CompanyDocument } from '@/schemas/Company';
 import { UsersService } from '@module/users/users.service';
 import { ProjectsService } from '../projects/projects.service';
 import { CompaniesService } from '../companies/companies.service';
@@ -19,66 +20,6 @@ export class WorkersService {
     private readonly projectsService: ProjectsService,
     @InjectConnection() private readonly connection: Connection,
   ) {}
-
-  async create(worker: CreateWorkerDto, companyId: Types.ObjectId) {
-    const session = await this.connection.startSession();
-    session.startTransaction();
-
-    const company = await this.companiesService.findById(companyId);
-
-    if (!company) {
-      throw new UnauthorizedException('La empresa no existe');
-    }
-
-    const username = generateUsername(worker.username, company.publicId);
-
-    const userBody = {
-      name: worker.name,
-      username,
-      email: worker.email,
-      password: this.generateTemporalPassword(),
-      type: UserType.WORKER,
-      companyId,
-    };
-
-    const workerBody = {
-      companyId,
-    };
-
-    try {
-      const user = await this.userService.create(userBody, session);
-
-      const newWorker = await this.workerModel.create(
-        [
-          {
-            ...workerBody,
-            userId: user.data._id,
-          },
-        ],
-        { session },
-      );
-
-      worker.projectId = new Types.ObjectId(worker.projectId);
-
-      await this.projectsService.addWorkers(
-        worker.projectId,
-        [newWorker[0]._id.toString()],
-        companyId,
-        session,
-      );
-
-      await session.commitTransaction();
-
-      return {
-        message: 'Operario creado correctamente',
-      };
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
-    }
-  }
 
   async findAll(): Promise<Worker[]> {
     try {
@@ -104,6 +45,39 @@ export class WorkersService {
     }
   }
 
+  async create(worker: CreateWorkerDto, companyId: Types.ObjectId) {
+    const company = await this.validateCompanyExists(companyId);
+
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const user = await this.createUser(worker, company, session);
+
+      const newWorker = await this.createWorker(
+        user.data._id,
+        companyId,
+        session,
+      );
+
+      await this.assingWorkerToProject(
+        worker.projectId,
+        newWorker._id,
+        companyId,
+        session,
+      );
+
+      await session.commitTransaction();
+
+      return { message: 'Operario creado correctamente' };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  }
+
   async changePassword(userId: Types.ObjectId, password: string) {
     const user = await this.userService.findById(userId);
 
@@ -114,12 +88,72 @@ export class WorkersService {
     try {
       await this.userService.changePassword(userId, password);
 
-      return {
-        message: 'Contraseña actualizada correctamente',
-      };
+      return { message: 'Contraseña actualizada correctamente' };
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  private async validateCompanyExists(companyId: Types.ObjectId) {
+    const company = await this.companiesService.findById(companyId);
+
+    if (!company) {
+      throw new UnauthorizedException('La empresa no existe');
+    }
+
+    return company;
+  }
+
+  private async createUser(
+    worker: CreateWorkerDto,
+    company: CompanyDocument,
+    session: ClientSession,
+  ) {
+    const username = generateUsername(worker.username, company.publicId);
+
+    const userBody = {
+      name: worker.name,
+      username,
+      email: worker.email,
+      password: this.generateTemporalPassword(),
+      type: UserType.WORKER,
+      companyId: company._id,
+    };
+
+    return await this.userService.create(userBody, session);
+  }
+
+  private async createWorker(
+    userId: Types.ObjectId,
+    companyId: Types.ObjectId,
+    session: ClientSession,
+  ) {
+    const newWorker = await this.workerModel.create(
+      [
+        {
+          companyId,
+          userId,
+        },
+      ],
+      { session },
+    );
+
+    return newWorker[0];
+  }
+
+  private async assingWorkerToProject(
+    projectId: Types.ObjectId,
+    workerId: Types.ObjectId,
+    companyId: Types.ObjectId,
+    session: ClientSession,
+  ) {
+    projectId = new Types.ObjectId(projectId);
+    await this.projectsService.addWorkers(
+      projectId,
+      [workerId.toString()],
+      companyId,
+      session,
+    );
   }
 
   private generateTemporalPassword() {

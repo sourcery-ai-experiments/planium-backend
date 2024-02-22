@@ -30,48 +30,6 @@ let WorkersService = class WorkersService {
         this.projectsService = projectsService;
         this.connection = connection;
     }
-    async create(worker, companyId) {
-        const session = await this.connection.startSession();
-        session.startTransaction();
-        const company = await this.companiesService.findById(companyId);
-        if (!company) {
-            throw new common_1.UnauthorizedException('La empresa no existe');
-        }
-        const username = (0, generate_data_1.generateUsername)(worker.username, company.publicId);
-        const userBody = {
-            name: worker.name,
-            username,
-            email: worker.email,
-            password: this.generateTemporalPassword(),
-            type: User_1.UserType.WORKER,
-            companyId,
-        };
-        const workerBody = {
-            companyId,
-        };
-        try {
-            const user = await this.userService.create(userBody, session);
-            const newWorker = await this.workerModel.create([
-                {
-                    ...workerBody,
-                    userId: user.data._id,
-                },
-            ], { session });
-            worker.projectId = new mongoose_2.Types.ObjectId(worker.projectId);
-            await this.projectsService.addWorkers(worker.projectId, [newWorker[0]._id.toString()], companyId, session);
-            await session.commitTransaction();
-            return {
-                message: 'Operario creado correctamente',
-            };
-        }
-        catch (error) {
-            await session.abortTransaction();
-            throw error;
-        }
-        finally {
-            session.endSession();
-        }
-    }
     async findAll() {
         try {
             return this.workerModel.find().exec();
@@ -96,6 +54,25 @@ let WorkersService = class WorkersService {
             throw new Error(error);
         }
     }
+    async create(worker, companyId) {
+        const company = await this.validateCompanyExists(companyId);
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            const user = await this.createUser(worker, company, session);
+            const newWorker = await this.createWorker(user.data._id, companyId, session);
+            await this.assingWorkerToProject(worker.projectId, newWorker._id, companyId, session);
+            await session.commitTransaction();
+            return { message: 'Operario creado correctamente' };
+        }
+        catch (error) {
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
+    }
     async changePassword(userId, password) {
         const user = await this.userService.findById(userId);
         if (!user) {
@@ -103,13 +80,43 @@ let WorkersService = class WorkersService {
         }
         try {
             await this.userService.changePassword(userId, password);
-            return {
-                message: 'Contraseña actualizada correctamente',
-            };
+            return { message: 'Contraseña actualizada correctamente' };
         }
         catch (error) {
             throw new Error(error);
         }
+    }
+    async validateCompanyExists(companyId) {
+        const company = await this.companiesService.findById(companyId);
+        if (!company) {
+            throw new common_1.UnauthorizedException('La empresa no existe');
+        }
+        return company;
+    }
+    async createUser(worker, company, session) {
+        const username = (0, generate_data_1.generateUsername)(worker.username, company.publicId);
+        const userBody = {
+            name: worker.name,
+            username,
+            email: worker.email,
+            password: this.generateTemporalPassword(),
+            type: User_1.UserType.WORKER,
+            companyId: company._id,
+        };
+        return await this.userService.create(userBody, session);
+    }
+    async createWorker(userId, companyId, session) {
+        const newWorker = await this.workerModel.create([
+            {
+                companyId,
+                userId,
+            },
+        ], { session });
+        return newWorker[0];
+    }
+    async assingWorkerToProject(projectId, workerId, companyId, session) {
+        projectId = new mongoose_2.Types.ObjectId(projectId);
+        await this.projectsService.addWorkers(projectId, [workerId.toString()], companyId, session);
     }
     generateTemporalPassword() {
         return Math.random().toString(36).slice(-8);

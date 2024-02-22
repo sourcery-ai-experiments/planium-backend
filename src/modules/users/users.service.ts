@@ -15,13 +15,19 @@ export class UsersService {
   ) {}
 
   async create(user: CreateUserDto, session: ClientSession | null = null) {
-    const existEmail = await this.userModel.findOne({
-      email: user.email,
-      companyId: user.companyId,
+    const { username, email, companyId } = user;
+
+    const userExist = await this.userModel.findOne({
+      $or: [
+        { username, companyId },
+        { email, companyId },
+      ],
     });
 
-    if (existEmail) {
-      throw new BadRequestException('El correo electrónico ya existe');
+    if (userExist) {
+      throw new BadRequestException(
+        'El email o el username ya están en uso dentro de la empresa',
+      );
     }
 
     const hashedPassword = await this.hashPassword(user.password);

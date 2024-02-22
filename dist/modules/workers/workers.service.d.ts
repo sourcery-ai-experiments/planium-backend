@@ -35,9 +35,6 @@ export declare class WorkersService {
     private readonly projectsService;
     private readonly connection;
     constructor(workerModel: Model<WorkerDocument>, companiesService: CompaniesService, userService: UsersService, projectsService: ProjectsService, connection: Connection);
-    create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
     findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
@@ -47,8 +44,15 @@ export declare class WorkersService {
     } & Required<{
         _id: Types.ObjectId;
     }>>;
+    create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
     changePassword(userId: Types.ObjectId, password: string): Promise<{
         message: string;
     }>;
+    private validateCompanyExists;
+    private createUser;
+    private createWorker;
+    private assingWorkerToProject;
     private generateTemporalPassword;
 }
