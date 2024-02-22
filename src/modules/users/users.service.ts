@@ -14,21 +14,24 @@ export class UsersService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async create(user: CreateUserDto, session: ClientSession | null = null) {
-    const { username, email, companyId } = user;
-
-    const userExist = await this.userModel.findOne({
-      $or: [
-        { username, companyId },
-        { email, companyId },
-      ],
-    });
-
-    if (userExist) {
-      throw new BadRequestException(
-        'El email o el username ya están en uso dentro de la empresa',
-      );
+  async findById(id: Types.ObjectId): Promise<UserDocument> {
+    try {
+      return this.userModel.findById(id).exec();
+    } catch (error) {
+      throw new Error(error);
     }
+  }
+
+  async findOne(where: Record<string, string>) {
+    try {
+      return this.userModel.findOne(where).exec();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async create(user: CreateUserDto, session: ClientSession | null = null) {
+    await this.validateUserExists(user);
 
     const hashedPassword = await this.hashPassword(user.password);
 
@@ -64,20 +67,12 @@ export class UsersService {
     };
   }
 
-  async findById(id: Types.ObjectId): Promise<UserDocument> {
-    try {
-      return this.userModel.findById(id).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
+  async changePassword(userId: Types.ObjectId, password: string) {
+    const hashedPassword = await this.hashPassword(password);
 
-  async findOne(where: Record<string, string>) {
-    try {
-      return this.userModel.findOne(where).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
+    await this.userModel.findByIdAndUpdate(userId, {
+      password: hashedPassword,
+    });
   }
 
   async hashPassword(password: string) {
@@ -89,11 +84,20 @@ export class UsersService {
     }
   }
 
-  async changePassword(userId: Types.ObjectId, password: string) {
-    const hashedPassword = await this.hashPassword(password);
+  private async validateUserExists(user: CreateUserDto) {
+    const { username, email, companyId } = user;
 
-    await this.userModel.findByIdAndUpdate(userId, {
-      password: hashedPassword,
+    const userExist = await this.userModel.findOne({
+      $or: [
+        { username, companyId },
+        { email, companyId },
+      ],
     });
+
+    if (userExist) {
+      throw new BadRequestException(
+        'El email o el username ya están en uso dentro de la empresa',
+      );
+    }
   }
 }

@@ -29,6 +29,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export declare class UsersService {
     private readonly userModel;
     constructor(userModel: Model<UserDocument>);
+    findById(id: Types.ObjectId): Promise<UserDocument>;
+    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, User> & User & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
     create(user: CreateUserDto, session?: ClientSession | null): Promise<{
         message: string;
         data: {
@@ -99,14 +107,7 @@ export declare class UsersService {
             updatedAt: number;
         };
     }>;
-    findById(id: Types.ObjectId): Promise<UserDocument>;
-    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    } & Required<{
-        _id: Types.ObjectId;
-    }>>;
-    hashPassword(password: string): Promise<any>;
     changePassword(userId: Types.ObjectId, password: string): Promise<void>;
+    hashPassword(password: string): Promise<any>;
+    private validateUserExists;
 }

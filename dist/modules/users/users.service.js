@@ -22,17 +22,24 @@ let UsersService = class UsersService {
     constructor(userModel) {
         this.userModel = userModel;
     }
-    async create(user, session = null) {
-        const { username, email, companyId } = user;
-        const userExist = await this.userModel.findOne({
-            $or: [
-                { username, companyId },
-                { email, companyId },
-            ],
-        });
-        if (userExist) {
-            throw new common_1.BadRequestException('El email o el username ya están en uso dentro de la empresa');
+    async findById(id) {
+        try {
+            return this.userModel.findById(id).exec();
         }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    async findOne(where) {
+        try {
+            return this.userModel.findOne(where).exec();
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    async create(user, session = null) {
+        await this.validateUserExists(user);
         const hashedPassword = await this.hashPassword(user.password);
         user.password = hashedPassword;
         const newUser = await this.userModel.create([user], { session });
@@ -54,21 +61,11 @@ let UsersService = class UsersService {
             data: userData,
         };
     }
-    async findById(id) {
-        try {
-            return this.userModel.findById(id).exec();
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    }
-    async findOne(where) {
-        try {
-            return this.userModel.findOne(where).exec();
-        }
-        catch (error) {
-            throw new Error(error);
-        }
+    async changePassword(userId, password) {
+        const hashedPassword = await this.hashPassword(password);
+        await this.userModel.findByIdAndUpdate(userId, {
+            password: hashedPassword,
+        });
     }
     async hashPassword(password) {
         try {
@@ -79,11 +76,17 @@ let UsersService = class UsersService {
             throw new Error(error);
         }
     }
-    async changePassword(userId, password) {
-        const hashedPassword = await this.hashPassword(password);
-        await this.userModel.findByIdAndUpdate(userId, {
-            password: hashedPassword,
+    async validateUserExists(user) {
+        const { username, email, companyId } = user;
+        const userExist = await this.userModel.findOne({
+            $or: [
+                { username, companyId },
+                { email, companyId },
+            ],
         });
+        if (userExist) {
+            throw new common_1.BadRequestException('El email o el username ya están en uso dentro de la empresa');
+        }
     }
 };
 exports.UsersService = UsersService;
