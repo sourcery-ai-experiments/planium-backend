@@ -109,5 +109,5 @@ export declare class UsersService {
     }>;
     changePassword(userId: Types.ObjectId, password: string): Promise<void>;
     hashPassword(password: string): Promise<any>;
-    private validateUserExists;
+    validateUserExists(user: CreateUserDto): Promise<void>;
 }

@@ -9,15 +9,16 @@ describe('CompaniesService', () => {
   let service: CompaniesService;
 
   const mockWorkersService = {
-    findById: jest.fn().mockImplementation((workerId) => ({
-      _id: workerId,
-      name: 'Worker 1',
-    })),
+    findById: jest.fn().mockImplementation((workerId) => [
+      {
+        _id: workerId,
+        name: 'Worker 1',
+      },
+    ]),
   };
 
   const mockCompanyModel = {
     create: jest.fn().mockImplementation((dto) => ({
-      id: '507f1f77bcf86cd799439011',
       ...dto,
     })),
     aggregate: jest.fn().mockImplementation(() => [
@@ -26,6 +27,10 @@ describe('CompaniesService', () => {
         name: 'Company 1',
       },
     ]),
+    findOne: jest.fn().mockImplementation((where) => ({
+      _id: '507f1f77bcf86cd799439011',
+      ...where,
+    })),
   };
 
   beforeEach(async () => {
@@ -52,18 +57,19 @@ describe('CompaniesService', () => {
   it('should create a new company', async () => {
     const company = {
       name: 'Company 1',
-      workers: [],
     };
+
+    jest.spyOn(mockCompanyModel, 'findOne').mockImplementation(() => null);
 
     expect(await service.create(company)).toEqual({
       message: 'Empresa creada correctamente',
       data: {
-        id: '507f1f77bcf86cd799439011',
+        publicId: expect.any(String),
         ...company,
       },
     });
 
-    expect(mockCompanyModel.create).toHaveBeenCalledWith(company);
+    expect(mockCompanyModel.create).toHaveBeenCalled();
   });
 
   it('should find all companies by worker id', async () => {

@@ -34,26 +34,17 @@ describe('WorkersController', () => {
   it('should create a worker', async () => {
     const dto = {
       name: 'Pepe Díaz',
+      username: 'pepe.diaz',
       email: 'pepe@gmail.com',
       password: '12345678',
       countryId: 'Colombiana',
-      phone: {
-        number: '3003421965',
-        countryCode: '57',
-      },
-      personalInformation: {
-        socialSecurityNumber: '123456789',
-        fileId: new Types.ObjectId('507f1f77bcf86cd799439011'),
-      },
-      emergencyContact: {
-        name: 'Juan Diaz',
-        phone: '3003421965',
-        phoneCountryCode: '57',
-      },
       fileId: new Types.ObjectId('507f1f77bcf86cd799439011'),
+      projectId: new Types.ObjectId(),
     };
 
-    expect(await controller.create(dto)).toEqual({
+    const companyId = new Types.ObjectId();
+
+    expect(await controller.create(dto, companyId)).toEqual({
       message: 'Operario creado correctamente',
     });
 

@@ -22,15 +22,6 @@ describe('CompaniesController', () => {
     findAllByWorkerId: jest.fn().mockImplementation((workerId) => {
       return companyList;
     }),
-    addWorker: jest.fn().mockImplementation((companyId, worker) => {
-      return { message: 'Operario agregado correctamente' };
-    }),
-    removeWorker: jest.fn().mockImplementation((companyId, workerId) => {
-      return { message: 'Operario eliminado correctamente' };
-    }),
-    updateWorker: jest.fn().mockImplementation((companyId, worker) => {
-      return { message: 'Operario actualizado correctamente' };
-    }),
   };
 
   beforeEach(async () => {
@@ -55,47 +46,5 @@ describe('CompaniesController', () => {
     expect(await controller.findAllByWorkerId(workerId)).toEqual(companyList);
 
     expect(mockCompaniesService.findAllByWorkerId).toHaveBeenCalled();
-  });
-
-  it('should add a worker', async () => {
-    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
-    const worker = {
-      salary: '12',
-      workerId: new Types.ObjectId(),
-    };
-
-    expect(await controller.addWorker(worker, companyId)).toEqual({
-      message: 'Operario agregado correctamente',
-    });
-
-    expect(mockCompaniesService.addWorker).toHaveBeenCalled();
-  });
-
-  it('should remove a worker', async () => {
-    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
-    const worker = {
-      salary: '12',
-      workerId: new Types.ObjectId(),
-    };
-
-    expect(await controller.removeWorker(worker, companyId)).toEqual({
-      message: 'Operario eliminado correctamente',
-    });
-
-    expect(mockCompaniesService.removeWorker).toHaveBeenCalled();
-  });
-
-  it('should update a worker', async () => {
-    const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
-    const worker = {
-      salary: '12',
-      workerId: new Types.ObjectId(),
-    };
-
-    expect(await controller.updateWorker(worker, companyId)).toEqual({
-      message: 'Operario actualizado correctamente',
-    });
-
-    expect(mockCompaniesService.updateWorker).toHaveBeenCalled();
   });
 });

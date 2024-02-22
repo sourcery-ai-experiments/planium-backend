@@ -84,7 +84,7 @@ export class UsersService {
     }
   }
 
-  private async validateUserExists(user: CreateUserDto) {
+  async validateUserExists(user: CreateUserDto) {
     const { username, email, companyId } = user;
 
     const userExist = await this.userModel.findOne({
