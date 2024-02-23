@@ -37,7 +37,7 @@ let SesService = class SesService {
                         Data: subject,
                     },
                     Body: {
-                        Text: {
+                        Html: {
                             Data: body,
                         },
                     },

@@ -20,11 +20,14 @@ const Worker_1 = require("../../schemas/Worker");
 const users_service_1 = require("../users/users.service");
 const projects_service_1 = require("../projects/projects.service");
 const companies_service_1 = require("../companies/companies.service");
+const aws_ses_service_1 = require("../aws/aws.ses.service");
 const User_1 = require("../../types/User");
 const generate_data_1 = require("../../helpers/generate-data");
+const welcome_1 = require("../../templates/email/welcome");
 let WorkersService = class WorkersService {
-    constructor(workerModel, companiesService, userService, projectsService, connection) {
+    constructor(workerModel, sesService, companiesService, userService, projectsService, connection) {
         this.workerModel = workerModel;
+        this.sesService = sesService;
         this.companiesService = companiesService;
         this.userService = userService;
         this.projectsService = projectsService;
@@ -59,9 +62,11 @@ let WorkersService = class WorkersService {
         const session = await this.connection.startSession();
         session.startTransaction();
         try {
-            const user = await this.createUser(worker, company, session);
+            const temporalPassword = this.generateTemporalPassword();
+            const user = await this.createUser(worker, company, session, temporalPassword);
             const newWorker = await this.createWorker(user.data._id, companyId, session);
             await this.assingWorkerToProject(worker.projectId, newWorker._id, companyId, session);
+            await this.sendWelcomeEmail(worker.email, user.data.username, temporalPassword, user.data.name);
             await session.commitTransaction();
             return { message: 'Operario creado correctamente' };
         }
@@ -93,13 +98,13 @@ let WorkersService = class WorkersService {
         }
         return company;
     }
-    async createUser(worker, company, session) {
+    async createUser(worker, company, session, temporalPassword) {
         const username = (0, generate_data_1.generateUsername)(worker.username, company.publicId);
         const userBody = {
             name: worker.name,
             username,
             email: worker.email,
-            password: this.generateTemporalPassword(),
+            password: temporalPassword,
             type: User_1.UserType.WORKER,
             companyId: company._id,
         };
@@ -118,6 +123,9 @@ let WorkersService = class WorkersService {
         projectId = new mongoose_2.Types.ObjectId(projectId);
         await this.projectsService.addWorkers(projectId, [workerId.toString()], companyId, session);
     }
+    async sendWelcomeEmail(email, username, password, name) {
+        await this.sesService.sendEmail(email, 'Bienvenido a la plataforma', (0, welcome_1.welcomeTemplate)(name, username, password));
+    }
     generateTemporalPassword() {
         return Math.random().toString(36).slice(-8);
     }
@@ -126,8 +134,9 @@ exports.WorkersService = WorkersService;
 exports.WorkersService = WorkersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Worker_1.Worker.name)),
-    __param(4, (0, mongoose_1.InjectConnection)()),
+    __param(5, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        aws_ses_service_1.SesService,
         companies_service_1.CompaniesService,
         users_service_1.UsersService,
         projects_service_1.ProjectsService,

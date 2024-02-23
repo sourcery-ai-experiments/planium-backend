@@ -6,15 +6,18 @@ import { CompanyDocument } from '@/schemas/Company';
 import { UsersService } from '@module/users/users.service';
 import { ProjectsService } from '../projects/projects.service';
 import { CompaniesService } from '../companies/companies.service';
+import { SesService } from '../aws/aws.ses.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 import { UserType } from '@/types/User';
 import { generateUsername } from '@/helpers/generate-data';
+import { welcomeTemplate } from '@/templates/email/welcome';
 
 @Injectable()
 export class WorkersService {
   constructor(
     @InjectModel(Worker.name)
     private readonly workerModel: Model<WorkerDocument>,
+    private readonly sesService: SesService,
     private readonly companiesService: CompaniesService,
     private readonly userService: UsersService,
     private readonly projectsService: ProjectsService,
@@ -52,7 +55,14 @@ export class WorkersService {
     session.startTransaction();
 
     try {
-      const user = await this.createUser(worker, company, session);
+      const temporalPassword = this.generateTemporalPassword();
+
+      const user = await this.createUser(
+        worker,
+        company,
+        session,
+        temporalPassword,
+      );
 
       const newWorker = await this.createWorker(
         user.data._id,
@@ -65,6 +75,13 @@ export class WorkersService {
         newWorker._id,
         companyId,
         session,
+      );
+
+      await this.sendWelcomeEmail(
+        worker.email,
+        user.data.username,
+        temporalPassword,
+        user.data.name,
       );
 
       await session.commitTransaction();
@@ -108,6 +125,7 @@ export class WorkersService {
     worker: CreateWorkerDto,
     company: CompanyDocument,
     session: ClientSession,
+    temporalPassword: string,
   ) {
     const username = generateUsername(worker.username, company.publicId);
 
@@ -115,7 +133,7 @@ export class WorkersService {
       name: worker.name,
       username,
       email: worker.email,
-      password: this.generateTemporalPassword(),
+      password: temporalPassword,
       type: UserType.WORKER,
       companyId: company._id,
     };
@@ -153,6 +171,19 @@ export class WorkersService {
       [workerId.toString()],
       companyId,
       session,
+    );
+  }
+
+  private async sendWelcomeEmail(
+    email: string,
+    username: string,
+    password: string,
+    name: string,
+  ) {
+    await this.sesService.sendEmail(
+      email,
+      'Bienvenido a la plataforma',
+      welcomeTemplate(name, username, password),
     );
   }
 

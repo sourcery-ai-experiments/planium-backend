@@ -27,14 +27,16 @@ import { Worker, WorkerDocument } from '@schema/Worker';
 import { UsersService } from '@module/users/users.service';
 import { ProjectsService } from '../projects/projects.service';
 import { CompaniesService } from '../companies/companies.service';
+import { SesService } from '../aws/aws.ses.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 export declare class WorkersService {
     private readonly workerModel;
+    private readonly sesService;
     private readonly companiesService;
     private readonly userService;
     private readonly projectsService;
     private readonly connection;
-    constructor(workerModel: Model<WorkerDocument>, companiesService: CompaniesService, userService: UsersService, projectsService: ProjectsService, connection: Connection);
+    constructor(workerModel: Model<WorkerDocument>, sesService: SesService, companiesService: CompaniesService, userService: UsersService, projectsService: ProjectsService, connection: Connection);
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
     findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
@@ -54,5 +56,6 @@ export declare class WorkersService {
     private createUser;
     private createWorker;
     private assingWorkerToProject;
+    private sendWelcomeEmail;
     private generateTemporalPassword;
 }

@@ -6,12 +6,14 @@ import { Worker, WorkerSchema } from '@schema/Worker';
 import { WorkersController } from './workers.controller';
 import { ProjectsModule } from '@module/projects/projects.module';
 import { CompaniesModule } from '../companies/companies.module';
+import { AwsModule } from '../aws/aws.module';
 
 @Module({
   imports: [
     CompaniesModule,
     ProjectsModule,
     UsersModule,
+    AwsModule,
     MongooseModule.forFeature([{ name: Worker.name, schema: WorkerSchema }]),
   ],
   providers: [WorkersService],

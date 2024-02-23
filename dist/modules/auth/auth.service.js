@@ -36,7 +36,6 @@ let AuthService = class AuthService {
                 throw new common_1.UnauthorizedException('El correo electrónico no está registrado');
             }
             const otp = await this.otpService.generateOTP(user._id);
-            await this.sesService.sendEmail(email, 'Recuperación de contraseña', `Tu código de recuperación es ${otp}`);
             return {
                 message: 'Email enviado correctamente',
                 data: {
