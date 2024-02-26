@@ -5,8 +5,11 @@ import { WorkersService } from './workers.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CompanyId } from '@/decorators/company-id.decorator';
+import { UserTypes } from '@/decorators/auth/user-type.decorator';
+import { UserType } from '@/types/User';
 
 @Controller('workers')
+@UserTypes(UserType.COMPANY_USER)
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 

@@ -34,9 +34,29 @@ export declare class AuthController {
             access_token: string;
         };
     }>;
-    validateUser(req: any): Promise<{
+    validateUser(req: any, companyId: Types.ObjectId): Promise<{
         message: string;
         data: {
+            _id: Types.ObjectId;
+            __v?: any;
+            $locals: Record<string, unknown>;
+            $op: "remove" | "save" | "validate";
+            $where: Record<string, unknown>;
+            baseModelName?: string;
+            collection: import("mongoose").Collection<import("bson").Document>;
+            db: import("mongoose").Connection;
+            errors?: import("mongoose").Error.ValidationError;
+            id?: any;
+            isNew: boolean;
+            schema: import("mongoose").Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
+                [x: string]: any;
+            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
+                [x: string]: any;
+            }>> & import("mongoose").FlatRecord<{
+                [x: string]: any;
+            }> & Required<{
+                _id: unknown;
+            }>>;
             name: string;
             username: string;
             email: string;
@@ -44,8 +64,6 @@ export declare class AuthController {
             phone: Record<string, any>;
             type: string;
             fileId: Types.ObjectId;
-            companyId: Types.ObjectId;
-            _id: Types.ObjectId;
         };
     }>;
     refreshToken(companyId: Types.ObjectId, req: any): Promise<{

@@ -22,7 +22,7 @@ export class UsersService {
     }
   }
 
-  async findOne(where: Record<string, string>) {
+  async findOne(where: Record<string, any>) {
     try {
       return this.userModel.findOne(where).exec();
     } catch (error) {

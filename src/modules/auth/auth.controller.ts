@@ -26,15 +26,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() signInUserDto: SignInDto) {
-    const { email, password } = signInUserDto;
-    return this.authService.signIn(email, password);
+    const { username, password } = signInUserDto;
+    return this.authService.signIn(username, password);
   }
 
   @Get('validate')
-  validateUser(@Request() req: any) {
-    const userId = req.user.userId;
+  validateUser(@Request() req: any, @CompanyId() companyId: Types.ObjectId) {
+    const userId = new Types.ObjectId(req.user['userId']);
 
-    return this.authService.validateSession(userId);
+    return this.authService.validateSession(userId, companyId);
   }
 
   @Get('refresh')

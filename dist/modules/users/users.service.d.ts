@@ -30,7 +30,7 @@ export declare class UsersService {
     private readonly userModel;
     constructor(userModel: Model<UserDocument>);
     findById(id: Types.ObjectId): Promise<UserDocument>;
-    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
+    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
         _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, User> & User & {
         _id: Types.ObjectId;

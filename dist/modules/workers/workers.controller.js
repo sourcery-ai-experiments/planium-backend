@@ -20,6 +20,8 @@ const workers_service_1 = require("./workers.service");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
 const change_password_dto_1 = require("./dto/change-password.dto");
 const company_id_decorator_1 = require("../../decorators/company-id.decorator");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
+const User_1 = require("../../types/User");
 let WorkersController = class WorkersController {
     constructor(workersService) {
         this.workersService = workersService;
@@ -51,6 +53,7 @@ __decorate([
 ], WorkersController.prototype, "changePassword", null);
 exports.WorkersController = WorkersController = __decorate([
     (0, common_1.Controller)('workers'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __metadata("design:paramtypes", [workers_service_1.WorkersService])
 ], WorkersController);
 //# sourceMappingURL=workers.controller.js.map
