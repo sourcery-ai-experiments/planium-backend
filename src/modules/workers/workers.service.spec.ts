@@ -6,6 +6,7 @@ import { UsersService } from '@module/users/users.service';
 import { WorkersService } from './workers.service';
 import { ProjectsService } from '../projects/projects.service';
 import { CompaniesService } from '../companies/companies.service';
+import { SesService } from '../aws/aws.ses.service';
 import { Types } from 'mongoose';
 
 describe('WorkersService', () => {
@@ -19,6 +20,10 @@ describe('WorkersService', () => {
         ...dto,
       },
     })),
+  };
+
+  const mockSesService = {
+    sendEmail: jest.fn().mockResolvedValue(null),
   };
 
   const mockProjectService = {
@@ -95,6 +100,10 @@ describe('WorkersService', () => {
         {
           provide: CompaniesService,
           useValue: mockCompanyService,
+        },
+        {
+          provide: SesService,
+          useValue: mockSesService,
         },
       ],
     }).compile();
