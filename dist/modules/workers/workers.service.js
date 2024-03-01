@@ -83,6 +83,7 @@ let WorkersService = class WorkersService {
     }
     async update(workerId, updateWorkerDto, companyId, file) {
         const worker = await this.workerModel.findOne({ _id: workerId, companyId });
+        console.log(worker);
         if (!worker) {
             throw new common_1.UnauthorizedException('El operario no existe');
         }
