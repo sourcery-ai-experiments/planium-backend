@@ -122,6 +122,7 @@ export class AuthService {
 
     const otp = await this.otpService.generateOTP(user._id);
 
+    // TODO: Arrerglar envío de email
     /* await this.sesService.sendEmail(
       email,
       'Recuperación de contraseña',

@@ -2,6 +2,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { Types } from 'mongoose';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -15,6 +16,12 @@ describe('AuthController', () => {
     })),
     sendRecoverySms: jest.fn().mockImplementation((phone) => ({
       message: 'SMS enviado correctamente',
+    })),
+    sendRecoveryEmail: jest.fn().mockImplementation((email) => ({
+      message: 'Email enviado correctamente',
+      data: {
+        userId: new Types.ObjectId(),
+      },
     })),
   };
 
@@ -36,7 +43,7 @@ describe('AuthController', () => {
 
   it('should sign in a user', async () => {
     const userDto = {
-      email: 'kuzo.mock@gmail.com',
+      username: 'kuzo_mock#1234',
       password: '12345678',
     };
     expect(await controller.signIn(userDto)).toEqual({
@@ -59,5 +66,16 @@ describe('AuthController', () => {
     });
 
     expect(mockAuthService.sendRecoverySms).toHaveBeenCalled();
+  });
+
+  it('should send a recovery email', async () => {
+    const email = 'test@gmail.com';
+
+    expect(await controller.sendRecoveryEmail({ email })).toEqual({
+      message: 'Email enviado correctamente',
+      data: {
+        userId: expect.any(Types.ObjectId),
+      },
+    });
   });
 });
