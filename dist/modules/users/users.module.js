@@ -11,12 +11,14 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const User_1 = require("../../schemas/User");
 const mongoose_1 = require("@nestjs/mongoose");
+const files_module_1 = require("../files/files.module");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
 exports.UsersModule = UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            files_module_1.FilesModule,
             mongoose_1.MongooseModule.forFeature([{ name: User_1.User.name, schema: User_1.UserSchema }]),
         ],
         providers: [users_service_1.UsersService],

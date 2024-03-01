@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Patch,
   Post,
   UploadedFile,
@@ -46,6 +48,21 @@ export class WorkersController {
       companyId,
       file,
     );
+  }
+
+  @Patch('avatar/:id')
+  @UseInterceptors(FileInterceptor('avatar'))
+  async uploadAvatar(
+    @Param('id', ParseMongoIdPipe) workerId: Types.ObjectId,
+    @CompanyId() companyId: Types.ObjectId,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.workersService.uploadAvatar(file, workerId, companyId);
   }
 
   @Public()

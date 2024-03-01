@@ -83,7 +83,6 @@ let WorkersService = class WorkersService {
     }
     async update(workerId, updateWorkerDto, companyId, file) {
         const worker = await this.workerModel.findOne({ _id: workerId, companyId });
-        console.log(worker);
         if (!worker) {
             throw new common_1.UnauthorizedException('El operario no existe');
         }
@@ -103,6 +102,26 @@ let WorkersService = class WorkersService {
             });
             await session.commitTransaction();
             return { message: 'Operario actualizado correctamente' };
+        }
+        catch (error) {
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
+    }
+    async uploadAvatar(file, workerId, companyId) {
+        const worker = await this.workerModel.findOne({ _id: workerId, companyId });
+        if (!worker) {
+            throw new common_1.UnauthorizedException('El operario no existe');
+        }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            await this.userService.uploadAvatar(file, File_1.Folder.WORKER_AVATAR, worker.userId, companyId, session);
+            await session.commitTransaction();
+            return { message: 'Avatar actualizado correctamente' };
         }
         catch (error) {
             await session.abortTransaction();

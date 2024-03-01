@@ -35,6 +35,9 @@ let WorkersController = class WorkersController {
     async update(workerId, updateWorkerDto, companyId, file) {
         return this.workersService.update(workerId, updateWorkerDto, companyId, file);
     }
+    async uploadAvatar(workerId, companyId, file) {
+        return this.workersService.uploadAvatar(file, workerId, companyId);
+    }
     async changePassword(changePasswordDto) {
         const { userId, password } = changePasswordDto;
         return this.workersService.changePassword(new mongoose_1.Types.ObjectId(userId), password);
@@ -60,6 +63,18 @@ __decorate([
     __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, update_worker_dto_1.UpdateWorkerDto, mongoose_1.Types.ObjectId, Object]),
     __metadata("design:returntype", Promise)
 ], WorkersController.prototype, "update", null);
+__decorate([
+    (0, common_1.Patch)('avatar/:id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar')),
+    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
+    __param(2, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
+        validators: [new common_1.MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
+    }))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId, Object]),
+    __metadata("design:returntype", Promise)
+], WorkersController.prototype, "uploadAvatar", null);
 __decorate([
     (0, auth_decorator_1.Public)(),
     (0, common_1.Patch)('change-password'),

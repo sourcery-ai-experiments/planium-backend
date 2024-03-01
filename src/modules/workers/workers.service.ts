@@ -141,6 +141,39 @@ export class WorkersService {
     }
   }
 
+  async uploadAvatar(
+    file: Express.Multer.File,
+    workerId: Types.ObjectId,
+    companyId: Types.ObjectId,
+  ) {
+    const worker = await this.workerModel.findOne({ _id: workerId, companyId });
+
+    if (!worker) {
+      throw new UnauthorizedException('El operario no existe');
+    }
+
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      await this.userService.uploadAvatar(
+        file,
+        Folder.WORKER_AVATAR,
+        worker.userId,
+        companyId,
+        session,
+      );
+
+      await session.commitTransaction();
+      return { message: 'Avatar actualizado correctamente' };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  }
+
   async changePassword(userId: Types.ObjectId, password: string) {
     const user = await this.userService.findById(userId);
 

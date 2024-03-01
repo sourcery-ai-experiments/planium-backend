@@ -37,6 +37,9 @@ export declare class WorkersController {
     update(workerId: Types.ObjectId, updateWorkerDto: UpdateWorkerDto, companyId: Types.ObjectId, file?: Express.Multer.File): Promise<{
         message: string;
     }>;
+    uploadAvatar(workerId: Types.ObjectId, companyId: Types.ObjectId, file: Express.Multer.File): Promise<{
+        message: string;
+    }>;
     changePassword(changePasswordDto: ChangePasswordDto): Promise<{
         message: string;
     }>;

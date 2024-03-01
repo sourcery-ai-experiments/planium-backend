@@ -18,9 +18,11 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const bcrypt = require("bcrypt");
 const User_1 = require("../../schemas/User");
+const files_service_1 = require("../files/files.service");
 let UsersService = class UsersService {
-    constructor(userModel) {
+    constructor(userModel, filesService) {
         this.userModel = userModel;
+        this.filesService = filesService;
     }
     async findById(id) {
         try {
@@ -88,11 +90,24 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException('El email o el username ya están en uso dentro de la empresa');
         }
     }
+    async uploadAvatar(file, folder, userId, companyId, session = null) {
+        const user = await this.findOne({ _id: userId, companyId });
+        if (!user) {
+            throw new common_1.BadRequestException('El usuario no existe');
+        }
+        if (user.fileId) {
+            await this.filesService.deleteOneFile(user.fileId, companyId, session);
+        }
+        const { originalname, buffer } = file;
+        const newFile = await this.filesService.uploadOneFile(originalname, buffer, folder, companyId, session);
+        await this.userModel.updateOne({ _id: userId }, { fileId: newFile.id }, { session });
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        files_service_1.FilesService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map
