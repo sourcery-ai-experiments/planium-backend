@@ -66,7 +66,7 @@ export class AuthService {
       updatedAt,
       companyId: company,
       ...userData
-    } = user.toObject();
+    } = user;
 
     return {
       message: 'Usuario verificado correctamente',

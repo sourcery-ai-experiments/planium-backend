@@ -24,7 +24,7 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Model, Types, ClientSession } from 'mongoose';
-import { User, UserDocument } from '@/schemas/User';
+import { UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilesService } from '../files/files.service';
@@ -34,13 +34,7 @@ export declare class UsersService {
     private readonly filesService;
     constructor(userModel: Model<UserDocument>, filesService: FilesService);
     findById(id: Types.ObjectId): Promise<UserDocument>;
-    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    } & Required<{
-        _id: Types.ObjectId;
-    }>>;
+    findOne(where: Record<string, any>): Promise<any>;
     create(user: CreateUserDto, session?: ClientSession | null): Promise<{
         message: string;
         data: {

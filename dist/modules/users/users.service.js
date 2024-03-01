@@ -33,12 +33,42 @@ let UsersService = class UsersService {
         }
     }
     async findOne(where) {
-        try {
-            return this.userModel.findOne(where).exec();
-        }
-        catch (error) {
-            throw new Error(error);
-        }
+        const response = await this.userModel.aggregate([
+            {
+                $match: where,
+            },
+            {
+                $lookup: {
+                    from: 'files',
+                    localField: 'fileId',
+                    foreignField: '_id',
+                    as: 'file',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$file',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    name: 1,
+                    username: 1,
+                    email: 1,
+                    password: 1,
+                    phone: 1,
+                    type: 1,
+                    file: {
+                        _id: 1,
+                        url: 1,
+                    },
+                    createdAt: 1,
+                    updatedAt: 1,
+                },
+            },
+        ]);
+        return response[0];
     }
     async create(user, session = null) {
         await this.validateUserExists(user);

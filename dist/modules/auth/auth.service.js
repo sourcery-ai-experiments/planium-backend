@@ -70,7 +70,7 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.UnauthorizedException('Sesión no válida');
         }
-        const { password, createdAt, updatedAt, companyId: company, ...userData } = user.toObject();
+        const { password, createdAt, updatedAt, companyId: company, ...userData } = user;
         return {
             message: 'Usuario verificado correctamente',
             data: userData,
