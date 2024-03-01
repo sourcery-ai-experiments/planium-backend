@@ -24,19 +24,28 @@ let FilesService = class FilesService {
         this.fileModel = fileModel;
         this.s3Service = s3Service;
     }
-    async uploadOneFile(originalName, body, folder, companyId) {
+    async uploadOneFile(originalName, body, folder, companyId, session = null) {
         const key = (0, rename_file_helper_1.renameFile)(originalName);
         const newKey = `${folder}/${key}`;
         const imageUrl = await this.s3Service.uploadFile(newKey, body);
-        const newFile = await this.fileModel.create({
-            url: imageUrl,
-            key: newKey,
-            companyId,
-        });
+        const newFile = await this.fileModel.create([
+            {
+                url: imageUrl,
+                key: newKey,
+                companyId,
+            },
+        ], { session });
         return {
-            id: newFile._id,
-            url: newFile.url,
+            id: newFile[0]._id,
+            url: newFile[0].url,
         };
+    }
+    async deleteOneFile(fileId, companyId, session = null) {
+        const file = await this.fileModel.findOneAndDelete({ _id: fileId, companyId }, { session });
+        if (!file) {
+            throw new common_1.NotFoundException('El archivo no existe');
+        }
+        await this.s3Service.deleteFile(file.key);
     }
 };
 exports.FilesService = FilesService;

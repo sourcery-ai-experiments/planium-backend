@@ -28,8 +28,8 @@ declare class Phone {
     countryCode: string;
 }
 declare class PersonalInformation {
-    socialSecurityNumber: string;
-    fileId: Types.ObjectId;
+    socialSecurityNumber?: string;
+    fileId?: Types.ObjectId;
 }
 declare class EmergencyContact {
     name: string;

@@ -47,16 +47,27 @@ export class UsersService {
     };
   }
 
-  async update(id: Types.ObjectId, updateUserDto: UpdateUserDto) {
-    const user = await this.findById(id);
+  async update(
+    id: Types.ObjectId,
+    updateUserDto: UpdateUserDto,
+    companyId: Types.ObjectId,
+    session: ClientSession | null = null,
+  ) {
+    const user = await this.findOne({ _id: id, companyId });
 
     if (!user) {
       throw new BadRequestException('El usuario no existe');
     }
 
+    /* const updatedUser = await this.userModel.findByIdAndUpdate(
+      id,
+      updateUserDto,
+    ); */
+
     const updatedUser = await this.userModel.findByIdAndUpdate(
       id,
       updateUserDto,
+      { session },
     );
 
     const { password, ...userData } = updatedUser.toObject();

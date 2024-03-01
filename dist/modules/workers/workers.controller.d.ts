@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -24,12 +25,16 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
 import { WorkersService } from './workers.service';
-import { CreateWorkerDto } from './dto/create-worker.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CreateWorkerDto } from './dto/create-worker.dto';
+import { UpdateWorkerDto } from './dto/update-worker.dto';
 export declare class WorkersController {
     private readonly workersService;
     constructor(workersService: WorkersService);
     create(createWorkerDto: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    update(workerId: Types.ObjectId, updateWorkerDto: UpdateWorkerDto, companyId: Types.ObjectId, file?: Express.Multer.File): Promise<{
         message: string;
     }>;
     changePassword(changePasswordDto: ChangePasswordDto): Promise<{

@@ -49,12 +49,12 @@ let UsersService = class UsersService {
             data: userData,
         };
     }
-    async update(id, updateUserDto) {
-        const user = await this.findById(id);
+    async update(id, updateUserDto, companyId, session = null) {
+        const user = await this.findOne({ _id: id, companyId });
         if (!user) {
             throw new common_1.BadRequestException('El usuario no existe');
         }
-        const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto);
+        const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { session });
         const { password, ...userData } = updatedUser.toObject();
         return {
             message: 'Usuario actualizado correctamente',

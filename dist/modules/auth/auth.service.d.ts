@@ -53,7 +53,7 @@ export declare class AuthService {
             _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;

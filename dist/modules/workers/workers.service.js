@@ -21,13 +21,16 @@ const users_service_1 = require("../users/users.service");
 const projects_service_1 = require("../projects/projects.service");
 const companies_service_1 = require("../companies/companies.service");
 const aws_ses_service_1 = require("../aws/aws.ses.service");
+const files_service_1 = require("../files/files.service");
 const User_1 = require("../../types/User");
 const generate_data_1 = require("../../helpers/generate-data");
 const welcome_1 = require("../../templates/email/welcome");
+const File_1 = require("../../types/File");
 let WorkersService = class WorkersService {
-    constructor(workerModel, sesService, companiesService, userService, projectsService, connection) {
+    constructor(workerModel, sesService, filesService, companiesService, userService, projectsService, connection) {
         this.workerModel = workerModel;
         this.sesService = sesService;
+        this.filesService = filesService;
         this.companiesService = companiesService;
         this.userService = userService;
         this.projectsService = projectsService;
@@ -78,6 +81,36 @@ let WorkersService = class WorkersService {
             session.endSession();
         }
     }
+    async update(workerId, updateWorkerDto, companyId, file) {
+        const worker = await this.workerModel.findOne({ _id: workerId, companyId });
+        if (!worker) {
+            throw new common_1.UnauthorizedException('El operario no existe');
+        }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            await this.updateUser(updateWorkerDto, worker.userId, session, companyId);
+            const fileId = await this.uploadW9File(file, worker, companyId, session);
+            if (fileId) {
+                updateWorkerDto.personalInformation = {
+                    ...updateWorkerDto.personalInformation,
+                    fileId,
+                };
+            }
+            await this.workerModel.updateOne({ _id: workerId }, updateWorkerDto, {
+                session,
+            });
+            await session.commitTransaction();
+            return { message: 'Operario actualizado correctamente' };
+        }
+        catch (error) {
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
+    }
     async changePassword(userId, password) {
         const user = await this.userService.findById(userId);
         if (!user) {
@@ -110,6 +143,14 @@ let WorkersService = class WorkersService {
         };
         return await this.userService.create(userBody, session);
     }
+    async updateUser(worker, userId, session, companyId) {
+        const userBody = {
+            name: worker.name,
+            email: worker.email,
+            phone: worker.phone,
+        };
+        return await this.userService.update(userId, userBody, companyId, session);
+    }
     async createWorker(userId, companyId, session) {
         const newWorker = await this.workerModel.create([
             {
@@ -126,6 +167,16 @@ let WorkersService = class WorkersService {
     async sendWelcomeEmail(email, username, password, name) {
         await this.sesService.sendEmail(email, 'Bienvenido a la plataforma', (0, welcome_1.welcomeTemplate)(name, username, password));
     }
+    async uploadW9File(file, worker, companyId, session) {
+        if (file) {
+            const fileId = worker?.personalInformation?.fileId;
+            if (fileId) {
+                await this.filesService.deleteOneFile(fileId, companyId, session);
+            }
+            const newFile = await this.filesService.uploadOneFile(file.originalname, file.buffer, File_1.Folder.WORKER_W9, companyId, session);
+            return newFile.id;
+        }
+    }
     generateTemporalPassword() {
         return Math.random().toString(36).slice(-8);
     }
@@ -134,9 +185,10 @@ exports.WorkersService = WorkersService;
 exports.WorkersService = WorkersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Worker_1.Worker.name)),
-    __param(5, (0, mongoose_1.InjectConnection)()),
+    __param(6, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
         aws_ses_service_1.SesService,
+        files_service_1.FilesService,
         companies_service_1.CompaniesService,
         users_service_1.UsersService,
         projects_service_1.ProjectsService,

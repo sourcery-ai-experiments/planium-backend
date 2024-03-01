@@ -7,10 +7,13 @@ import { UsersService } from '@module/users/users.service';
 import { ProjectsService } from '../projects/projects.service';
 import { CompaniesService } from '../companies/companies.service';
 import { SesService } from '../aws/aws.ses.service';
+import { FilesService } from '../files/files.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 import { UserType } from '@/types/User';
 import { generateUsername } from '@/helpers/generate-data';
 import { welcomeTemplate } from '@/templates/email/welcome';
+import { UpdateWorkerDto } from './dto/update-worker.dto';
+import { Folder } from '@/types/File';
 
 @Injectable()
 export class WorkersService {
@@ -18,6 +21,7 @@ export class WorkersService {
     @InjectModel(Worker.name)
     private readonly workerModel: Model<WorkerDocument>,
     private readonly sesService: SesService,
+    private readonly filesService: FilesService,
     private readonly companiesService: CompaniesService,
     private readonly userService: UsersService,
     private readonly projectsService: ProjectsService,
@@ -95,6 +99,48 @@ export class WorkersService {
     }
   }
 
+  async update(
+    workerId: Types.ObjectId,
+    updateWorkerDto: UpdateWorkerDto,
+    companyId: Types.ObjectId,
+    file?: Express.Multer.File,
+  ) {
+    const worker = await this.workerModel.findOne({ _id: workerId, companyId });
+
+    if (!worker) {
+      throw new UnauthorizedException('El operario no existe');
+    }
+
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      await this.updateUser(updateWorkerDto, worker.userId, session, companyId);
+
+      const fileId = await this.uploadW9File(file, worker, companyId, session);
+
+      if (fileId) {
+        updateWorkerDto.personalInformation = {
+          ...updateWorkerDto.personalInformation,
+          fileId,
+        };
+      }
+
+      await this.workerModel.updateOne({ _id: workerId }, updateWorkerDto, {
+        session,
+      });
+
+      await session.commitTransaction();
+
+      return { message: 'Operario actualizado correctamente' };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  }
+
   async changePassword(userId: Types.ObjectId, password: string) {
     const user = await this.userService.findById(userId);
 
@@ -141,6 +187,21 @@ export class WorkersService {
     return await this.userService.create(userBody, session);
   }
 
+  private async updateUser(
+    worker: UpdateWorkerDto,
+    userId: Types.ObjectId,
+    session: ClientSession,
+    companyId: Types.ObjectId,
+  ) {
+    const userBody = {
+      name: worker.name,
+      email: worker.email,
+      phone: worker.phone,
+    };
+
+    return await this.userService.update(userId, userBody, companyId, session);
+  }
+
   private async createWorker(
     userId: Types.ObjectId,
     companyId: Types.ObjectId,
@@ -185,6 +246,29 @@ export class WorkersService {
       'Bienvenido a la plataforma',
       welcomeTemplate(name, username, password),
     );
+  }
+
+  private async uploadW9File(
+    file: Express.Multer.File,
+    worker: WorkerDocument,
+    companyId: Types.ObjectId,
+    session: ClientSession,
+  ): Promise<Types.ObjectId> | undefined {
+    if (file) {
+      const fileId = worker?.personalInformation?.fileId;
+      if (fileId) {
+        await this.filesService.deleteOneFile(fileId, companyId, session);
+      }
+      const newFile = await this.filesService.uploadOneFile(
+        file.originalname,
+        file.buffer,
+        Folder.WORKER_W9,
+        companyId,
+        session,
+      );
+
+      return newFile.id;
+    }
   }
 
   private generateTemporalPassword() {

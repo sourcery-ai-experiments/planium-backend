@@ -1,5 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -34,6 +38,23 @@ export class S3Service {
     } catch (error) {
       throw new InternalServerErrorException(
         `Error uploading file to S3: ${error}`,
+      );
+    }
+  }
+
+  async deleteFile(key: string) {
+    try {
+      const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
+
+      const command = new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      });
+
+      await this.s3.send(command);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error deleting file from S3: ${error}`,
       );
     }
   }

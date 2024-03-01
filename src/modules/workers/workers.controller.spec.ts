@@ -38,7 +38,6 @@ describe('WorkersController', () => {
       email: 'pepe@gmail.com',
       password: '12345678',
       countryId: 'Colombiana',
-      fileId: new Types.ObjectId('507f1f77bcf86cd799439011'),
       projectId: new Types.ObjectId(),
     };
 

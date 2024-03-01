@@ -22,7 +22,6 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { UserType } from '@/types/User';
 import { Types } from 'mongoose';
 declare class Phone {
     number: string;
@@ -31,10 +30,7 @@ declare class Phone {
 export declare class UpdateUserDto {
     name: string;
     email: string;
-    password: string;
-    countryId: Types.ObjectId;
-    phone: Phone;
-    type: UserType;
-    companyId: Types.ObjectId;
+    countryId?: Types.ObjectId;
+    phone?: Phone;
 }
 export {};

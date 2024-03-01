@@ -1,33 +1,31 @@
 import {
-  IsNotEmpty,
   IsOptional,
-  IsEmail,
   ValidateNested,
   IsMongoId,
   IsMobilePhone,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Types } from 'mongoose';
 
 class Phone {
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   number: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   countryCode: string;
 }
 class PersonalInformation {
   @ApiPropertyOptional()
   @IsOptional()
-  socialSecurityNumber: string;
+  socialSecurityNumber?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsMongoId()
-  fileId: Types.ObjectId;
+  fileId?: Types.ObjectId;
 }
 
 class EmergencyContact {
@@ -46,24 +44,26 @@ class EmergencyContact {
 }
 
 export class UpdateWorkerDto {
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   name: string;
 
-  @ApiProperty()
-  @IsEmail()
+  @ApiPropertyOptional()
+  @IsOptional()
   email: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsMongoId()
   countryId: Types.ObjectId;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsMongoId()
   projectId: Types.ObjectId;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @ValidateNested()
   @Type(() => Phone)
   phone: Phone;

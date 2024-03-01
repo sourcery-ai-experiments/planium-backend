@@ -72,7 +72,7 @@ export declare class UsersService {
             updatedAt: number;
         };
     }>;
-    update(id: Types.ObjectId, updateUserDto: UpdateUserDto): Promise<{
+    update(id: Types.ObjectId, updateUserDto: UpdateUserDto, companyId: Types.ObjectId, session?: ClientSession | null): Promise<{
         message: string;
         data: {
             _id: Types.ObjectId;

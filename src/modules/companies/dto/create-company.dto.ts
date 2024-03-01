@@ -1,13 +1,8 @@
-import { IsNotEmpty, IsOptional, IsMongoId } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCompanyDto {
   @ApiProperty()
   @IsNotEmpty()
   name: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId()
-  fileId?: string;
 }
