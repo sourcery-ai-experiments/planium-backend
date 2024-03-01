@@ -36,7 +36,6 @@ let AuthService = class AuthService {
                 throw new common_1.UnauthorizedException('El correo electrónico no está registrado');
             }
             const otp = await this.otpService.generateOTP(user._id);
-            await this.sesService.sendEmail(email, 'Recuperación de contraseña', `Tu código de recuperación es ${otp}`);
             return {
                 message: 'Email enviado correctamente',
                 data: {
@@ -45,8 +44,8 @@ let AuthService = class AuthService {
             };
         };
     }
-    async signIn(email, password) {
-        const user = await this.userService.findOne({ email });
+    async signIn(username, password) {
+        const user = await this.userService.findOne({ username });
         if (!user) {
             throw new common_1.UnauthorizedException('Credenciales incorrectas');
         }
@@ -66,12 +65,12 @@ let AuthService = class AuthService {
     async comparePasswords(password, storedPasswordHash) {
         return bcrypt.compare(password, storedPasswordHash);
     }
-    async validateSession(userId) {
-        const user = await this.userService.findById(userId);
+    async validateSession(userId, companyId) {
+        const user = await this.userService.findOne({ _id: userId, companyId });
         if (!user) {
             throw new common_1.UnauthorizedException('Sesión no válida');
         }
-        const { password, createdAt, updatedAt, ...userData } = user.toObject();
+        const { password, createdAt, updatedAt, companyId: company, ...userData } = user.toObject();
         return {
             message: 'Usuario verificado correctamente',
             data: userData,
@@ -128,6 +127,7 @@ let AuthService = class AuthService {
             }
             payload = {
                 sub: worker._id,
+                companyId: worker.companyId,
             };
         }
         payload['userId'] = user._id;

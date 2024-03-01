@@ -23,6 +23,10 @@ export class CreateCompanyUserDto {
   name: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  username: string;
+
+  @ApiProperty()
   @IsEmail()
   email: string;
 
@@ -32,7 +36,7 @@ export class CreateCompanyUserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  nationality: string;
+  countryId: string;
 
   @ApiProperty()
   @IsNotEmpty()

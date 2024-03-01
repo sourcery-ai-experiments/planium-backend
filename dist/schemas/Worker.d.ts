@@ -28,6 +28,7 @@ export declare class Worker {
     personalInformation: Record<string, any>;
     emergencyContact: Record<string, any>;
     userId: Types.ObjectId;
+    companyId: Types.ObjectId;
     createdAt: number;
     updatedAt: number;
 }

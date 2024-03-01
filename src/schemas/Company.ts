@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { Worker } from '@/types/Company';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
@@ -9,11 +8,11 @@ export class Company {
   @Prop({ required: true })
   name: string;
 
+  @Prop({ required: true })
+  publicId: string;
+
   @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
-
-  @Prop({ default: [], type: Array })
-  workers: Worker[];
 
   @Prop({ default: new Date() })
   createdAt!: number;

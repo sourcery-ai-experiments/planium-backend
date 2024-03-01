@@ -12,7 +12,6 @@ const mongoose_1 = require("@nestjs/mongoose");
 const Project_1 = require("../../schemas/Project");
 const projects_controller_1 = require("./projects.controller");
 const projects_service_1 = require("./projects.service");
-const companies_module_1 = require("../companies/companies.module");
 const users_module_1 = require("../users/users.module");
 let ProjectsModule = class ProjectsModule {
 };
@@ -20,12 +19,12 @@ exports.ProjectsModule = ProjectsModule;
 exports.ProjectsModule = ProjectsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            companies_module_1.CompaniesModule,
             users_module_1.UsersModule,
             mongoose_1.MongooseModule.forFeature([{ name: Project_1.Project.name, schema: Project_1.ProjectSchema }]),
         ],
         controllers: [projects_controller_1.ProjectsController],
         providers: [projects_service_1.ProjectsService],
+        exports: [projects_service_1.ProjectsService],
     })
 ], ProjectsModule);
 //# sourceMappingURL=projects.module.js.map

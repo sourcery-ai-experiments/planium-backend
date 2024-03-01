@@ -20,13 +20,13 @@ __decorate([
     __metadata("design:type", String)
 ], Company.prototype, "name", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Company.prototype, "publicId", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Company.prototype, "fileId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ default: [], type: Array }),
-    __metadata("design:type", Array)
-], Company.prototype, "workers", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: new Date() }),
     __metadata("design:type", Number)

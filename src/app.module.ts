@@ -14,6 +14,8 @@ import { CompanyUsersModule } from './modules/company_users/company_users.module
 import { RolesModule } from './modules/roles/roles.module';
 import { WorkdaysModule } from './modules/workdays/workdays.module';
 import { ProjectsModule } from './modules/projects/projects.module';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { CountriesModule } from './modules/countries/countries.module';
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { ProjectsModule } from './modules/projects/projects.module';
     RolesModule,
     WorkdaysModule,
     ProjectsModule,
+    TasksModule,
+    CountriesModule,
   ],
   controllers: [],
   providers: [],

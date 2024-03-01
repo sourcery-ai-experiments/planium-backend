@@ -20,40 +20,60 @@ const CompanyUser_1 = require("../../schemas/CompanyUser");
 const User_1 = require("../../types/User");
 const users_service_1 = require("../users/users.service");
 const companies_service_1 = require("../companies/companies.service");
+const generate_data_1 = require("../../helpers/generate-data");
 let CompanyUsersService = class CompanyUsersService {
-    constructor(companyUserModel, usersService, companiesService) {
+    constructor(companyUserModel, usersService, companiesService, connection) {
         this.companyUserModel = companyUserModel;
         this.usersService = usersService;
         this.companiesService = companiesService;
+        this.connection = connection;
     }
     async create(companyUser) {
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        const existCompany = await this.companiesService.findOne({
+            name: companyUser.companyName,
+        }, session);
+        if (existCompany) {
+            throw new common_1.BadRequestException('Ya existe una empresa con ese nombre');
+        }
+        const company = await this.companiesService.create({
+            name: companyUser.companyName,
+        }, session);
+        const username = (0, generate_data_1.generateUsername)(companyUser.username, company.data.publicId);
         const userBody = {
             name: companyUser.name,
+            username,
             email: companyUser.email,
             password: companyUser.password,
             phone: companyUser.phone,
-            nationality: companyUser.nationality,
+            countryId: new mongoose_2.Types.ObjectId(companyUser.countryId),
             type: User_1.UserType.COMPANY_USER,
+            companyId: company.data._id,
         };
-        const user = await this.usersService.create(userBody);
-        const company = await this.companiesService.create({
-            name: companyUser.companyName,
-        });
+        const user = await this.usersService.create(userBody, session);
         const companyUserBody = {
             roleId: new mongoose_2.Types.ObjectId(companyUser.roleId),
             companyId: company.data._id,
         };
         try {
-            await this.companyUserModel.create({
-                ...companyUserBody,
-                userId: user.data._id,
-            });
+            await this.companyUserModel.create([
+                {
+                    ...companyUserBody,
+                    userId: user.data._id,
+                },
+            ], { session });
+            await session.commitTransaction();
             return {
                 message: 'Usuario creado correctamente',
             };
         }
         catch (error) {
+            await session.abortTransaction();
             throw new Error(error);
+        }
+        finally {
+            session.endSession();
         }
     }
     async findByUserId(userId) {
@@ -64,8 +84,10 @@ exports.CompanyUsersService = CompanyUsersService;
 exports.CompanyUsersService = CompanyUsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(CompanyUser_1.CompanyUser.name)),
+    __param(3, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
         users_service_1.UsersService,
-        companies_service_1.CompaniesService])
+        companies_service_1.CompaniesService,
+        mongoose_2.Connection])
 ], CompanyUsersService);
 //# sourceMappingURL=company_users.service.js.map

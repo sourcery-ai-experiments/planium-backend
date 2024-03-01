@@ -22,16 +22,13 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
-import { Worker } from '@/types/Company';
-import { WorkersService } from '@/modules/workers/workers.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 export declare class CompaniesService {
     private readonly companyModel;
-    private readonly workersService;
-    constructor(companyModel: Model<CompanyDocument>, workersService: WorkersService);
-    create(company: CreateCompanyDto): Promise<{
+    constructor(companyModel: Model<CompanyDocument>);
+    create(company: CreateCompanyDto, session?: ClientSession | null): Promise<{
         message: string;
         data: import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
             _id: Types.ObjectId;
@@ -41,6 +38,20 @@ export declare class CompaniesService {
             _id: Types.ObjectId;
         }>;
     }>;
+    findById(companyId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
+    findOne(where: Record<string, string>, session?: ClientSession | null): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, Company> & Company & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
     findAllByWorkerId(workerId: Types.ObjectId): Promise<{
         data: any[];
     }>;
@@ -51,14 +62,5 @@ export declare class CompaniesService {
     } & Required<{
         _id: Types.ObjectId;
     }>>;
-    addWorker(companyId: Types.ObjectId, worker: Worker): Promise<{
-        message: string;
-    }>;
-    removeWorker(companyId: Types.ObjectId, workerId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    updateWorker(companyId: Types.ObjectId, worker: Worker): Promise<{
-        message: string;
-    }>;
-    verifyExistsWorker(workerId: string): Promise<void>;
+    private verifyExistsPublicId;
 }

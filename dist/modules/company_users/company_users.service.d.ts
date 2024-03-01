@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Model, Types, Connection } from 'mongoose';
 import { CompanyUser, CompanyUserDocument } from '@/schemas/CompanyUser';
 import { CreateCompanyUserDto } from './dto/create-company-user.dto';
 import { UsersService } from '@/modules/users/users.service';
@@ -31,7 +31,8 @@ export declare class CompanyUsersService {
     private readonly companyUserModel;
     private readonly usersService;
     private readonly companiesService;
-    constructor(companyUserModel: Model<CompanyUserDocument>, usersService: UsersService, companiesService: CompaniesService);
+    private readonly connection;
+    constructor(companyUserModel: Model<CompanyUserDocument>, usersService: UsersService, companiesService: CompaniesService, connection: Connection);
     create(companyUser: CreateCompanyUserDto): Promise<{
         message: string;
     }>;

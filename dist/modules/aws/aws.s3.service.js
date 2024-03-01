@@ -41,6 +41,19 @@ let S3Service = class S3Service {
             throw new common_1.InternalServerErrorException(`Error uploading file to S3: ${error}`);
         }
     }
+    async deleteFile(key) {
+        try {
+            const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
+            const command = new client_s3_1.DeleteObjectCommand({
+                Bucket: bucket,
+                Key: key,
+            });
+            await this.s3.send(command);
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException(`Error deleting file from S3: ${error}`);
+        }
+    }
 };
 exports.S3Service = S3Service;
 exports.S3Service = S3Service = __decorate([

@@ -1,15 +1,23 @@
-import { IsNotEmpty, IsEmail, ValidateNested } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  IsEmail,
+  ValidateNested,
+  IsMongoId,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { UserType } from '@/types/User';
+import { Types } from 'mongoose';
 
 class Phone {
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   number: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   countryCode: string;
 }
 
@@ -19,6 +27,10 @@ export class CreateUserDto {
   name: string;
 
   @ApiProperty()
+  @IsNotEmpty()
+  username: string;
+
+  @ApiProperty()
   @IsEmail()
   email: string;
 
@@ -26,15 +38,22 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  nationality: string;
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsMongoId()
+  countryId?: Types.ObjectId;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @ValidateNested()
   @Type(() => Phone)
-  phone: Phone;
+  phone?: Phone;
 
+  @ApiProperty()
+  @IsEnum(UserType)
   type: UserType;
+
+  @ApiProperty()
+  @IsMongoId()
+  companyId: Types.ObjectId;
 }

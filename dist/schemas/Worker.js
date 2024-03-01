@@ -31,9 +31,13 @@ __decorate([
     __metadata("design:type", Object)
 ], Worker.prototype, "emergencyContact", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
+    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Worker.prototype, "userId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], Worker.prototype, "companyId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: new Date() }),
     __metadata("design:type", Number)

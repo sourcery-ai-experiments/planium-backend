@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,28 +14,32 @@ export class UsersService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async create(user: CreateUserDto) {
-    const existEmail = await this.verifyEmailExists(user.email);
-
-    if (existEmail) {
-      throw new BadRequestException('El correo electrónico ya existe');
+  async findById(id: Types.ObjectId): Promise<UserDocument> {
+    try {
+      return this.userModel.findById(id).exec();
+    } catch (error) {
+      throw new Error(error);
     }
+  }
 
-    const existPhone = await this.findOne({
-      'phone.number': user.phone.number,
-    });
-
-    if (existPhone) {
-      throw new BadRequestException('El número de teléfono ya existe');
+  async findOne(where: Record<string, any>) {
+    try {
+      return this.userModel.findOne(where).exec();
+    } catch (error) {
+      throw new Error(error);
     }
+  }
+
+  async create(user: CreateUserDto, session: ClientSession | null = null) {
+    await this.validateUserExists(user);
 
     const hashedPassword = await this.hashPassword(user.password);
 
     user.password = hashedPassword;
 
-    const newUser = await this.userModel.create(user);
+    const newUser = await this.userModel.create([user], { session });
 
-    const { password, ...userData } = newUser.toObject();
+    const { password, ...userData } = newUser[0].toObject();
 
     return {
       message: 'Usuario creado correctamente',
@@ -43,16 +47,27 @@ export class UsersService {
     };
   }
 
-  async update(id: Types.ObjectId, updateUserDto: UpdateUserDto) {
-    const user = await this.findById(id);
+  async update(
+    id: Types.ObjectId,
+    updateUserDto: UpdateUserDto,
+    companyId: Types.ObjectId,
+    session: ClientSession | null = null,
+  ) {
+    const user = await this.findOne({ _id: id, companyId });
 
     if (!user) {
       throw new BadRequestException('El usuario no existe');
     }
 
+    /* const updatedUser = await this.userModel.findByIdAndUpdate(
+      id,
+      updateUserDto,
+    ); */
+
     const updatedUser = await this.userModel.findByIdAndUpdate(
       id,
       updateUserDto,
+      { session },
     );
 
     const { password, ...userData } = updatedUser.toObject();
@@ -63,28 +78,12 @@ export class UsersService {
     };
   }
 
-  async findById(id: Types.ObjectId): Promise<UserDocument> {
-    try {
-      return this.userModel.findById(id).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
+  async changePassword(userId: Types.ObjectId, password: string) {
+    const hashedPassword = await this.hashPassword(password);
 
-  async findOne(where: Record<string, string>) {
-    try {
-      return this.userModel.findOne(where).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
-  async verifyEmailExists(email: string) {
-    try {
-      return await this.findOne({ email });
-    } catch (error) {
-      throw new Error(error);
-    }
+    await this.userModel.findByIdAndUpdate(userId, {
+      password: hashedPassword,
+    });
   }
 
   async hashPassword(password: string) {
@@ -96,11 +95,20 @@ export class UsersService {
     }
   }
 
-  async changePassword(userId: Types.ObjectId, password: string) {
-    const hashedPassword = await this.hashPassword(password);
+  async validateUserExists(user: CreateUserDto) {
+    const { username, email, companyId } = user;
 
-    await this.userModel.findByIdAndUpdate(userId, {
-      password: hashedPassword,
+    const userExist = await this.userModel.findOne({
+      $or: [
+        { username, companyId },
+        { email, companyId },
+      ],
     });
+
+    if (userExist) {
+      throw new BadRequestException(
+        'El email o el username ya están en uso dentro de la empresa',
+      );
+    }
   }
 }

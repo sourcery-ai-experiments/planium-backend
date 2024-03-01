@@ -10,27 +10,33 @@ export class User {
   name: string;
 
   @Prop({ required: true })
+  username: string;
+
+  @Prop({ required: true })
   email: string;
 
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true })
-  nationality: string;
+  @Prop({})
+  countryId: string;
 
   @Prop(
     raw({
-      number: { type: String, required: true },
-      countryCode: { type: String, required: true },
+      number: { type: String },
+      countryCode: { type: String },
     }),
   )
   phone: Record<string, any>;
 
+  @Prop({ required: true, enum: UserType })
+  type: string;
+
   @Prop({ type: Types.ObjectId })
   fileId: Types.ObjectId;
 
-  @Prop({ required: true, enum: UserType })
-  type: string;
+  @Prop({ required: true, type: Types.ObjectId })
+  companyId: Types.ObjectId;
 
   @Prop({ default: new Date() })
   createdAt!: number;

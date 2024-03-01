@@ -22,94 +22,92 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import { User, UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 export declare class UsersService {
     private readonly userModel;
     constructor(userModel: Model<UserDocument>);
-    create(user: CreateUserDto): Promise<{
-        message: string;
-        data: {
-            _id: Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            email: string;
-            nationality: string;
-            phone: Record<string, any>;
-            fileId: Types.ObjectId;
-            type: string;
-            createdAt: number;
-            updatedAt: number;
-        };
-    }>;
-    update(id: Types.ObjectId, updateUserDto: UpdateUserDto): Promise<{
-        message: string;
-        data: {
-            _id: Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            email: string;
-            nationality: string;
-            phone: Record<string, any>;
-            fileId: Types.ObjectId;
-            type: string;
-            createdAt: number;
-            updatedAt: number;
-        };
-    }>;
     findById(id: Types.ObjectId): Promise<UserDocument>;
-    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
+    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
         _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, User> & User & {
         _id: Types.ObjectId;
     } & Required<{
         _id: Types.ObjectId;
     }>>;
-    verifyEmailExists(email: string): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    } & Required<{
-        _id: Types.ObjectId;
-    }>>;
-    hashPassword(password: string): Promise<any>;
+    create(user: CreateUserDto, session?: ClientSession | null): Promise<{
+        message: string;
+        data: {
+            _id: Types.ObjectId;
+            __v?: any;
+            $locals: Record<string, unknown>;
+            $op: "remove" | "save" | "validate";
+            $where: Record<string, unknown>;
+            baseModelName?: string;
+            collection: import("mongoose").Collection<import("bson").Document>;
+            db: import("mongoose").Connection;
+            errors?: import("mongoose").Error.ValidationError;
+            id?: any;
+            isNew: boolean;
+            schema: import("mongoose").Schema<any, Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
+                [x: string]: any;
+            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
+                [x: string]: any;
+            }>> & import("mongoose").FlatRecord<{
+                [x: string]: any;
+            }> & Required<{
+                _id: unknown;
+            }>>;
+            name: string;
+            username: string;
+            email: string;
+            countryId: string;
+            phone: Record<string, any>;
+            type: string;
+            fileId: Types.ObjectId;
+            companyId: Types.ObjectId;
+            createdAt: number;
+            updatedAt: number;
+        };
+    }>;
+    update(id: Types.ObjectId, updateUserDto: UpdateUserDto, companyId: Types.ObjectId, session?: ClientSession | null): Promise<{
+        message: string;
+        data: {
+            _id: Types.ObjectId;
+            __v?: any;
+            $locals: Record<string, unknown>;
+            $op: "remove" | "save" | "validate";
+            $where: Record<string, unknown>;
+            baseModelName?: string;
+            collection: import("mongoose").Collection<import("bson").Document>;
+            db: import("mongoose").Connection;
+            errors?: import("mongoose").Error.ValidationError;
+            id?: any;
+            isNew: boolean;
+            schema: import("mongoose").Schema<any, Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
+                [x: string]: any;
+            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
+                [x: string]: any;
+            }>> & import("mongoose").FlatRecord<{
+                [x: string]: any;
+            }> & Required<{
+                _id: unknown;
+            }>>;
+            name: string;
+            username: string;
+            email: string;
+            countryId: string;
+            phone: Record<string, any>;
+            type: string;
+            fileId: Types.ObjectId;
+            companyId: Types.ObjectId;
+            createdAt: number;
+            updatedAt: number;
+        };
+    }>;
     changePassword(userId: Types.ObjectId, password: string): Promise<void>;
+    hashPassword(password: string): Promise<any>;
+    validateUserExists(user: CreateUserDto): Promise<void>;
 }

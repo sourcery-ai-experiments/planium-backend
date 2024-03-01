@@ -8,6 +8,7 @@ import { Types } from 'mongoose';
 
 describe('ProjectsService', () => {
   let service: ProjectsService;
+  let mockProjectModel = {};
 
   const projectList = [
     {
@@ -25,7 +26,7 @@ describe('ProjectsService', () => {
       findCompanyById: jest.fn(),
     };
 
-    const mockProjectModel = {
+    mockProjectModel = {
       create: jest.fn(),
       aggregate: jest.fn(),
       findOne: jest.fn(),

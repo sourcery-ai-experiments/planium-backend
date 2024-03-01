@@ -34,9 +34,10 @@ describe('CompanyUsersController', () => {
   it('should create a company user', async () => {
     const dto = {
       name: 'Daniel Perez',
+      username: 'daniel.perez',
       email: 'company2@gmail.com',
       password: '12345678',
-      nationality: 'Colombiana',
+      countryId: 'Colombiana',
       phone: {
         number: '3209561247',
         countryCode: '57',

@@ -1,17 +1,15 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { REQUEST } from '@nestjs/core';
-import { Model, Types } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 import { Project, ProjectDocument } from '@schema/Project';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { CompaniesService } from '@module/companies/companies.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name)
     private readonly projectModel: Model<ProjectDocument>,
-    private readonly companiesService: CompaniesService,
     @Inject(REQUEST) private readonly request: Record<string, unknown>,
   ) {}
 
@@ -29,6 +27,14 @@ export class ProjectsService {
       return {
         message: 'Proyecto creado correctamente',
       };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findById(id: Types.ObjectId): Promise<Project> {
+    try {
+      return this.projectModel.findById(id).exec();
     } catch (error) {
       throw new Error(error);
     }
@@ -56,19 +62,22 @@ export class ProjectsService {
     projectId: Types.ObjectId,
     workers: string[],
     companyId: Types.ObjectId,
+    session: ClientSession | null = null,
   ) {
-    const project = await this.projectModel.findOne({
-      _id: projectId,
-      companyId,
-    });
+    const project = await this.projectModel.findOne(
+      {
+        _id: projectId,
+        companyId,
+      },
+      null,
+      { session },
+    );
 
     if (!project) {
       throw new NotFoundException('El proyecto no existe');
     }
 
     const workersObjectId = workers.map((id) => new Types.ObjectId(id));
-
-    await this.verifyWorkers(workersObjectId, companyId);
 
     try {
       await this.projectModel.updateOne(
@@ -86,15 +95,5 @@ export class ProjectsService {
     } catch (error) {
       throw new Error(error);
     }
-  }
-
-  async verifyWorkers(workers: Types.ObjectId[], companyId: Types.ObjectId) {
-    const company = await this.companiesService.findCompanyById(companyId);
-
-    workers.forEach((workerId) => {
-      if (!company.workers.find((worker) => worker.workerId.equals(workerId))) {
-        throw new NotFoundException('El operario no pertenece a la empresa');
-      }
-    });
   }
 }

@@ -1,30 +1,60 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ClientSession } from 'mongoose';
 import { Company, CompanyDocument } from '@schema/Company';
-import { Worker } from '@/types/Company';
-import { WorkersService } from '@/modules/workers/workers.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { generateRandomCode } from '@/helpers/generate-data';
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectModel(Company.name)
     private readonly companyModel: Model<CompanyDocument>,
-    private readonly workersService: WorkersService,
   ) {}
 
-  async create(company: CreateCompanyDto) {
+  async create(
+    company: CreateCompanyDto,
+    session: ClientSession | null = null,
+  ) {
     try {
-      const newCompany = await this.companyModel.create(company);
+      const publicId = generateRandomCode(4);
+
+      await this.verifyExistsPublicId(publicId);
+
+      const newCompany = await this.companyModel.create(
+        [
+          {
+            ...company,
+            publicId,
+          },
+        ],
+        {
+          session,
+        },
+      );
 
       return {
         message: 'Empresa creada correctamente',
-        data: newCompany,
+        data: newCompany[0],
       };
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async findById(companyId: Types.ObjectId) {
+    return await this.companyModel.findById(companyId);
+  }
+
+  async findOne(
+    where: Record<string, string>,
+    session: ClientSession | null = null,
+  ) {
+    return this.companyModel.findOne(where, null, { session });
   }
 
   async findAllByWorkerId(workerId: Types.ObjectId) {
@@ -60,71 +90,11 @@ export class CompaniesService {
     return company;
   }
 
-  async addWorker(companyId: Types.ObjectId, worker: Worker) {
-    const company = await this.findCompanyById(companyId);
+  private async verifyExistsPublicId(publicId: string) {
+    const exist = await this.companyModel.findOne({ publicId });
 
-    await this.verifyExistsWorker(worker.workerId.toString());
-
-    if (company.workers.some((w) => w.workerId.equals(worker.workerId))) {
-      throw new NotFoundException('El operario ya existe');
-    }
-
-    company.workers.push(worker);
-
-    await this.companyModel.findByIdAndUpdate(companyId, company);
-
-    return {
-      message: 'Operario agregado correctamente',
-    };
-  }
-
-  async removeWorker(companyId: Types.ObjectId, workerId: Types.ObjectId) {
-    const company = await this.findCompanyById(companyId);
-
-    await this.verifyExistsWorker(workerId.toString());
-
-    const workerIndex = company.workers.findIndex((worker) =>
-      worker.workerId.equals(workerId),
-    );
-
-    if (workerIndex === -1) {
-      throw new NotFoundException('Operario no encontrado');
-    }
-
-    company.workers.splice(workerIndex, 1);
-    await this.companyModel.findByIdAndUpdate(companyId, company);
-
-    return {
-      message: 'Operario eliminado correctamente',
-    };
-  }
-
-  async updateWorker(companyId: Types.ObjectId, worker: Worker) {
-    const company = await this.findCompanyById(companyId);
-
-    await this.verifyExistsWorker(worker.workerId.toString());
-
-    const workerIndex = company.workers.findIndex((w) =>
-      w.workerId.equals(worker.workerId),
-    );
-
-    if (workerIndex === -1) {
-      throw new NotFoundException('Operario no encontrado');
-    }
-
-    company.workers[workerIndex] = worker;
-    await this.companyModel.findByIdAndUpdate(companyId, company);
-
-    return {
-      message: 'Operario actualizado correctamente',
-    };
-  }
-
-  async verifyExistsWorker(workerId: string) {
-    const worker = await this.workersService.findById(workerId);
-
-    if (!worker) {
-      throw new NotFoundException('Operario no encontrado');
+    if (exist) {
+      throw new BadRequestException('Ocurrió un error, intente de nuevo');
     }
   }
 }

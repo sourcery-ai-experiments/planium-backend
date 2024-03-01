@@ -22,38 +22,6 @@ let UsersService = class UsersService {
     constructor(userModel) {
         this.userModel = userModel;
     }
-    async create(user) {
-        const existEmail = await this.verifyEmailExists(user.email);
-        if (existEmail) {
-            throw new common_1.BadRequestException('El correo electrónico ya existe');
-        }
-        const existPhone = await this.findOne({
-            'phone.number': user.phone.number,
-        });
-        if (existPhone) {
-            throw new common_1.BadRequestException('El número de teléfono ya existe');
-        }
-        const hashedPassword = await this.hashPassword(user.password);
-        user.password = hashedPassword;
-        const newUser = await this.userModel.create(user);
-        const { password, ...userData } = newUser.toObject();
-        return {
-            message: 'Usuario creado correctamente',
-            data: userData,
-        };
-    }
-    async update(id, updateUserDto) {
-        const user = await this.findById(id);
-        if (!user) {
-            throw new common_1.BadRequestException('El usuario no existe');
-        }
-        const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto);
-        const { password, ...userData } = updatedUser.toObject();
-        return {
-            message: 'Usuario actualizado correctamente',
-            data: userData,
-        };
-    }
     async findById(id) {
         try {
             return this.userModel.findById(id).exec();
@@ -70,13 +38,34 @@ let UsersService = class UsersService {
             throw new Error(error);
         }
     }
-    async verifyEmailExists(email) {
-        try {
-            return await this.findOne({ email });
+    async create(user, session = null) {
+        await this.validateUserExists(user);
+        const hashedPassword = await this.hashPassword(user.password);
+        user.password = hashedPassword;
+        const newUser = await this.userModel.create([user], { session });
+        const { password, ...userData } = newUser[0].toObject();
+        return {
+            message: 'Usuario creado correctamente',
+            data: userData,
+        };
+    }
+    async update(id, updateUserDto, companyId, session = null) {
+        const user = await this.findOne({ _id: id, companyId });
+        if (!user) {
+            throw new common_1.BadRequestException('El usuario no existe');
         }
-        catch (error) {
-            throw new Error(error);
-        }
+        const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { session });
+        const { password, ...userData } = updatedUser.toObject();
+        return {
+            message: 'Usuario actualizado correctamente',
+            data: userData,
+        };
+    }
+    async changePassword(userId, password) {
+        const hashedPassword = await this.hashPassword(password);
+        await this.userModel.findByIdAndUpdate(userId, {
+            password: hashedPassword,
+        });
     }
     async hashPassword(password) {
         try {
@@ -87,11 +76,17 @@ let UsersService = class UsersService {
             throw new Error(error);
         }
     }
-    async changePassword(userId, password) {
-        const hashedPassword = await this.hashPassword(password);
-        await this.userModel.findByIdAndUpdate(userId, {
-            password: hashedPassword,
+    async validateUserExists(user) {
+        const { username, email, companyId } = user;
+        const userExist = await this.userModel.findOne({
+            $or: [
+                { username, companyId },
+                { email, companyId },
+            ],
         });
+        if (userExist) {
+            throw new common_1.BadRequestException('El email o el username ya están en uso dentro de la empresa');
+        }
     }
 };
 exports.UsersService = UsersService;

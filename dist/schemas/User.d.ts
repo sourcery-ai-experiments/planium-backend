@@ -26,12 +26,14 @@ import { HydratedDocument, Types } from 'mongoose';
 export type UserDocument = HydratedDocument<User>;
 export declare class User {
     name: string;
+    username: string;
     email: string;
     password: string;
-    nationality: string;
+    countryId: string;
     phone: Record<string, any>;
-    fileId: Types.ObjectId;
     type: string;
+    fileId: Types.ObjectId;
+    companyId: Types.ObjectId;
     createdAt: number;
     updatedAt: number;
 }

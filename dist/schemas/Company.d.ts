@@ -23,12 +23,11 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { HydratedDocument, Types } from 'mongoose';
-import { Worker } from '@/types/Company';
 export type CompanyDocument = HydratedDocument<Company>;
 export declare class Company {
     name: string;
+    publicId: string;
     fileId: Types.ObjectId;
-    workers: Worker[];
     createdAt: number;
     updatedAt: number;
 }

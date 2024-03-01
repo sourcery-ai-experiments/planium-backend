@@ -4,9 +4,10 @@ declare class Phone {
 }
 export declare class CreateCompanyUserDto {
     name: string;
+    username: string;
     email: string;
     password: string;
-    nationality: string;
+    countryId: string;
     phone: Phone;
     companyName: string;
     roleId: string;

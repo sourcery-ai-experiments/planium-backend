@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -23,8 +24,8 @@ export class AuthService {
     private readonly workerService: WorkersService,
   ) {}
 
-  async signIn(email: string, password: string) {
-    const user = await this.userService.findOne({ email });
+  async signIn(username: string, password: string) {
+    const user = await this.userService.findOne({ username });
 
     if (!user) {
       throw new UnauthorizedException('Credenciales incorrectas');
@@ -52,15 +53,20 @@ export class AuthService {
     return bcrypt.compare(password, storedPasswordHash);
   }
 
-  async validateSession(userId: Types.ObjectId) {
-    const user = await this.userService.findById(userId);
+  async validateSession(userId: Types.ObjectId, companyId: Types.ObjectId) {
+    const user = await this.userService.findOne({ _id: userId, companyId });
 
     if (!user) {
       throw new UnauthorizedException('Sesión no válida');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, createdAt, updatedAt, ...userData } = user.toObject();
+    const {
+      password,
+      createdAt,
+      updatedAt,
+      companyId: company,
+      ...userData
+    } = user.toObject();
 
     return {
       message: 'Usuario verificado correctamente',
@@ -116,11 +122,11 @@ export class AuthService {
 
     const otp = await this.otpService.generateOTP(user._id);
 
-    await this.sesService.sendEmail(
+    /* await this.sesService.sendEmail(
       email,
       'Recuperación de contraseña',
       `Tu código de recuperación es ${otp}`,
-    );
+    ); */
 
     return {
       message: 'Email enviado correctamente',
@@ -130,6 +136,7 @@ export class AuthService {
     };
   };
 
+  // TODO: agregar companyId en verificación de OTP
   async verifyRecoveryCode(otp: string, userId: string) {
     const response = await this.otpService.verifyOTP(
       otp,
@@ -167,6 +174,7 @@ export class AuthService {
 
       payload = {
         sub: worker._id,
+        companyId: worker.companyId,
       };
     }
 

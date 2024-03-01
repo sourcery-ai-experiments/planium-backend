@@ -24,12 +24,12 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     signIn(signInUserDto) {
-        const { email, password } = signInUserDto;
-        return this.authService.signIn(email, password);
+        const { username, password } = signInUserDto;
+        return this.authService.signIn(username, password);
     }
-    validateUser(req) {
-        const userId = req.user.userId;
-        return this.authService.validateSession(userId);
+    validateUser(req, companyId) {
+        const userId = new mongoose_1.Types.ObjectId(req.user['userId']);
+        return this.authService.validateSession(userId, companyId);
     }
     refreshToken(companyId, req) {
         const subId = req.user.sub;
@@ -69,8 +69,9 @@ __decorate([
 __decorate([
     (0, common_1.Get)('validate'),
     __param(0, (0, common_1.Request)()),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "validateUser", null);
 __decorate([
