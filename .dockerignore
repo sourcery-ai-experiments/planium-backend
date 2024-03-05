@@ -1,0 +1,13 @@
+.dockerignore
+.git
+.gitignore
+docker-compose*
+Dockerfile*
+README.md
+node_modules
+
+# .env
+
+# .env.development
+
+# /dist
