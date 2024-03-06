@@ -11,8 +11,4 @@ export class CreateWorkdayDto {
   @ApiProperty()
   @IsMongoId()
   projectId: Types.ObjectId;
-
-  @ApiProperty()
-  @IsMongoId()
-  fileId: Types.ObjectId;
 }

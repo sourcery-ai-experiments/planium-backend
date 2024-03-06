@@ -29,10 +29,10 @@ import { AddWorkersDto } from './dto/add-workers.dto';
 export declare class ProjectsController {
     private readonly projectsService;
     constructor(projectsService: ProjectsService);
+    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     addWorkers(addWorkersDto: AddWorkersDto, projectId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

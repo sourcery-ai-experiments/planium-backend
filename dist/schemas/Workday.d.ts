@@ -31,7 +31,6 @@ export declare class Workday {
     endTime: number;
     type: WorkdayType;
     isActive: boolean;
-    fileId: Types.ObjectId;
     workerId: Types.ObjectId;
     projectId: Types.ObjectId;
     companyId: Types.ObjectId;

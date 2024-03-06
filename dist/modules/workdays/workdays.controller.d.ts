@@ -28,6 +28,9 @@ import { CreateWorkdayDto } from './dto/create-workday.dto';
 export declare class WorkdaysController {
     private readonly workdaysService;
     constructor(workdaysService: WorkdaysService);
+    getByWorkerId(workerId: Types.ObjectId, isActive: boolean, companyId: Types.ObjectId): Promise<{
+        data: any[];
+    }>;
     create(createWorkdayDto: CreateWorkdayDto, req: any, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

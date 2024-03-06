@@ -25,11 +25,14 @@
 import { Model, Types } from 'mongoose';
 import { WorkdayDocument } from '@/schemas/Workday';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
-import { WorkersService } from '@module/workers/workers.service';
+import { ProjectsService } from '../projects/projects.service';
 export declare class WorkdaysService {
     private readonly workdayModel;
-    private readonly workersService;
-    constructor(workdayModel: Model<WorkdayDocument>, workersService: WorkersService);
+    private readonly projectsService;
+    constructor(workdayModel: Model<WorkdayDocument>, projectsService: ProjectsService);
+    getWorkdaysByWorkerId(isActive: boolean, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        data: any[];
+    }>;
     create(workday: CreateWorkdayDto, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

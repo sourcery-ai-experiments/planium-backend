@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
+  ParseBoolPipe,
   Patch,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
@@ -19,6 +22,21 @@ import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 export class WorkdaysController {
   constructor(private readonly workdaysService: WorkdaysService) {}
 
+  @Get(':id')
+  @UserTypes(UserType.WORKER)
+  async getByWorkerId(
+    @Param('id', ParseMongoIdPipe) workerId: Types.ObjectId,
+    @Query('isActive', new ParseBoolPipe({ optional: true }))
+    isActive: boolean,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    return await this.workdaysService.getWorkdaysByWorkerId(
+      isActive,
+      workerId,
+      companyId,
+    );
+  }
+
   @Post()
   @UserTypes(UserType.WORKER)
   @HttpCode(HttpStatus.CREATED)
@@ -27,11 +45,11 @@ export class WorkdaysController {
     @Request() req: any,
     @CompanyId() companyId: Types.ObjectId,
   ) {
-    const workerId = req.user.sub;
+    const workerId = new Types.ObjectId(req.user.sub);
 
     return await this.workdaysService.create(
       createWorkdayDto,
-      new Types.ObjectId(workerId),
+      workerId,
       companyId,
     );
   }

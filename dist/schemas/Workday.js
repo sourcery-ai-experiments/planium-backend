@@ -39,10 +39,6 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
-], Workday.prototype, "fileId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
-    __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Workday.prototype, "workerId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),

@@ -22,9 +22,6 @@ export class Workday {
   isActive: boolean;
 
   @Prop({ required: true, type: Types.ObjectId })
-  fileId: Types.ObjectId;
-
-  @Prop({ required: true, type: Types.ObjectId })
   workerId: Types.ObjectId;
 
   @Prop({ required: true, type: Types.ObjectId })
