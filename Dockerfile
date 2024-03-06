@@ -4,9 +4,22 @@ FROM node:${NODE_VERSION}-alpine as dependencies
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock tsconfig.json ./
 
 RUN yarn install
+
+
+
+FROM node:${NODE_VERSION}-alpine as builder
+
+WORKDIR /app
+
+COPY . .
+
+COPY --from=dependencies /app/node_modules ./node_modules
+
+RUN yarn run build
+
 
 
 FROM node:${NODE_VERSION}-alpine as tester
@@ -25,13 +38,11 @@ FROM node:${NODE_VERSION}-alpine as production
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY --from=dependencies /app/node_modules ./node_modules
 
-COPY .env.development ./
+COPY --from=builder /app/dist ./dist
 
-COPY --from=tester /app/dist ./dist
-
-RUN yarn install --production
+COPY package.json yarn.lock .env.development ./
 
 EXPOSE 3011
 

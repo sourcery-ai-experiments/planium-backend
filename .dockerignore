@@ -5,9 +5,6 @@ docker-compose*
 Dockerfile*
 README.md
 node_modules
-
-# .env
+/dist
 
 # .env.development
-
-# /dist
