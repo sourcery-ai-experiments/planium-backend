@@ -3,11 +3,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { Workday, WorkdayDocument } from '@/schemas/Workday';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
 import { ProjectsService } from '../projects/projects.service';
+import { FilesService } from '../files/files.service';
+import { Folder } from '@/types/File';
 
 @Injectable()
 export class WorkdaysService {
@@ -15,6 +17,8 @@ export class WorkdaysService {
     @InjectModel(Workday.name)
     private readonly workdayModel: Model<WorkdayDocument>,
     private readonly projectsService: ProjectsService,
+    private readonly filesService: FilesService,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
   async getWorkdaysByWorkerId(
@@ -66,6 +70,7 @@ export class WorkdaysService {
   }
 
   async create(
+    file: Express.Multer.File,
     workday: CreateWorkdayDto,
     workerId: Types.ObjectId,
     companyId: Types.ObjectId,
@@ -91,21 +96,40 @@ export class WorkdaysService {
       throw new ConflictException('El operario ya tiene una jornada en curso');
     }
 
-    const newWorkday = {
-      workerId,
-      companyId,
-      updatedBy: workerId,
-      ...workday,
-    };
+    const session = await this.connection.startSession();
+    session.startTransaction();
 
     try {
-      await this.workdayModel.create(newWorkday);
+      const { originalname, buffer } = file;
+
+      const newFile = await this.filesService.uploadOneFile(
+        originalname,
+        buffer,
+        Folder.WORKER_WORKDAY,
+        companyId,
+        session,
+      );
+
+      const newWorkday = {
+        fileId: newFile.id,
+        workerId,
+        companyId,
+        updatedBy: workerId,
+        ...workday,
+      };
+
+      await this.workdayModel.create([newWorkday], { session });
+
+      await session.commitTransaction();
 
       return {
         message: 'Jornada creada correctamente',
       };
     } catch (error) {
-      throw new Error(error);
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
   }
 

@@ -49,13 +49,22 @@ describe('WorkdaysController', () => {
     const dto = {
       type: WorkdayType.HOURS,
       projectId: new Types.ObjectId(),
-      fileId: new Types.ObjectId(),
     };
     const workerId = '507f1f77bcf86cd799439011';
     const companyId = new Types.ObjectId('507f1f77bcf86cd799439011');
 
+    const file = {
+      originalname: 'test.jpg',
+      buffer: Buffer.from('test'),
+    } as any;
+
     expect(
-      await controller.create(dto, { user: { sub: workerId } }, companyId),
+      await controller.create(
+        dto,
+        { user: { sub: workerId } },
+        file,
+        companyId,
+      ),
     ).toEqual({
       message: 'Jornada creada correctamente',
     });

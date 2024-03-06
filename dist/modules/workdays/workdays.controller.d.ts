@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -31,7 +32,7 @@ export declare class WorkdaysController {
     getByWorkerId(workerId: Types.ObjectId, isActive: boolean, companyId: Types.ObjectId): Promise<{
         data: any[];
     }>;
-    create(createWorkdayDto: CreateWorkdayDto, req: any, companyId: Types.ObjectId): Promise<{
+    create(createWorkdayDto: CreateWorkdayDto, req: any, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     endWorkday(workdayId: Types.ObjectId, companyId: Types.ObjectId): Promise<{

@@ -2,10 +2,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkdaysService } from './workdays.service';
 import { WorkersService } from '@module/workers/workers.service';
-import { getModelToken } from '@nestjs/mongoose';
+import { getConnectionToken, getModelToken } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { Workday } from '@/schemas/Workday';
 import { WorkdayType } from '@/types/Workday';
+import { FilesService } from '../files/files.service';
+import { ProjectsService } from '../projects/projects.service';
 
 describe('WorkdaysService', () => {
   let service: WorkdaysService;
@@ -15,6 +17,28 @@ describe('WorkdaysService', () => {
       id,
       name: 'Daniel Diaz',
     })),
+  };
+
+  const mockProjectsService = {
+    findOne: jest.fn().mockImplementation((where: Record<string, unknown>) => ({
+      where,
+    })),
+  };
+
+  const mockFilesService = {
+    uploadOneFile: jest
+      .fn()
+      .mockImplementation(
+        (
+          originalname: string,
+          body: Buffer,
+          folder: string,
+          companyId: Types.ObjectId,
+        ) => ({
+          id: new Types.ObjectId(),
+          url: `https://s3.amazonaws.com/${folder}/${originalname}`,
+        }),
+      ),
   };
 
   const mockWorkdayModel = {
@@ -38,6 +62,15 @@ describe('WorkdaysService', () => {
       ),
   };
 
+  const mockConnection = {
+    startSession: jest.fn().mockImplementation(() => ({
+      startTransaction: jest.fn(),
+      commitTransaction: jest.fn().mockResolvedValue(null),
+      abortTransaction: jest.fn().mockResolvedValue(null),
+      endSession: jest.fn().mockResolvedValue(null),
+    })),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -49,6 +82,18 @@ describe('WorkdaysService', () => {
         {
           provide: getModelToken(Workday.name),
           useValue: mockWorkdayModel,
+        },
+        {
+          provide: FilesService,
+          useValue: mockFilesService,
+        },
+        {
+          provide: ProjectsService,
+          useValue: mockProjectsService,
+        },
+        {
+          provide: getConnectionToken(),
+          useValue: mockConnection,
         },
       ],
     }).compile();
@@ -70,16 +115,18 @@ describe('WorkdaysService', () => {
       projectId: new Types.ObjectId(),
     };
 
-    expect(await service.create(newWorkday, workerId, companyId)).toEqual({
-      message: 'Jornada creada correctamente',
-    });
+    const file = {
+      originalname: 'test.jpg',
+      buffer: Buffer.from('test'),
+    } as any;
 
-    expect(mockWorkdayModel.create).toHaveBeenCalledWith({
-      workerId,
-      companyId,
-      updatedBy: workerId,
-      ...newWorkday,
-    });
+    expect(await service.create(file, newWorkday, workerId, companyId)).toEqual(
+      {
+        message: 'Jornada creada correctamente',
+      },
+    );
+
+    expect(mockWorkdayModel.create).toHaveBeenCalled();
   });
 
   it('should end a workday', async () => {

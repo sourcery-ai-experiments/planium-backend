@@ -18,10 +18,14 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Workday_1 = require("../../schemas/Workday");
 const projects_service_1 = require("../projects/projects.service");
+const files_service_1 = require("../files/files.service");
+const File_1 = require("../../types/File");
 let WorkdaysService = class WorkdaysService {
-    constructor(workdayModel, projectsService) {
+    constructor(workdayModel, projectsService, filesService, connection) {
         this.workdayModel = workdayModel;
         this.projectsService = projectsService;
+        this.filesService = filesService;
+        this.connection = connection;
     }
     async getWorkdaysByWorkerId(isActive, workerId, companyId) {
         const query = {
@@ -64,7 +68,7 @@ let WorkdaysService = class WorkdaysService {
             data: workdays,
         };
     }
-    async create(workday, workerId, companyId) {
+    async create(file, workday, workerId, companyId) {
         workday.projectId = new mongoose_2.Types.ObjectId(workday.projectId);
         const project = await this.projectsService.findOne({
             _id: workday.projectId,
@@ -81,20 +85,30 @@ let WorkdaysService = class WorkdaysService {
         if (activeWorkday.length > 0) {
             throw new common_1.ConflictException('El operario ya tiene una jornada en curso');
         }
-        const newWorkday = {
-            workerId,
-            companyId,
-            updatedBy: workerId,
-            ...workday,
-        };
+        const session = await this.connection.startSession();
+        session.startTransaction();
         try {
-            await this.workdayModel.create(newWorkday);
+            const { originalname, buffer } = file;
+            const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.WORKER_WORKDAY, companyId, session);
+            const newWorkday = {
+                fileId: newFile.id,
+                workerId,
+                companyId,
+                updatedBy: workerId,
+                ...workday,
+            };
+            await this.workdayModel.create([newWorkday], { session });
+            await session.commitTransaction();
             return {
                 message: 'Jornada creada correctamente',
             };
         }
         catch (error) {
-            throw new Error(error);
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
         }
     }
     async endWorkday(workdayId, companyId) {
@@ -123,7 +137,10 @@ exports.WorkdaysService = WorkdaysService;
 exports.WorkdaysService = WorkdaysService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Workday_1.Workday.name)),
+    __param(3, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        projects_service_1.ProjectsService])
+        projects_service_1.ProjectsService,
+        files_service_1.FilesService,
+        mongoose_2.Connection])
 ], WorkdaysService);
 //# sourceMappingURL=workdays.service.js.map
