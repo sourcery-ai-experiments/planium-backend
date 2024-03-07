@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: .
+      target: ${DOCKER_BUILD_STAGE}
+      dockerfile: Dockerfile
+    image: planium-backend-${DOCKER_BUILD_STAGE}
+    container_name: planium-backend
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_SES_SENDER_EMAIL: ${AWS_SES_SENDER_EMAIL}
