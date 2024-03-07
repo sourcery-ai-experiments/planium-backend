@@ -21,7 +21,6 @@ import { CompanyId } from '@/decorators/company-id.decorator';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
-import { TaskReviewDto } from './dto/task-review.dto';
 import { TaskStatus, TaskType } from '@/types/Task';
 import { UserType } from '@/types/User';
 import { UserTypes } from '@/decorators/auth/user-type.decorator';
@@ -88,12 +87,9 @@ export class TasksController {
   @UserTypes(UserType.WORKER)
   @Patch('review/:id')
   async taskReview(
-    @Body() taskReviewDto: TaskReviewDto,
     @Param('id', ParseMongoIdPipe) taskId: Types.ObjectId,
     @CompanyId() companyId: Types.ObjectId,
   ) {
-    const { files } = taskReviewDto;
-
-    return await this.tasksService.taskReview(files, taskId, companyId);
+    return await this.tasksService.taskReview(taskId, companyId);
   }
 }

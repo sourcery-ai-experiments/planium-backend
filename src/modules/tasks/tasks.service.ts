@@ -70,11 +70,22 @@ export class TasksService {
       },
       {
         $lookup: {
+          from: 'projects',
+          localField: 'projectId',
+          foreignField: '_id',
+          as: 'project',
+        },
+      },
+      {
+        $lookup: {
           from: 'files',
           localField: 'files',
           foreignField: '_id',
           as: 'files',
         },
+      },
+      {
+        $unwind: '$project',
       },
       {
         $project: {
@@ -88,9 +99,14 @@ export class TasksService {
           cost: 1,
           startDate: 1,
           endDate: 1,
+          createdAt: 1,
           files: {
             _id: 1,
             url: 1,
+          },
+          project: {
+            _id: 1,
+            name: 1,
           },
         },
       },
@@ -183,11 +199,7 @@ export class TasksService {
     }
   }
 
-  async taskReview(
-    files: string[],
-    taskId: Types.ObjectId,
-    companyId: Types.ObjectId,
-  ) {
+  async taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId) {
     const subId = new Types.ObjectId(this.request.user['sub']);
 
     const task = await this.taskModel.findOne({
@@ -199,15 +211,10 @@ export class TasksService {
       throw new NotFoundException('La tarea no existe');
     }
 
-    if (task.status === TaskStatus.WAITING_APPROVAL) {
-      throw new BadRequestException('La tarea ya fue enviada para revisión');
+    if (task.status !== TaskStatus.IN_PROGRESS) {
+      throw new BadRequestException('La tarea no se encuentra en progreso');
     }
 
-    if (task.status === TaskStatus.DONE) {
-      throw new BadRequestException('La tarea ya fue completada');
-    }
-    const filesObjectIds = files.map((file) => new Types.ObjectId(file));
-    task.files = filesObjectIds;
     task.status = TaskStatus.WAITING_APPROVAL;
     task.updatedAt = new Date().getTime();
     task.updatedBy = subId;

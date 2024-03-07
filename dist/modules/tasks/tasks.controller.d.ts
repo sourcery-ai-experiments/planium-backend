@@ -26,7 +26,6 @@
 import { Types } from 'mongoose';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TaskReviewDto } from './dto/task-review.dto';
 import { TaskStatus, TaskType } from '@/types/Task';
 export declare class TasksController {
     private readonly tasksService;
@@ -39,7 +38,7 @@ export declare class TasksController {
     startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    taskReview(taskReviewDto: TaskReviewDto, taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+    taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
 }

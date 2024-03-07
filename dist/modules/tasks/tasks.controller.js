@@ -19,7 +19,6 @@ const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const tasks_service_1 = require("./tasks.service");
 const create_task_dto_1 = require("./dto/create-task.dto");
 const mongo_id_pipe_1 = require("../../pipes/mongo-id.pipe");
-const task_review_dto_1 = require("./dto/task-review.dto");
 const Task_1 = require("../../types/Task");
 const User_1 = require("../../types/User");
 const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
@@ -46,9 +45,8 @@ let TasksController = class TasksController {
     async startTask(taskId, file, companyId) {
         return await this.tasksService.startTask(taskId, file, companyId);
     }
-    async taskReview(taskReviewDto, taskId, companyId) {
-        const { files } = taskReviewDto;
-        return await this.tasksService.taskReview(files, taskId, companyId);
+    async taskReview(taskId, companyId) {
+        return await this.tasksService.taskReview(taskId, companyId);
     }
 };
 exports.TasksController = TasksController;
@@ -96,11 +94,10 @@ __decorate([
 __decorate([
     (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.Patch)('review/:id'),
-    __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
-    __param(2, (0, company_id_decorator_1.CompanyId)()),
+    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [task_review_dto_1.TaskReviewDto, mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "taskReview", null);
 exports.TasksController = TasksController = __decorate([

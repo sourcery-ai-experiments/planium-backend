@@ -66,11 +66,22 @@ let TasksService = class TasksService {
             },
             {
                 $lookup: {
+                    from: 'projects',
+                    localField: 'projectId',
+                    foreignField: '_id',
+                    as: 'project',
+                },
+            },
+            {
+                $lookup: {
                     from: 'files',
                     localField: 'files',
                     foreignField: '_id',
                     as: 'files',
                 },
+            },
+            {
+                $unwind: '$project',
             },
             {
                 $project: {
@@ -84,9 +95,14 @@ let TasksService = class TasksService {
                     cost: 1,
                     startDate: 1,
                     endDate: 1,
+                    createdAt: 1,
                     files: {
                         _id: 1,
                         url: 1,
+                    },
+                    project: {
+                        _id: 1,
+                        name: 1,
                     },
                 },
             },
@@ -152,7 +168,7 @@ let TasksService = class TasksService {
             session.endSession();
         }
     }
-    async taskReview(files, taskId, companyId) {
+    async taskReview(taskId, companyId) {
         const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
         const task = await this.taskModel.findOne({
             _id: taskId,
@@ -161,14 +177,9 @@ let TasksService = class TasksService {
         if (!task) {
             throw new common_1.NotFoundException('La tarea no existe');
         }
-        if (task.status === Task_2.TaskStatus.WAITING_APPROVAL) {
-            throw new common_1.BadRequestException('La tarea ya fue enviada para revisión');
+        if (task.status !== Task_2.TaskStatus.IN_PROGRESS) {
+            throw new common_1.BadRequestException('La tarea no se encuentra en progreso');
         }
-        if (task.status === Task_2.TaskStatus.DONE) {
-            throw new common_1.BadRequestException('La tarea ya fue completada');
-        }
-        const filesObjectIds = files.map((file) => new mongoose_2.Types.ObjectId(file));
-        task.files = filesObjectIds;
         task.status = Task_2.TaskStatus.WAITING_APPROVAL;
         task.updatedAt = new Date().getTime();
         task.updatedBy = subId;

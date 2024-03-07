@@ -44,7 +44,7 @@ export declare class TasksService {
     startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    taskReview(files: string[], taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+    taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     private verifyExistProject;
