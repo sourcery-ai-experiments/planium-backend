@@ -33,9 +33,6 @@ export class Task {
   cost: Record<string, any>;
 
   @Prop({ required: true })
-  startDate: number;
-
-  @Prop({ required: true })
   endDate: number;
 
   @Prop({ required: true, type: Array, default: [] })

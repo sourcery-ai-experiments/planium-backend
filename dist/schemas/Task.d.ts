@@ -32,7 +32,6 @@ export declare class Task {
     supervisor: string;
     floor: string;
     cost: Record<string, any>;
-    startDate: number;
     endDate: number;
     files: Types.ObjectId[];
     workerId: Types.ObjectId;

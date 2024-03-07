@@ -45,13 +45,13 @@ export class ProjectsService {
 
   async create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId) {
     try {
-      const userId = new Types.ObjectId(this.request.user['userId']);
+      const subId = new Types.ObjectId(this.request.user['sub']);
 
       await this.projectModel.create({
         ...createProjectDto,
         companyId,
-        createdBy: userId,
-        updatedBy: userId,
+        createdBy: subId,
+        updatedBy: subId,
       });
 
       return {

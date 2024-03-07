@@ -19,35 +19,16 @@ const core_1 = require("@nestjs/core");
 const mongoose_2 = require("mongoose");
 const Task_1 = require("../../schemas/Task");
 const projects_service_1 = require("../projects/projects.service");
+const files_service_1 = require("../files/files.service");
 const Task_2 = require("../../types/Task");
+const File_1 = require("../../types/File");
 let TasksService = class TasksService {
-    constructor(taskModel, request, projectsService) {
+    constructor(taskModel, request, projectsService, filesService, connection) {
         this.taskModel = taskModel;
         this.request = request;
         this.projectsService = projectsService;
-    }
-    async create(createTaskDto, companyId) {
-        const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
-        createTaskDto.projectId = new mongoose_2.Types.ObjectId(createTaskDto.projectId);
-        await this.verifyExistProject(createTaskDto.projectId);
-        if (createTaskDto?.workerId) {
-            createTaskDto.workerId = new mongoose_2.Types.ObjectId(createTaskDto.workerId);
-        }
-        try {
-            await this.taskModel.create({
-                ...createTaskDto,
-                companyId,
-                workerId: createTaskDto?.workerId ? createTaskDto.workerId : userId,
-                createdBy: userId,
-                updatedBy: userId,
-            });
-            return {
-                message: 'Tarea creada con éxito.',
-            };
-        }
-        catch (error) {
-            throw new Error(error);
-        }
+        this.filesService = filesService;
+        this.connection = connection;
     }
     async getAll(companyId, projectId, status, type) {
         const query = {
@@ -115,8 +96,64 @@ let TasksService = class TasksService {
         }
         return task;
     }
+    async create(createTaskDto, companyId) {
+        createTaskDto.projectId = new mongoose_2.Types.ObjectId(createTaskDto.projectId);
+        const { projectId, workerId } = createTaskDto;
+        await this.verifyExistProject(projectId);
+        await this.verifyWorkerIsInProject(projectId, workerId);
+        try {
+            await this.taskModel.create({
+                ...createTaskDto,
+                companyId,
+                workerId,
+                createdBy: workerId,
+                updatedBy: workerId,
+            });
+            return {
+                message: 'Tarea creada con éxito.',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
+    }
+    async startTask(taskId, file, companyId) {
+        const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
+        const task = await this.taskModel.findOne({
+            _id: taskId,
+            companyId,
+        });
+        if (!task) {
+            throw new common_1.NotFoundException('La tarea no existe');
+        }
+        if (task.status !== Task_2.TaskStatus.TO_DO) {
+            throw new common_1.BadRequestException('La tarea ya fue iniciada');
+        }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            const { originalname, buffer } = file;
+            const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.WORKER_WORKDAY, companyId, session);
+            task.files = [newFile.id];
+            task.status = Task_2.TaskStatus.IN_PROGRESS;
+            task.updatedAt = new Date().getTime();
+            task.updatedBy = subId;
+            await this.taskModel.updateOne({ _id: taskId }, task, { session });
+            await session.commitTransaction();
+            return {
+                message: 'Tarea iniciada.',
+            };
+        }
+        catch (error) {
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
+    }
     async taskReview(files, taskId, companyId) {
-        const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
+        const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
         const task = await this.taskModel.findOne({
             _id: taskId,
             companyId,
@@ -134,7 +171,7 @@ let TasksService = class TasksService {
         task.files = filesObjectIds;
         task.status = Task_2.TaskStatus.WAITING_APPROVAL;
         task.updatedAt = new Date().getTime();
-        task.updatedBy = userId;
+        task.updatedBy = subId;
         await task.save();
         return {
             message: 'Tarea enviada para revisión.',
@@ -143,7 +180,14 @@ let TasksService = class TasksService {
     async verifyExistProject(projectId) {
         const existProject = await this.projectsService.findById(projectId);
         if (!existProject) {
-            throw new common_1.NotFoundException('El id del proyecto no existe');
+            throw new common_1.NotFoundException('El proyecto no existe');
+        }
+    }
+    async verifyWorkerIsInProject(projectId, workerId) {
+        const project = await this.projectsService.findById(projectId);
+        const workerIsInProject = project.workers.some((id) => workerId.equals(id));
+        if (!workerIsInProject) {
+            throw new common_1.BadRequestException('El Operario no pertenece al proyecto');
         }
     }
 };
@@ -152,6 +196,9 @@ exports.TasksService = TasksService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Task_1.Task.name)),
     __param(1, (0, common_1.Inject)(core_1.REQUEST)),
-    __metadata("design:paramtypes", [mongoose_2.Model, Object, projects_service_1.ProjectsService])
+    __param(4, (0, mongoose_1.InjectConnection)()),
+    __metadata("design:paramtypes", [mongoose_2.Model, Object, projects_service_1.ProjectsService,
+        files_service_1.FilesService,
+        mongoose_2.Connection])
 ], TasksService);
 //# sourceMappingURL=tasks.service.js.map

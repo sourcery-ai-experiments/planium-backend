@@ -50,10 +50,6 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Number)
-], Task.prototype, "startDate", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", Number)
 ], Task.prototype, "endDate", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, type: Array, default: [] }),

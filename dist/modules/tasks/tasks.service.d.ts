@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -22,23 +23,30 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
+import { FilesService } from '../files/files.service';
 import { TaskStatus, TaskType } from '@/types/Task';
 export declare class TasksService {
     private readonly taskModel;
     private readonly request;
     private readonly projectsService;
-    constructor(taskModel: Model<TaskDocument>, request: Record<string, unknown>, projectsService: ProjectsService);
+    private readonly filesService;
+    private readonly connection;
+    constructor(taskModel: Model<TaskDocument>, request: Record<string, unknown>, projectsService: ProjectsService, filesService: FilesService, connection: Connection);
+    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<any[]>;
+    getById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<any[]>;
-    getById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
+    startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
     taskReview(files: string[], taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     private verifyExistProject;
+    private verifyWorkerIsInProject;
 }

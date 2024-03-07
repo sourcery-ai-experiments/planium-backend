@@ -25,11 +25,11 @@ let RolesService = class RolesService {
     }
     async create(createRoleDto) {
         try {
-            const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
+            const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
             const data = {
                 ...createRoleDto,
-                createdBy: userId,
-                updatedBy: userId,
+                createdBy: subId,
+                updatedBy: subId,
             };
             const createdRole = new this.roleModel(data);
             await createdRole.save();

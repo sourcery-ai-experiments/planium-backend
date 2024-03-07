@@ -14,6 +14,7 @@ const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const mongoose_1 = require("mongoose");
+const Task_1 = require("../../../types/Task");
 class Cost {
 }
 __decorate([
@@ -21,12 +22,6 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], Cost.prototype, "amount", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsBoolean)(),
-    __metadata("design:type", Boolean)
-], Cost.prototype, "isPaid", void 0);
 class CreateTaskDto {
 }
 exports.CreateTaskDto = CreateTaskDto;
@@ -61,12 +56,12 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], CreateTaskDto.prototype, "startDate", void 0);
+], CreateTaskDto.prototype, "endDate", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateTaskDto.prototype, "endDate", void 0);
+    (0, class_validator_1.IsEnum)(Task_1.TaskType),
+    __metadata("design:type", String)
+], CreateTaskDto.prototype, "type", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),

@@ -2,23 +2,19 @@ import {
   IsNotEmpty,
   ValidateNested,
   IsNumber,
-  IsBoolean,
   IsOptional,
   IsMongoId,
+  IsEnum,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Types } from 'mongoose';
+import { TaskType } from '@/types/Task';
 
 class Cost {
   @ApiPropertyOptional()
   @IsOptional()
   amount: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  isPaid: boolean;
 }
 
 export class CreateTaskDto {
@@ -46,16 +42,16 @@ export class CreateTaskDto {
 
   @ApiProperty()
   @IsNumber()
-  startDate: number;
+  endDate: number;
 
   @ApiProperty()
-  @IsNumber()
-  endDate: number;
+  @IsEnum(TaskType)
+  type: TaskType;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsMongoId()
-  workerId?: Types.ObjectId;
+  workerId: Types.ObjectId;
 
   @ApiProperty()
   @IsMongoId()

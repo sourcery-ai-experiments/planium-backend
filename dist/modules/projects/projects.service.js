@@ -52,12 +52,12 @@ let ProjectsService = class ProjectsService {
     }
     async create(createProjectDto, companyId) {
         try {
-            const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
+            const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
             await this.projectModel.create({
                 ...createProjectDto,
                 companyId,
-                createdBy: userId,
-                updatedBy: userId,
+                createdBy: subId,
+                updatedBy: subId,
             });
             return {
                 message: 'Proyecto creado correctamente',

@@ -4,13 +4,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { REQUEST } from '@nestjs/core';
-import { Model, Types } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { Task, TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
+import { FilesService } from '../files/files.service';
 import { TaskStatus, TaskType } from '@/types/Task';
+import { Folder } from '@/types/File';
 
 @Injectable()
 export class TasksService {
@@ -19,34 +21,9 @@ export class TasksService {
     private readonly taskModel: Model<TaskDocument>,
     @Inject(REQUEST) private readonly request: Record<string, unknown>,
     private readonly projectsService: ProjectsService,
+    private readonly filesService: FilesService,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
-
-  async create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId) {
-    const userId = new Types.ObjectId(this.request.user['userId']);
-    createTaskDto.projectId = new Types.ObjectId(createTaskDto.projectId);
-
-    await this.verifyExistProject(createTaskDto.projectId);
-
-    if (createTaskDto?.workerId) {
-      createTaskDto.workerId = new Types.ObjectId(createTaskDto.workerId);
-    }
-
-    try {
-      await this.taskModel.create({
-        ...createTaskDto,
-        companyId,
-        workerId: createTaskDto?.workerId ? createTaskDto.workerId : userId,
-        createdBy: userId,
-        updatedBy: userId,
-      });
-
-      return {
-        message: 'Tarea creada con éxito.',
-      };
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
 
   async getAll(
     companyId: Types.ObjectId,
@@ -126,12 +103,92 @@ export class TasksService {
     return task;
   }
 
+  async create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId) {
+    createTaskDto.projectId = new Types.ObjectId(createTaskDto.projectId);
+
+    const { projectId, workerId } = createTaskDto;
+
+    await this.verifyExistProject(projectId);
+
+    await this.verifyWorkerIsInProject(projectId, workerId);
+
+    try {
+      await this.taskModel.create({
+        ...createTaskDto,
+        companyId,
+        workerId,
+        createdBy: workerId,
+        updatedBy: workerId,
+      });
+
+      return {
+        message: 'Tarea creada con éxito.',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async startTask(
+    taskId: Types.ObjectId,
+    file: Express.Multer.File,
+    companyId: Types.ObjectId,
+  ) {
+    const subId = new Types.ObjectId(this.request.user['sub']);
+
+    const task = await this.taskModel.findOne({
+      _id: taskId,
+      companyId,
+    });
+
+    if (!task) {
+      throw new NotFoundException('La tarea no existe');
+    }
+
+    if (task.status !== TaskStatus.TO_DO) {
+      throw new BadRequestException('La tarea ya fue iniciada');
+    }
+
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const { originalname, buffer } = file;
+
+      const newFile = await this.filesService.uploadOneFile(
+        originalname,
+        buffer,
+        Folder.WORKER_WORKDAY,
+        companyId,
+        session,
+      );
+
+      task.files = [newFile.id];
+      task.status = TaskStatus.IN_PROGRESS;
+      task.updatedAt = new Date().getTime();
+      task.updatedBy = subId;
+
+      await this.taskModel.updateOne({ _id: taskId }, task, { session });
+
+      await session.commitTransaction();
+
+      return {
+        message: 'Tarea iniciada.',
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  }
+
   async taskReview(
     files: string[],
     taskId: Types.ObjectId,
     companyId: Types.ObjectId,
   ) {
-    const userId = new Types.ObjectId(this.request.user['userId']);
+    const subId = new Types.ObjectId(this.request.user['sub']);
 
     const task = await this.taskModel.findOne({
       _id: taskId,
@@ -153,7 +210,7 @@ export class TasksService {
     task.files = filesObjectIds;
     task.status = TaskStatus.WAITING_APPROVAL;
     task.updatedAt = new Date().getTime();
-    task.updatedBy = userId;
+    task.updatedBy = subId;
 
     await task.save();
 
@@ -166,7 +223,20 @@ export class TasksService {
     const existProject = await this.projectsService.findById(projectId);
 
     if (!existProject) {
-      throw new NotFoundException('El id del proyecto no existe');
+      throw new NotFoundException('El proyecto no existe');
+    }
+  }
+
+  private async verifyWorkerIsInProject(
+    projectId: Types.ObjectId,
+    workerId: Types.ObjectId,
+  ) {
+    const project = await this.projectsService.findById(projectId);
+
+    const workerIsInProject = project.workers.some((id) => workerId.equals(id));
+
+    if (!workerIsInProject) {
+      throw new BadRequestException('El Operario no pertenece al proyecto');
     }
   }
 }
