@@ -1,4 +1,3 @@
-/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -24,29 +23,6 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
-import { TasksService } from './tasks.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { TaskStatus, TaskType } from '@/types/Task';
-import { UploadFilesDto } from './dto/upload-files.dto';
-export declare class TasksController {
-    private readonly tasksService;
-    constructor(tasksService: TasksService);
-    getAll(projectId: Types.ObjectId, status: TaskStatus, type: TaskType, companyId: Types.ObjectId): Promise<{
-        data: any[];
-    }>;
-    getTaskById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
-        data: any;
-    }>;
-    create(createTaskDto: CreateTaskDto, req: any, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
-    manageFilesToTask(taskId: Types.ObjectId, files: Array<Express.Multer.File>, body: UploadFilesDto, companyId: Types.ObjectId): Promise<{
-        message: string;
-    }>;
+export declare class UploadFilesDto {
+    filesToDelete?: Types.ObjectId[];
 }

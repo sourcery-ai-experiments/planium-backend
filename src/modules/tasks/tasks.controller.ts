@@ -14,6 +14,7 @@ import {
   Query,
   Request,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
@@ -24,7 +25,8 @@ import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 import { TaskStatus, TaskType } from '@/types/Task';
 import { UserType } from '@/types/User';
 import { UserTypes } from '@/decorators/auth/user-type.decorator';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UploadFilesDto } from './dto/upload-files.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -91,5 +93,31 @@ export class TasksController {
     @CompanyId() companyId: Types.ObjectId,
   ) {
     return await this.tasksService.taskReview(taskId, companyId);
+  }
+
+  @Patch('upload/:id')
+  @UseInterceptors(FilesInterceptor('files'))
+  manageFilesToTask(
+    @Param('id', ParseMongoIdPipe) taskId: Types.ObjectId,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: UploadFilesDto,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    const filesToDelete = body.filesToDelete?.map(
+      (fileId) => new Types.ObjectId(fileId),
+    );
+
+    if (!filesToDelete && !files) {
+      throw new BadRequestException(
+        'Debe seleccionar al menos una imagen para subir o eliminar',
+      );
+    }
+
+    return this.tasksService.manageTaskFiles(
+      taskId,
+      companyId,
+      files,
+      filesToDelete,
+    );
   }
 }

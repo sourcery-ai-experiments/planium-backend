@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { REQUEST } from '@nestjs/core';
-import { Connection, Model, Types } from 'mongoose';
+import { ClientSession, Connection, Model, Types } from 'mongoose';
 import { Task, TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
@@ -57,7 +57,9 @@ export class TasksService {
       },
     ]);
 
-    return tasks;
+    return {
+      data: tasks,
+    };
   }
 
   async getById(taskId: Types.ObjectId, companyId: Types.ObjectId) {
@@ -116,7 +118,9 @@ export class TasksService {
       throw new NotFoundException('La tarea no existe');
     }
 
-    return task;
+    return {
+      data: task[0],
+    };
   }
 
   async create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId) {
@@ -152,14 +156,7 @@ export class TasksService {
   ) {
     const subId = new Types.ObjectId(this.request.user['sub']);
 
-    const task = await this.taskModel.findOne({
-      _id: taskId,
-      companyId,
-    });
-
-    if (!task) {
-      throw new NotFoundException('La tarea no existe');
-    }
+    const task = await this.verifyTaskExist(taskId, companyId);
 
     if (task.status !== TaskStatus.TO_DO) {
       throw new BadRequestException('La tarea ya fue iniciada');
@@ -174,7 +171,7 @@ export class TasksService {
       const newFile = await this.filesService.uploadOneFile(
         originalname,
         buffer,
-        Folder.WORKER_WORKDAY,
+        Folder.COMPANY_PROJECT_TASK,
         companyId,
         session,
       );
@@ -202,14 +199,7 @@ export class TasksService {
   async taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId) {
     const subId = new Types.ObjectId(this.request.user['sub']);
 
-    const task = await this.taskModel.findOne({
-      _id: taskId,
-      companyId,
-    });
-
-    if (!task) {
-      throw new NotFoundException('La tarea no existe');
-    }
+    const task = await this.verifyTaskExist(taskId, companyId);
 
     if (task.status !== TaskStatus.IN_PROGRESS) {
       throw new BadRequestException('La tarea no se encuentra en progreso');
@@ -224,6 +214,99 @@ export class TasksService {
     return {
       message: 'Tarea enviada para revisión.',
     };
+  }
+
+  async manageTaskFiles(
+    taskId: Types.ObjectId,
+    companyId: Types.ObjectId,
+    files?: Express.Multer.File[],
+    filesToDelete?: Types.ObjectId[],
+  ) {
+    const subId = new Types.ObjectId(this.request.user['sub']);
+    const task = await this.verifyTaskExist(taskId, companyId);
+
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      if (filesToDelete) {
+        await this.removeFilesFromTask(
+          task,
+          filesToDelete,
+          subId,
+          companyId,
+          session,
+        );
+      }
+
+      if (files) {
+        await this.uploadFilesToTask(task, subId, companyId, files, session);
+      }
+
+      await session.commitTransaction();
+
+      return {
+        message: 'Imagenes actualizadas con éxito.',
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  }
+
+  private async uploadFilesToTask(
+    task: TaskDocument,
+    updateBy: Types.ObjectId,
+    companyId: Types.ObjectId,
+    files: Express.Multer.File[],
+    session: ClientSession | null = null,
+  ) {
+    const newFiles = await this.filesService.uploadManyFiles(
+      files,
+      Folder.COMPANY_PROJECT_TASK,
+      companyId,
+      session,
+    );
+
+    task.files = [...task.files, ...newFiles.map((file) => file.id)];
+    task.updatedAt = new Date().getTime();
+    task.updatedBy = updateBy;
+
+    await this.taskModel.updateOne({ _id: task._id }, task, { session });
+  }
+
+  private async removeFilesFromTask(
+    task: TaskDocument,
+    filesToDelete: Types.ObjectId[],
+    updateBy: Types.ObjectId,
+    companyId: Types.ObjectId,
+    session: ClientSession | null = null,
+  ) {
+    await this.filesService.deleteManyFiles(filesToDelete, companyId, session);
+
+    task.files = task.files.filter((fileId) => !filesToDelete.includes(fileId));
+    task.updatedAt = new Date().getTime();
+    task.updatedBy = updateBy;
+
+    await this.taskModel.updateOne({ _id: task._id }, task, { session });
+  }
+
+  private async verifyTaskExist(
+    taskId: Types.ObjectId,
+    companyId: Types.ObjectId,
+  ) {
+    const task = await this.taskModel.findOne({
+      _id: taskId,
+      companyId,
+    });
+
+    if (!task) {
+      throw new NotFoundException('La tarea no existe');
+    }
+
+    return task;
   }
 
   private async verifyExistProject(projectId: Types.ObjectId) {

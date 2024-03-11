@@ -36,8 +36,12 @@ export declare class TasksService {
     private readonly filesService;
     private readonly connection;
     constructor(taskModel: Model<TaskDocument>, request: Record<string, unknown>, projectsService: ProjectsService, filesService: FilesService, connection: Connection);
-    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<any[]>;
-    getById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
+    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<{
+        data: any[];
+    }>;
+    getById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        data: any;
+    }>;
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
@@ -47,6 +51,12 @@ export declare class TasksService {
     taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
+    manageTaskFiles(taskId: Types.ObjectId, companyId: Types.ObjectId, files?: Express.Multer.File[], filesToDelete?: Types.ObjectId[]): Promise<{
+        message: string;
+    }>;
+    private uploadFilesToTask;
+    private removeFilesFromTask;
+    private verifyTaskExist;
     private verifyExistProject;
     private verifyWorkerIsInProject;
 }
