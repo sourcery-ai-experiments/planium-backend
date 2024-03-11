@@ -10,6 +10,7 @@ async function bootstrap() {
         whitelist: true,
         forbidNonWhitelisted: true,
     }));
+    app.setGlobalPrefix('api');
     const configService = app.get(config_1.ConfigService);
     const port = process.env.PORT || configService.get('PORT');
     await app.listen(port);
