@@ -46,7 +46,7 @@ export declare class TasksController {
     taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    manageFilesToTask(taskId: Types.ObjectId, files: Array<Express.Multer.File>, body: UploadFilesDto, companyId: Types.ObjectId): Promise<{
+    manageTaskFiles(taskId: Types.ObjectId, files: Array<Express.Multer.File>, body: UploadFilesDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
 }

@@ -24,7 +24,7 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Connection, Model, Types } from 'mongoose';
-import { TaskDocument } from '@/schemas/Task';
+import { Task, TaskDocument } from '@/schemas/Task';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
 import { FilesService } from '../files/files.service';
@@ -56,7 +56,13 @@ export declare class TasksService {
     }>;
     private uploadFilesToTask;
     private removeFilesFromTask;
-    private verifyTaskExist;
+    verifyTaskExist(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Task> & Task & {
+        _id: Types.ObjectId;
+    }> & import("mongoose").Document<unknown, {}, Task> & Task & {
+        _id: Types.ObjectId;
+    } & Required<{
+        _id: Types.ObjectId;
+    }>>;
     private verifyExistProject;
-    private verifyWorkerIsInProject;
+    verifyWorkerIsInProject(projectId: Types.ObjectId, workerId: Types.ObjectId): Promise<void>;
 }

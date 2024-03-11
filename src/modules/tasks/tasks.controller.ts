@@ -95,9 +95,10 @@ export class TasksController {
     return await this.tasksService.taskReview(taskId, companyId);
   }
 
+  @UserTypes(UserType.WORKER)
   @Patch('upload/:id')
   @UseInterceptors(FilesInterceptor('files'))
-  manageFilesToTask(
+  manageTaskFiles(
     @Param('id', ParseMongoIdPipe) taskId: Types.ObjectId,
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() body: UploadFilesDto,

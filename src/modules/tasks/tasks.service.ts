@@ -293,10 +293,7 @@ export class TasksService {
     await this.taskModel.updateOne({ _id: task._id }, task, { session });
   }
 
-  private async verifyTaskExist(
-    taskId: Types.ObjectId,
-    companyId: Types.ObjectId,
-  ) {
+  async verifyTaskExist(taskId: Types.ObjectId, companyId: Types.ObjectId) {
     const task = await this.taskModel.findOne({
       _id: taskId,
       companyId,
@@ -317,7 +314,7 @@ export class TasksService {
     }
   }
 
-  private async verifyWorkerIsInProject(
+  async verifyWorkerIsInProject(
     projectId: Types.ObjectId,
     workerId: Types.ObjectId,
   ) {

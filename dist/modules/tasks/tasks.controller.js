@@ -49,7 +49,7 @@ let TasksController = class TasksController {
     async taskReview(taskId, companyId) {
         return await this.tasksService.taskReview(taskId, companyId);
     }
-    manageFilesToTask(taskId, files, body, companyId) {
+    manageTaskFiles(taskId, files, body, companyId) {
         const filesToDelete = body.filesToDelete?.map((fileId) => new mongoose_1.Types.ObjectId(fileId));
         if (!filesToDelete && !files) {
             throw new common_1.BadRequestException('Debe seleccionar al menos una imagen para subir o eliminar');
@@ -109,6 +109,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "taskReview", null);
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.Patch)('upload/:id'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files')),
     __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
@@ -119,7 +120,7 @@ __decorate([
     __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, Array,
         upload_files_dto_1.UploadFilesDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", void 0)
-], TasksController.prototype, "manageFilesToTask", null);
+], TasksController.prototype, "manageTaskFiles", null);
 exports.TasksController = TasksController = __decorate([
     (0, common_1.Controller)('tasks'),
     __metadata("design:paramtypes", [tasks_service_1.TasksService])
