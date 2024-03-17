@@ -10,7 +10,9 @@ async function bootstrap() {
         whitelist: true,
         forbidNonWhitelisted: true,
     }));
-    app.setGlobalPrefix('api');
+    app.setGlobalPrefix('api', {
+        exclude: [{ path: 'health-status', method: common_1.RequestMethod.GET }],
+    });
     const configService = app.get(config_1.ConfigService);
     const port = process.env.PORT || configService.get('PORT');
     await app.listen(port);
