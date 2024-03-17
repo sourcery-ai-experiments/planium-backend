@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -22,15 +23,21 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model, Types } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { WorkdayDocument } from '@/schemas/Workday';
 import { CreateWorkdayDto } from './dto/create-workday.dto';
-import { WorkersService } from '@module/workers/workers.service';
+import { ProjectsService } from '../projects/projects.service';
+import { FilesService } from '../files/files.service';
 export declare class WorkdaysService {
     private readonly workdayModel;
-    private readonly workersService;
-    constructor(workdayModel: Model<WorkdayDocument>, workersService: WorkersService);
-    create(workday: CreateWorkdayDto, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+    private readonly projectsService;
+    private readonly filesService;
+    private readonly connection;
+    constructor(workdayModel: Model<WorkdayDocument>, projectsService: ProjectsService, filesService: FilesService, connection: Connection);
+    getWorkdaysByWorkerId(isActive: boolean, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        data: any[];
+    }>;
+    create(file: Express.Multer.File, workday: CreateWorkdayDto, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     endWorkday(workdayId: Types.ObjectId, companyId: Types.ObjectId): Promise<{

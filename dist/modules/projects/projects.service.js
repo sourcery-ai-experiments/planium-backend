@@ -23,23 +23,6 @@ let ProjectsService = class ProjectsService {
         this.projectModel = projectModel;
         this.request = request;
     }
-    async create(createProjectDto, companyId) {
-        try {
-            const userId = new mongoose_2.Types.ObjectId(this.request.user['userId']);
-            await this.projectModel.create({
-                ...createProjectDto,
-                companyId,
-                createdBy: userId,
-                updatedBy: userId,
-            });
-            return {
-                message: 'Proyecto creado correctamente',
-            };
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    }
     async findById(id) {
         try {
             return this.projectModel.findById(id).exec();
@@ -47,6 +30,9 @@ let ProjectsService = class ProjectsService {
         catch (error) {
             throw new Error(error);
         }
+    }
+    async findOne(where) {
+        return this.projectModel.findOne(where).exec();
     }
     async getByWorkerId(workerId, companyId) {
         const projects = await this.projectModel.aggregate([
@@ -63,6 +49,23 @@ let ProjectsService = class ProjectsService {
             },
         ]);
         return projects;
+    }
+    async create(createProjectDto, companyId) {
+        try {
+            const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
+            await this.projectModel.create({
+                ...createProjectDto,
+                companyId,
+                createdBy: subId,
+                updatedBy: subId,
+            });
+            return {
+                message: 'Proyecto creado correctamente',
+            };
+        }
+        catch (error) {
+            throw new Error(error);
+        }
     }
     async addWorkers(projectId, workers, companyId, session = null) {
         const project = await this.projectModel.findOne({

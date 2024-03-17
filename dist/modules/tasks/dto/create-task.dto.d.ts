@@ -23,9 +23,9 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
+import { TaskType } from '@/types/Task';
 declare class Cost {
     amount: string;
-    isPaid: boolean;
 }
 export declare class CreateTaskDto {
     title: string;
@@ -33,9 +33,9 @@ export declare class CreateTaskDto {
     supervisor: string;
     floor: string;
     cost?: Cost;
-    startDate: number;
     endDate: number;
-    workerId?: Types.ObjectId;
+    type: TaskType;
+    workerId: Types.ObjectId;
     projectId: Types.ObjectId;
 }
 export {};

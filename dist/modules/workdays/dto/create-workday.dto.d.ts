@@ -27,5 +27,4 @@ import { Types } from 'mongoose';
 export declare class CreateWorkdayDto {
     type: WorkdayType;
     projectId: Types.ObjectId;
-    fileId: Types.ObjectId;
 }

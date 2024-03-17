@@ -52,9 +52,6 @@ export declare class CompaniesService {
     } & Required<{
         _id: Types.ObjectId;
     }>>;
-    findAllByWorkerId(workerId: Types.ObjectId): Promise<{
-        data: any[];
-    }>;
     findCompanyById(companyId: Types.ObjectId): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Company> & Company & {
         _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, Company> & Company & {

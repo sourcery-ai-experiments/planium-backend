@@ -49,28 +49,6 @@ let CompaniesService = class CompaniesService {
     async findOne(where, session = null) {
         return this.companyModel.findOne(where, null, { session });
     }
-    async findAllByWorkerId(workerId) {
-        try {
-            const companies = await this.companyModel.aggregate([
-                {
-                    $match: {
-                        'workers.workerId': workerId,
-                    },
-                },
-                {
-                    $project: {
-                        name: 1,
-                    },
-                },
-            ]);
-            return {
-                data: companies,
-            };
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    }
     async findCompanyById(companyId) {
         const company = await this.companyModel.findById(companyId);
         if (!company) {

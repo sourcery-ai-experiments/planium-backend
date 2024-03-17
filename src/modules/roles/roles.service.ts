@@ -15,12 +15,12 @@ export class RolesService {
 
   async create(createRoleDto: CreateRoleDto) {
     try {
-      const userId = new Types.ObjectId(this.request.user['userId']);
+      const subId = new Types.ObjectId(this.request.user['sub']);
 
       const data = {
         ...createRoleDto,
-        createdBy: userId,
-        updatedBy: userId,
+        createdBy: subId,
+        updatedBy: subId,
       };
 
       const createdRole = new this.roleModel(data);

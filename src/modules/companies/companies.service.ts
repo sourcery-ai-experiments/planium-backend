@@ -57,29 +57,6 @@ export class CompaniesService {
     return this.companyModel.findOne(where, null, { session });
   }
 
-  async findAllByWorkerId(workerId: Types.ObjectId) {
-    try {
-      const companies = await this.companyModel.aggregate([
-        {
-          $match: {
-            'workers.workerId': workerId,
-          },
-        },
-        {
-          $project: {
-            name: 1,
-          },
-        },
-      ]);
-
-      return {
-        data: companies,
-      };
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
   async findCompanyById(companyId: Types.ObjectId) {
     const company = await this.companyModel.findById(companyId);
 

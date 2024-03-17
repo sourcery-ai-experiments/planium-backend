@@ -29,11 +29,12 @@ export declare class ProjectsService {
     private readonly projectModel;
     private readonly request;
     constructor(projectModel: Model<ProjectDocument>, request: Record<string, unknown>);
+    findById(id: Types.ObjectId): Promise<Project>;
+    findOne(where: Record<string, unknown>): Promise<Project>;
+    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    findById(id: Types.ObjectId): Promise<Project>;
-    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
     addWorkers(projectId: Types.ObjectId, workers: string[], companyId: Types.ObjectId, session?: ClientSession | null): Promise<{
         message: string;
     }>;

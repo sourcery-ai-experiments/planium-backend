@@ -13,6 +13,9 @@ async function bootstrap() {
     }),
   );
 
+  //TODO: si healthy check falla excluirlo desde acá
+  app.setGlobalPrefix('api');
+
   const configService = app.get(ConfigService);
   const port = process.env.PORT || configService.get('PORT');
 

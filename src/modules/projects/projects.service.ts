@@ -13,31 +13,16 @@ export class ProjectsService {
     @Inject(REQUEST) private readonly request: Record<string, unknown>,
   ) {}
 
-  async create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId) {
-    try {
-      const userId = new Types.ObjectId(this.request.user['userId']);
-
-      await this.projectModel.create({
-        ...createProjectDto,
-        companyId,
-        createdBy: userId,
-        updatedBy: userId,
-      });
-
-      return {
-        message: 'Proyecto creado correctamente',
-      };
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-
   async findById(id: Types.ObjectId): Promise<Project> {
     try {
       return this.projectModel.findById(id).exec();
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async findOne(where: Record<string, unknown>): Promise<Project> {
+    return this.projectModel.findOne(where).exec();
   }
 
   async getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId) {
@@ -56,6 +41,25 @@ export class ProjectsService {
     ]);
 
     return projects;
+  }
+
+  async create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId) {
+    try {
+      const subId = new Types.ObjectId(this.request.user['sub']);
+
+      await this.projectModel.create({
+        ...createProjectDto,
+        companyId,
+        createdBy: subId,
+        updatedBy: subId,
+      });
+
+      return {
+        message: 'Proyecto creado correctamente',
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async addWorkers(

@@ -22,6 +22,14 @@ import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
+  @Get('by-worker/:id')
+  async getByWorkerId(
+    @Param('id', ParseMongoIdPipe) workerId: Types.ObjectId,
+    @CompanyId() companyId: Types.ObjectId,
+  ) {
+    return await this.projectsService.getByWorkerId(workerId, companyId);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -29,14 +37,6 @@ export class ProjectsController {
     @CompanyId() companyId: Types.ObjectId,
   ) {
     return await this.projectsService.create(createProjectDto, companyId);
-  }
-
-  @Get('by-worker/:id')
-  async getByWorkerId(
-    @Param('id', ParseMongoIdPipe) workerId: Types.ObjectId,
-    @CompanyId() companyId: Types.ObjectId,
-  ) {
-    return await this.projectsService.getByWorkerId(workerId, companyId);
   }
 
   @Patch(':id/workers')

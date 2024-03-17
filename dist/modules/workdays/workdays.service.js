@@ -17,15 +17,66 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Workday_1 = require("../../schemas/Workday");
-const workers_service_1 = require("../workers/workers.service");
+const projects_service_1 = require("../projects/projects.service");
+const files_service_1 = require("../files/files.service");
+const File_1 = require("../../types/File");
 let WorkdaysService = class WorkdaysService {
-    constructor(workdayModel, workersService) {
+    constructor(workdayModel, projectsService, filesService, connection) {
         this.workdayModel = workdayModel;
-        this.workersService = workersService;
+        this.projectsService = projectsService;
+        this.filesService = filesService;
+        this.connection = connection;
     }
-    async create(workday, workerId, companyId) {
-        workday.fileId = new mongoose_2.Types.ObjectId(workday.fileId);
+    async getWorkdaysByWorkerId(isActive, workerId, companyId) {
+        const query = {
+            workerId,
+            companyId,
+        };
+        if (isActive)
+            query['isActive'] = isActive;
+        const workdays = await this.workdayModel.aggregate([
+            {
+                $match: query,
+            },
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: 'projectId',
+                    foreignField: '_id',
+                    as: 'project',
+                },
+            },
+            {
+                $unwind: '$project',
+            },
+            {
+                $project: {
+                    _id: 1,
+                    date: 1,
+                    startTime: 1,
+                    endTime: 1,
+                    isActive: 1,
+                    type: 1,
+                    project: {
+                        _id: 1,
+                        name: 1,
+                    },
+                },
+            },
+        ]);
+        return {
+            data: workdays,
+        };
+    }
+    async create(file, workday, workerId, companyId) {
         workday.projectId = new mongoose_2.Types.ObjectId(workday.projectId);
+        const project = await this.projectsService.findOne({
+            _id: workday.projectId,
+            companyId,
+        });
+        if (!project) {
+            throw new common_1.NotFoundException('El proyecto no existe');
+        }
         const activeWorkday = await this.workdayModel.find({
             workerId,
             companyId,
@@ -34,24 +85,30 @@ let WorkdaysService = class WorkdaysService {
         if (activeWorkday.length > 0) {
             throw new common_1.ConflictException('El operario ya tiene una jornada en curso');
         }
-        const worker = await this.workersService.findOne(workerId);
-        if (!worker) {
-            throw new common_1.NotFoundException('El operario no existe');
-        }
-        const newWorkday = {
-            workerId,
-            companyId,
-            updatedBy: workerId,
-            ...workday,
-        };
+        const session = await this.connection.startSession();
+        session.startTransaction();
         try {
-            await this.workdayModel.create(newWorkday);
+            const { originalname, buffer } = file;
+            const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.WORKER_WORKDAY, companyId, session);
+            const newWorkday = {
+                fileId: newFile.id,
+                workerId,
+                companyId,
+                updatedBy: workerId,
+                ...workday,
+            };
+            await this.workdayModel.create([newWorkday], { session });
+            await session.commitTransaction();
             return {
                 message: 'Jornada creada correctamente',
             };
         }
         catch (error) {
-            throw new Error(error);
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
         }
     }
     async endWorkday(workdayId, companyId) {
@@ -80,7 +137,10 @@ exports.WorkdaysService = WorkdaysService;
 exports.WorkdaysService = WorkdaysService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Workday_1.Workday.name)),
+    __param(3, (0, mongoose_1.InjectConnection)()),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        workers_service_1.WorkersService])
+        projects_service_1.ProjectsService,
+        files_service_1.FilesService,
+        mongoose_2.Connection])
 ], WorkdaysService);
 //# sourceMappingURL=workdays.service.js.map

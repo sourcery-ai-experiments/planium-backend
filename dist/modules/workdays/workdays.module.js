@@ -9,17 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkdaysModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
-const workers_module_1 = require("../workers/workers.module");
 const workdays_service_1 = require("./workdays.service");
 const workdays_controller_1 = require("./workdays.controller");
 const Workday_1 = require("../../schemas/Workday");
+const projects_module_1 = require("../projects/projects.module");
+const files_module_1 = require("../files/files.module");
 let WorkdaysModule = class WorkdaysModule {
 };
 exports.WorkdaysModule = WorkdaysModule;
 exports.WorkdaysModule = WorkdaysModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            workers_module_1.WorkersModule,
+            files_module_1.FilesModule,
+            projects_module_1.ProjectsModule,
             mongoose_1.MongooseModule.forFeature([{ name: Workday_1.Workday.name, schema: Workday_1.WorkdaySchema }]),
         ],
         providers: [workdays_service_1.WorkdaysService],

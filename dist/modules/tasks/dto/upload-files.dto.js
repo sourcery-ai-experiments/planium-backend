@@ -9,17 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TaskReviewDto = void 0;
+exports.UploadFilesDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
-class TaskReviewDto {
+class UploadFilesDto {
 }
-exports.TaskReviewDto = TaskReviewDto;
+exports.UploadFilesDto = UploadFilesDto;
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.ArrayNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsMongoId)({ each: true }),
     __metadata("design:type", Array)
-], TaskReviewDto.prototype, "files", void 0);
-//# sourceMappingURL=task-review.dto.js.map
+], UploadFilesDto.prototype, "filesToDelete", void 0);
+//# sourceMappingURL=upload-files.dto.js.map

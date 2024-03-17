@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -25,17 +26,27 @@
 import { Types } from 'mongoose';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { TaskReviewDto } from './dto/task-review.dto';
 import { TaskStatus, TaskType } from '@/types/Task';
+import { UploadFilesDto } from './dto/upload-files.dto';
 export declare class TasksController {
     private readonly tasksService;
     constructor(tasksService: TasksService);
-    create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
+    getAll(projectId: Types.ObjectId, status: TaskStatus, type: TaskType, companyId: Types.ObjectId): Promise<{
+        data: any[];
+    }>;
+    getTaskById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        data: any;
+    }>;
+    create(createTaskDto: CreateTaskDto, req: any, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    getAll(projectId: Types.ObjectId, status: TaskStatus, type: TaskType, companyId: Types.ObjectId): Promise<any[]>;
-    getTaskById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
-    taskReview(taskReviewDto: TaskReviewDto, taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+    startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    manageTaskFiles(taskId: Types.ObjectId, files: Array<Express.Multer.File>, body: UploadFilesDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
 }

@@ -13,12 +13,14 @@ const Task_1 = require("../../schemas/Task");
 const tasks_service_1 = require("./tasks.service");
 const tasks_controller_1 = require("./tasks.controller");
 const projects_module_1 = require("../projects/projects.module");
+const files_module_1 = require("../files/files.module");
 let TasksModule = class TasksModule {
 };
 exports.TasksModule = TasksModule;
 exports.TasksModule = TasksModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            files_module_1.FilesModule,
             projects_module_1.ProjectsModule,
             mongoose_1.MongooseModule.forFeature([{ name: Task_1.Task.name, schema: Task_1.TaskSchema }]),
         ],

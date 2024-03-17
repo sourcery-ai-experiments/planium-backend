@@ -40,6 +40,27 @@ let FilesService = class FilesService {
             url: newFile[0].url,
         };
     }
+    async uploadManyFiles(files, folder, companyId, session = null) {
+        const newFiles = await Promise.all(files.map(async (file) => {
+            const key = (0, rename_file_helper_1.renameFile)(file.originalname);
+            const newKey = `${folder}/${key}`;
+            const imageUrl = await this.s3Service.uploadFile(newKey, file.buffer);
+            return {
+                url: imageUrl,
+                key: newKey,
+                companyId,
+            };
+        }));
+        return await this.fileModel.insertMany(newFiles, { session });
+    }
+    async deleteManyFiles(filesToDelete, companyId, session = null) {
+        const files = await this.fileModel.find({ _id: { $in: filesToDelete }, companyId }, { key: 1 }, { session });
+        if (files.length !== filesToDelete.length) {
+            throw new common_1.NotFoundException('Algunos archivos a eliminar no existen');
+        }
+        await Promise.all(files.map((file) => this.s3Service.deleteFile(file.key)));
+        await this.fileModel.deleteMany({ _id: { $in: filesToDelete } }, { session });
+    }
     async deleteOneFile(fileId, companyId, session = null) {
         const file = await this.fileModel.findOneAndDelete({ _id: fileId, companyId }, { session });
         if (!file) {

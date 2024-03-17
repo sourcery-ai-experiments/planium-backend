@@ -22,28 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { HydratedDocument, Types } from 'mongoose';
-export type TaskDocument = HydratedDocument<Task>;
-export declare class Task {
-    title: string;
-    description: string;
-    status: string;
-    type: string;
-    supervisor: string;
-    floor: string;
-    cost: Record<string, any>;
-    endDate: number;
-    files: Types.ObjectId[];
-    workerId: Types.ObjectId;
-    projectId: Types.ObjectId;
-    companyId: Types.ObjectId;
-    createdAt: number;
-    createdBy: Types.ObjectId;
-    updatedAt: number;
-    updatedBy: Types.ObjectId;
+import { Types } from 'mongoose';
+export declare class UploadFilesDto {
+    filesToDelete?: Types.ObjectId[];
 }
-export declare const TaskSchema: import("mongoose").Schema<Task, import("mongoose").Model<Task, any, any, any, import("mongoose").Document<unknown, any, Task> & Task & {
-    _id: Types.ObjectId;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Task, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Task>> & import("mongoose").FlatRecord<Task> & {
-    _id: Types.ObjectId;
-}>;
