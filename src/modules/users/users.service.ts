@@ -6,12 +6,15 @@ import * as bcrypt from 'bcrypt';
 import { User, UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FilesService } from '../files/files.service';
+import { Folder } from '@/types/File';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    private readonly filesService: FilesService,
   ) {}
 
   async findById(id: Types.ObjectId): Promise<UserDocument> {
@@ -23,11 +26,43 @@ export class UsersService {
   }
 
   async findOne(where: Record<string, any>) {
-    try {
-      return this.userModel.findOne(where).exec();
-    } catch (error) {
-      throw new Error(error);
-    }
+    const response = await this.userModel.aggregate([
+      {
+        $match: where,
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'fileId',
+          foreignField: '_id',
+          as: 'file',
+        },
+      },
+      {
+        $unwind: {
+          path: '$file',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          username: 1,
+          email: 1,
+          password: 1,
+          phone: 1,
+          type: 1,
+          file: {
+            _id: 1,
+            url: 1,
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
+
+    return response[0];
   }
 
   async create(user: CreateUserDto, session: ClientSession | null = null) {
@@ -58,11 +93,6 @@ export class UsersService {
     if (!user) {
       throw new BadRequestException('El usuario no existe');
     }
-
-    /* const updatedUser = await this.userModel.findByIdAndUpdate(
-      id,
-      updateUserDto,
-    ); */
 
     const updatedUser = await this.userModel.findByIdAndUpdate(
       id,
@@ -110,5 +140,39 @@ export class UsersService {
         'El email o el username ya están en uso dentro de la empresa',
       );
     }
+  }
+
+  async uploadAvatar(
+    file: Express.Multer.File,
+    folder: Folder,
+    userId: Types.ObjectId,
+    companyId: Types.ObjectId,
+    session: ClientSession | null = null,
+  ) {
+    const user = await this.findOne({ _id: userId, companyId });
+
+    if (!user) {
+      throw new BadRequestException('El usuario no existe');
+    }
+
+    if (user.fileId) {
+      await this.filesService.deleteOneFile(user.fileId, companyId, session);
+    }
+
+    const { originalname, buffer } = file;
+
+    const newFile = await this.filesService.uploadOneFile(
+      originalname,
+      buffer,
+      folder,
+      companyId,
+      session,
+    );
+
+    await this.userModel.updateOne(
+      { _id: userId },
+      { fileId: newFile.id },
+      { session },
+    );
   }
 }

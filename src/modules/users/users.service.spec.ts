@@ -6,6 +6,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { UserType } from '@/types/User';
 import { Types } from 'mongoose';
 import { BadRequestException } from '@nestjs/common';
+import { FilesService } from '../files/files.service';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -55,6 +56,23 @@ describe('UsersService', () => {
     findById: jest.fn().mockImplementation((id) => ({
       exec: jest.fn().mockResolvedValue(userList[0]),
     })),
+    aggregate: jest.fn().mockImplementation(() => userList),
+  };
+
+  const mockFilesService = {
+    uploadOneFile: jest
+      .fn()
+      .mockImplementation(
+        (
+          originalname: string,
+          body: Buffer,
+          folder: string,
+          companyId: Types.ObjectId,
+        ) => ({
+          id: new Types.ObjectId(),
+          url: `https://s3.amazonaws.com/${folder}/${originalname}`,
+        }),
+      ),
   };
 
   beforeEach(async () => {
@@ -64,6 +82,10 @@ describe('UsersService', () => {
         {
           provide: getModelToken(User.name),
           useValue: mockUserModel,
+        },
+        {
+          provide: FilesService,
+          useValue: mockFilesService,
         },
       ],
     }).compile();
@@ -99,26 +121,4 @@ describe('UsersService', () => {
 
     await expect(service.create(dto)).rejects.toThrow(BadRequestException);
   });
-
-  /*  it('should update a user', async () => {
-    const userId = new Types.ObjectId('507f1f77bcf86cd799439011');
-    const updateDto = {
-      name: 'Pepe Díaz',
-      username: 'pepe.mock',
-      email: 'pepe@gmail.com',
-      password: '12345678',
-      type: UserType.WORKER,
-      companyId: new Types.ObjectId(),
-    };
-
-    const { password, ...userData } = updateDto;
-
-    expect(await service.update(userId, updateDto)).toEqual({
-      message: 'Usuario actualizado correctamente',
-      data: {
-        id: new Types.ObjectId('507f1f77bcf86cd799439011'),
-        ...userData,
-      },
-    });
-  }); */
 });

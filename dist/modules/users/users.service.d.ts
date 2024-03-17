@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -23,27 +24,24 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Model, Types, ClientSession } from 'mongoose';
-import { User, UserDocument } from '@/schemas/User';
+import { UserDocument } from '@/schemas/User';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FilesService } from '../files/files.service';
+import { Folder } from '@/types/File';
 export declare class UsersService {
     private readonly userModel;
-    constructor(userModel: Model<UserDocument>);
+    private readonly filesService;
+    constructor(userModel: Model<UserDocument>, filesService: FilesService);
     findById(id: Types.ObjectId): Promise<UserDocument>;
-    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, User> & User & {
-        _id: Types.ObjectId;
-    } & Required<{
-        _id: Types.ObjectId;
-    }>>;
+    findOne(where: Record<string, any>): Promise<any>;
     create(user: CreateUserDto, session?: ClientSession | null): Promise<{
         message: string;
         data: {
             _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -78,7 +76,7 @@ export declare class UsersService {
             _id: Types.ObjectId;
             __v?: any;
             $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
+            $op: "save" | "validate" | "remove";
             $where: Record<string, unknown>;
             baseModelName?: string;
             collection: import("mongoose").Collection<import("bson").Document>;
@@ -110,4 +108,5 @@ export declare class UsersService {
     changePassword(userId: Types.ObjectId, password: string): Promise<void>;
     hashPassword(password: string): Promise<any>;
     validateUserExists(user: CreateUserDto): Promise<void>;
+    uploadAvatar(file: Express.Multer.File, folder: Folder, userId: Types.ObjectId, companyId: Types.ObjectId, session?: ClientSession | null): Promise<void>;
 }

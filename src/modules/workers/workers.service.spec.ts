@@ -7,6 +7,7 @@ import { WorkersService } from './workers.service';
 import { ProjectsService } from '../projects/projects.service';
 import { CompaniesService } from '../companies/companies.service';
 import { SesService } from '../aws/aws.ses.service';
+import { FilesService } from '../files/files.service';
 import { Types } from 'mongoose';
 
 describe('WorkersService', () => {
@@ -20,10 +21,29 @@ describe('WorkersService', () => {
         ...dto,
       },
     })),
+    update: jest.fn().mockImplementation((id, dto) => ({
+      message: 'Operario actualizado correctamente',
+    })),
   };
 
   const mockSesService = {
     sendEmail: jest.fn().mockResolvedValue(null),
+  };
+
+  const mockFilesService = {
+    uploadOneFile: jest
+      .fn()
+      .mockImplementation(
+        (
+          originalname: string,
+          body: Buffer,
+          folder: string,
+          companyId: Types.ObjectId,
+        ) => ({
+          id: new Types.ObjectId(),
+          url: `https://s3.amazonaws.com/${folder}/${originalname}`,
+        }),
+      ),
   };
 
   const mockProjectService = {
@@ -65,6 +85,7 @@ describe('WorkersService', () => {
     findOne: jest.fn().mockImplementation((where) => ({
       exec: jest.fn().mockResolvedValue(workerList[0]),
     })),
+    updateOne: jest.fn(),
   };
 
   const mockConnection = {
@@ -104,6 +125,10 @@ describe('WorkersService', () => {
         {
           provide: SesService,
           useValue: mockSesService,
+        },
+        {
+          provide: FilesService,
+          useValue: mockFilesService,
         },
       ],
     }).compile();
@@ -145,5 +170,18 @@ describe('WorkersService', () => {
     expect(await service.findOne({ email: 'daniel.mock@gmail.com' })).toEqual(
       workerList[0],
     );
+  });
+
+  it('should update a worker', async () => {
+    const workerId = new Types.ObjectId();
+    const companyId = new Types.ObjectId();
+    const updateWorkerDto = {
+      name: 'Pepe Diaz',
+      email: 'pepe@gmail.com',
+    } as any;
+
+    expect(await service.update(workerId, updateWorkerDto, companyId)).toEqual({
+      message: 'Operario actualizado correctamente',
+    });
   });
 });

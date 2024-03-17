@@ -111,6 +111,26 @@ let WorkersService = class WorkersService {
             session.endSession();
         }
     }
+    async uploadAvatar(file, workerId, companyId) {
+        const worker = await this.workerModel.findOne({ _id: workerId, companyId });
+        if (!worker) {
+            throw new common_1.UnauthorizedException('El operario no existe');
+        }
+        const session = await this.connection.startSession();
+        session.startTransaction();
+        try {
+            await this.userService.uploadAvatar(file, File_1.Folder.WORKER_AVATAR, worker.userId, companyId, session);
+            await session.commitTransaction();
+            return { message: 'Avatar actualizado correctamente' };
+        }
+        catch (error) {
+            await session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
+    }
     async changePassword(userId, password) {
         const user = await this.userService.findById(userId);
         if (!user) {

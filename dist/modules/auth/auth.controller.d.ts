@@ -36,35 +36,7 @@ export declare class AuthController {
     }>;
     validateUser(req: any, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: {
-            _id: Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "save" | "validate" | "remove";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            username: string;
-            email: string;
-            countryId: string;
-            phone: Record<string, any>;
-            type: string;
-            fileId: Types.ObjectId;
-        };
+        data: any;
     }>;
     refreshToken(companyId: Types.ObjectId, req: any): Promise<{
         message: string;
@@ -75,13 +47,13 @@ export declare class AuthController {
     sendRecoverySms(smsRecoveryDto: SmsRecoveryDto): Promise<{
         message: string;
         data: {
-            userId: Types.ObjectId;
+            userId: any;
         };
     }>;
     sendRecoveryEmail(emailRecoveryDto: EmailRecoveryDto): Promise<{
         message: string;
         data: {
-            userId: Types.ObjectId;
+            userId: any;
         };
     }>;
     verifyRecoveryCode(verifyCodeDto: VerifyCodeDto): Promise<{

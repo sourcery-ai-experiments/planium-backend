@@ -20,6 +20,13 @@ describe('AuthService', () => {
   let companyUserService: Partial<CompanyUsersService>;
   let workerService: Partial<WorkersService>;
 
+  const mockUser = {
+    _id: new Types.ObjectId(),
+    email: 'pepe.mock@gmail.com',
+    password: '123456789',
+    companyId: new Types.ObjectId(),
+  } as any;
+
   beforeEach(async () => {
     userService = {
       findOne: jest.fn(),
@@ -93,34 +100,25 @@ describe('AuthService', () => {
 
   it('should throw exception if user does not exist', async () => {
     jest.spyOn(userService, 'findOne').mockResolvedValue(null);
+    const { email, password } = mockUser;
 
-    await expect(
-      service.signIn('pepe.mock@gmail.com', '12345678'),
-    ).rejects.toThrow(UnauthorizedException);
+    await expect(service.signIn(email, password)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should thrown exception if password does not match', async () => {
-    const mockUser = {
-      _id: new Types.ObjectId(),
-      email: 'pepe.mock@gmail.com',
-      password: '123456789',
-    } as any;
-
     jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
     jest.spyOn(service, 'comparePasswords').mockResolvedValue(false);
 
-    await expect(
-      service.signIn('pepe.mock@gmail.com', '12345678'),
-    ).rejects.toThrow(UnauthorizedException);
+    const { email, password } = mockUser;
+
+    await expect(service.signIn(email, password)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should return access token if user login', async () => {
-    const mockUser = {
-      _id: new Types.ObjectId(),
-      email: 'pepe.mock@gmail.com',
-      password: '123456789',
-    } as any;
-
     const accessToken = 'access-token';
 
     jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
@@ -128,9 +126,9 @@ describe('AuthService', () => {
     jest.spyOn(service, 'getPayload').mockResolvedValue({ sub: mockUser._id });
     jest.spyOn(jwtService, 'sign').mockReturnValue(accessToken);
 
-    await expect(
-      service.signIn('pepe.mock@gmail.com', '123456789'),
-    ).resolves.toEqual({
+    const { email, password } = mockUser;
+
+    await expect(service.signIn(email, password)).resolves.toEqual({
       message: 'Logueado correctamente',
       data: {
         access_token: accessToken,
@@ -140,11 +138,6 @@ describe('AuthService', () => {
   it('should send a recovery sms', async () => {
     const phone = '12345678';
     const countryCode = '54';
-    const id = new Types.ObjectId();
-
-    const mockUser = {
-      _id: id,
-    } as any;
 
     jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
     jest.spyOn(otpService, 'generateOTP').mockResolvedValue('123456');
@@ -152,7 +145,7 @@ describe('AuthService', () => {
     await expect(service.sendRecoverySms(phone, countryCode)).resolves.toEqual({
       message: 'SMS enviado correctamente',
       data: {
-        userId: id,
+        userId: mockUser._id,
       },
     });
 
@@ -160,27 +153,23 @@ describe('AuthService', () => {
   });
 
   it('should send a recovery email', async () => {
-    const email = 'mock.test@gmail.com';
-    const id = new Types.ObjectId();
+    const { _id, email } = mockUser;
 
-    jest.spyOn(userService, 'findOne').mockResolvedValue({
-      _id: id,
-      email,
-    } as any);
+    jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
 
     jest.spyOn(otpService, 'generateOTP').mockResolvedValue('123456');
 
     await expect(service.sendRecoveryEmail(email)).resolves.toEqual({
       message: 'Email enviado correctamente',
       data: {
-        userId: id,
+        userId: _id,
       },
     });
   });
 
   it('should be validate code', async () => {
     const otp = '123456';
-    const userId = '65addbe51328a245e6fd67df';
+    const { _id: userId } = mockUser;
 
     jest.spyOn(otpService, 'verifyOTP').mockResolvedValue({
       message: 'OTP verificado correctamente',
@@ -189,5 +178,29 @@ describe('AuthService', () => {
     await expect(service.verifyRecoveryCode(otp, userId)).resolves.toEqual({
       message: 'OTP verificado correctamente',
     });
+  });
+
+  it('should be validate session', async () => {
+    const userId = new Types.ObjectId();
+    const companyId = new Types.ObjectId();
+    const user = {
+      _id: userId,
+      companyId,
+      name: 'Test User',
+      toObject: function () {
+        return {
+          _id: this._id,
+          companyId: this.companyId,
+          name: this.name,
+        };
+      },
+    } as any;
+
+    jest.spyOn(userService, 'findOne').mockResolvedValue(user);
+
+    const result = await service.validateSession(userId, companyId);
+
+    expect(result.message).toBe('Usuario verificado correctamente');
+    expect(result.data).toHaveProperty('name', 'Test User');
   });
 });

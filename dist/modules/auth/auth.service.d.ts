@@ -49,35 +49,7 @@ export declare class AuthService {
     comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
     validateSession(userId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: {
-            _id: Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "save" | "validate" | "remove";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            username: string;
-            email: string;
-            countryId: string;
-            phone: Record<string, any>;
-            type: string;
-            fileId: Types.ObjectId;
-        };
+        data: any;
     }>;
     refreshToken(payload: object): Promise<{
         message: string;
@@ -88,13 +60,13 @@ export declare class AuthService {
     sendRecoverySms(phone: string, countryCode: string): Promise<{
         message: string;
         data: {
-            userId: Types.ObjectId;
+            userId: any;
         };
     }>;
     sendRecoveryEmail: (email: string) => Promise<{
         message: string;
         data: {
-            userId: Types.ObjectId;
+            userId: any;
         };
     }>;
     verifyRecoveryCode(otp: string, userId: string): Promise<{
