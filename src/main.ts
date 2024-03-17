@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -14,7 +14,9 @@ async function bootstrap() {
   );
 
   //TODO: si healthy check falla excluirlo desde acá
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'health-status', method: RequestMethod.GET }],
+  });
 
   const configService = app.get(ConfigService);
   const port = process.env.PORT || configService.get('PORT');
