@@ -37,6 +37,10 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
+## Docker
+
+See README.Docker.md file
+
 ## License
 
 Nest is [MIT licensed](LICENSE).
