@@ -6,6 +6,11 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  //TODO: configurar dominios permitidos
+  app.enableCors({
+    origin: '*',
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -13,7 +18,6 @@ async function bootstrap() {
     }),
   );
 
-  //TODO: si healthy check falla excluirlo desde acá
   app.setGlobalPrefix('api', {
     exclude: [{ path: 'health-status', method: RequestMethod.GET }],
   });
