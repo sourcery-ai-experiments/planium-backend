@@ -85,16 +85,19 @@ let AuthService = class AuthService {
             },
         };
     }
-    async sendRecoverySms(phone, countryCode) {
+    async sendRecoverySms(username) {
         const user = await this.userService.findOne({
-            'phone.number': phone,
-            'phone.countryCode': countryCode,
+            username,
         });
         if (!user) {
-            throw new common_1.UnauthorizedException('El número de teléfono no está registrado');
+            throw new common_1.UnauthorizedException(`El usuario no se encuentra registrado`);
+        }
+        const { phone } = user;
+        if (!phone) {
+            throw new common_1.UnauthorizedException(`El usuario no tiene un número de teléfono registrado`);
         }
         const otp = await this.otpService.generateOTP(user._id);
-        await this.snsService.publishSmsToPhone(`+${countryCode}${phone}`, `Tu código de recuperación es ${otp}`);
+        await this.snsService.publishSmsToPhone(`+${phone.countryCode}${phone.number}`, `Tu código de recuperación es ${otp}`);
         return {
             message: 'SMS enviado correctamente',
             data: {

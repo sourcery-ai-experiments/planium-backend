@@ -25,7 +25,7 @@ export class UsersService {
     }
   }
 
-  async findOne(where: Record<string, any>) {
+  async findOne(where: Record<string, any>): Promise<UserDocument> {
     const response = await this.userModel.aggregate([
       {
         $match: where,

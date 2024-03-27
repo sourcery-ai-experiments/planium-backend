@@ -56,9 +56,9 @@ export class AuthController {
   @Public()
   @Post('recovery/sms')
   sendRecoverySms(@Body() smsRecoveryDto: SmsRecoveryDto) {
-    const { phone, countryCode } = smsRecoveryDto;
+    const { username } = smsRecoveryDto;
 
-    return this.authService.sendRecoverySms(phone, countryCode);
+    return this.authService.sendRecoverySms(username);
   }
 
   @Public()

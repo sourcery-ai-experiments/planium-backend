@@ -34,7 +34,7 @@ export declare class UsersService {
     private readonly filesService;
     constructor(userModel: Model<UserDocument>, filesService: FilesService);
     findById(id: Types.ObjectId): Promise<UserDocument>;
-    findOne(where: Record<string, any>): Promise<any>;
+    findOne(where: Record<string, any>): Promise<UserDocument>;
     create(user: CreateUserDto, session?: ClientSession | null): Promise<{
         message: string;
         data: {
