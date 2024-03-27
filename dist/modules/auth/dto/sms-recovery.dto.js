@@ -17,12 +17,7 @@ class SmsRecoveryDto {
 exports.SmsRecoveryDto = SmsRecoveryDto;
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsMobilePhone)(),
-    __metadata("design:type", String)
-], SmsRecoveryDto.prototype, "phone", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], SmsRecoveryDto.prototype, "countryCode", void 0);
+], SmsRecoveryDto.prototype, "username", void 0);
 //# sourceMappingURL=sms-recovery.dto.js.map
