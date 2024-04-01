@@ -10,16 +10,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from '@/decorators/auth/auth.decorator';
-import { UserTypes } from '@/decorators/auth/user-type.decorator';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
+import { UserTypes } from '@/decorators/auth/user-type.decorator';
 import { CompanyId } from '@/decorators/company-id.decorator';
 import { WorkersService } from './workers.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UserType } from '@/types/User';
+import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('workers')
 export class WorkersController {
@@ -68,13 +68,13 @@ export class WorkersController {
   }
 
   @Public()
-  @Patch('change-password')
-  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
-    const { userId, password } = changePasswordDto;
+  @Patch('change-password/:id')
+  async changePassword(
+    @Param('id', ParseMongoIdPipe) userId: Types.ObjectId,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    const { password } = changePasswordDto;
 
-    return this.workersService.changePassword(
-      new Types.ObjectId(userId),
-      password,
-    );
+    return this.workersService.changePassword(userId, password);
   }
 }
