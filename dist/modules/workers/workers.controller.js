@@ -15,14 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkersController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
+const platform_express_1 = require("@nestjs/platform-express");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
 const mongo_id_pipe_1 = require("../../pipes/mongo-id.pipe");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
 const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const workers_service_1 = require("./workers.service");
 const change_password_dto_1 = require("./dto/change-password.dto");
+const User_1 = require("../../types/User");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
 const update_worker_dto_1 = require("./dto/update-worker.dto");
-const platform_express_1 = require("@nestjs/platform-express");
 let WorkersController = class WorkersController {
     constructor(workersService) {
         this.workersService = workersService;
@@ -43,6 +45,7 @@ let WorkersController = class WorkersController {
 };
 exports.WorkersController = WorkersController;
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, company_id_decorator_1.CompanyId)()),
@@ -51,6 +54,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], WorkersController.prototype, "create", null);
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.Patch)(':id'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('w9')),
     __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
@@ -62,6 +66,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], WorkersController.prototype, "update", null);
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.Patch)('avatar/:id'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar')),
     __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),

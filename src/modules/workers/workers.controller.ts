@@ -10,19 +10,22 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from '@/decorators/auth/auth.decorator';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
+import { UserTypes } from '@/decorators/auth/user-type.decorator';
 import { CompanyId } from '@/decorators/company-id.decorator';
 import { WorkersService } from './workers.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UserType } from '@/types/User';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('workers')
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
+  @UserTypes(UserType.COMPANY_USER)
   @Post()
   async create(
     @Body() createWorkerDto: CreateWorkerDto,
@@ -31,6 +34,7 @@ export class WorkersController {
     return this.workersService.create(createWorkerDto, companyId);
   }
 
+  @UserTypes(UserType.WORKER)
   @Patch(':id')
   @UseInterceptors(FileInterceptor('w9'))
   async update(
@@ -47,6 +51,7 @@ export class WorkersController {
     );
   }
 
+  @UserTypes(UserType.WORKER)
   @Patch('avatar/:id')
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar(
