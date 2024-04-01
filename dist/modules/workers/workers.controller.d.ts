@@ -40,7 +40,7 @@ export declare class WorkersController {
     uploadAvatar(workerId: Types.ObjectId, companyId: Types.ObjectId, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    changePassword(changePasswordDto: ChangePasswordDto): Promise<{
+    changePassword(userId: Types.ObjectId, changePasswordDto: ChangePasswordDto): Promise<{
         message: string;
     }>;
 }
