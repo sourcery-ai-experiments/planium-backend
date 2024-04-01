@@ -22,10 +22,10 @@ import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('workers')
-@UserTypes(UserType.COMPANY_USER)
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
+  @UserTypes(UserType.COMPANY_USER)
   @Post()
   async create(
     @Body() createWorkerDto: CreateWorkerDto,
@@ -34,6 +34,7 @@ export class WorkersController {
     return this.workersService.create(createWorkerDto, companyId);
   }
 
+  @UserTypes(UserType.WORKER)
   @Patch(':id')
   @UseInterceptors(FileInterceptor('w9'))
   async update(
@@ -50,6 +51,7 @@ export class WorkersController {
     );
   }
 
+  @UserTypes(UserType.WORKER)
   @Patch('avatar/:id')
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar(
