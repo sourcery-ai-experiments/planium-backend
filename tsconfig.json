@@ -19,8 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
-      "@schemas/*": ["src/schemas/*"],
-      "@modules/*": ["src/modules/*"]
+      "@schema/*": ["src/schemas/*"],
+      "@module/*": ["src/modules/*"]
     }
   }
 }

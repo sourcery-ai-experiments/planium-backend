@@ -3,32 +3,12 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type WorkerDocument = HydratedDocument<Worker>;
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema({ versionKey: false })
 export class Worker {
-  @Prop({ required: true })
-  name: string;
-
-  @Prop({ required: true })
-  email: string;
-
-  @Prop({ required: true })
-  password: string;
-
-  @Prop({ required: true })
-  nationality: string;
-
-  @Prop(
-    raw({
-      number: { type: String, required: true },
-      code: { type: String, required: true },
-    }),
-  )
-  phone: Record<string, any>;
-
   @Prop(
     raw({
       socialSecurityNumber: { type: String },
-      fileId: { type: String },
+      fileId: { type: Types.ObjectId },
     }),
   )
   personalInformation: Record<string, any>;
@@ -37,13 +17,22 @@ export class Worker {
     raw({
       name: { type: String },
       phone: { type: String },
-      phoneCode: { type: String },
+      phoneCountryCode: { type: String },
     }),
   )
   emergencyContact: Record<string, any>;
 
-  @Prop({ type: Types.ObjectId })
-  fileId: Types.ObjectId;
+  @Prop({ required: true, type: Types.ObjectId })
+  userId: Types.ObjectId;
+
+  @Prop({ required: true, type: Types.ObjectId })
+  companyId: Types.ObjectId;
+
+  @Prop({ default: new Date() })
+  createdAt!: number;
+
+  @Prop({ default: new Date() })
+  updatedAt!: number;
 }
 
 export const WorkerSchema = SchemaFactory.createForClass(Worker);

@@ -13,6 +13,18 @@ const mongoose_1 = require("@nestjs/mongoose");
 const environment_validation_1 = require("./config/environment.validation");
 const workers_module_1 = require("./modules/workers/workers.module");
 const auth_module_1 = require("./modules/auth/auth.module");
+const health_status_module_1 = require("./modules/health-status/health-status.module");
+const users_module_1 = require("./modules/users/users.module");
+const otps_module_1 = require("./modules/otps/otps.module");
+const aws_module_1 = require("./modules/aws/aws.module");
+const files_module_1 = require("./modules/files/files.module");
+const companies_module_1 = require("./modules/companies/companies.module");
+const company_users_module_1 = require("./modules/company_users/company_users.module");
+const roles_module_1 = require("./modules/roles/roles.module");
+const workdays_module_1 = require("./modules/workdays/workdays.module");
+const projects_module_1 = require("./modules/projects/projects.module");
+const tasks_module_1 = require("./modules/tasks/tasks.module");
+const countries_module_1 = require("./modules/countries/countries.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -33,6 +45,18 @@ exports.AppModule = AppModule = __decorate([
             }),
             workers_module_1.WorkersModule,
             auth_module_1.AuthModule,
+            health_status_module_1.HealthStatusModule,
+            users_module_1.UsersModule,
+            otps_module_1.OtpsModule,
+            aws_module_1.AwsModule,
+            files_module_1.FilesModule,
+            companies_module_1.CompaniesModule,
+            company_users_module_1.CompanyUsersModule,
+            roles_module_1.RolesModule,
+            workdays_module_1.WorkdaysModule,
+            projects_module_1.ProjectsModule,
+            tasks_module_1.TasksModule,
+            countries_module_1.CountriesModule,
         ],
         controllers: [],
         providers: [],

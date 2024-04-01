@@ -14,26 +14,78 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkersController = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("mongoose");
+const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
+const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
+const mongo_id_pipe_1 = require("../../pipes/mongo-id.pipe");
+const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const workers_service_1 = require("./workers.service");
+const change_password_dto_1 = require("./dto/change-password.dto");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
+const User_1 = require("../../types/User");
+const update_worker_dto_1 = require("./dto/update-worker.dto");
+const platform_express_1 = require("@nestjs/platform-express");
 let WorkersController = class WorkersController {
     constructor(workersService) {
         this.workersService = workersService;
     }
-    async create(createWorkerDto) {
-        return this.workersService.create(createWorkerDto);
+    async create(createWorkerDto, companyId) {
+        return this.workersService.create(createWorkerDto, companyId);
+    }
+    async update(workerId, updateWorkerDto, companyId, file) {
+        return this.workersService.update(workerId, updateWorkerDto, companyId, file);
+    }
+    async uploadAvatar(workerId, companyId, file) {
+        return this.workersService.uploadAvatar(file, workerId, companyId);
+    }
+    async changePassword(changePasswordDto) {
+        const { userId, password } = changePasswordDto;
+        return this.workersService.changePassword(new mongoose_1.Types.ObjectId(userId), password);
     }
 };
 exports.WorkersController = WorkersController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_worker_dto_1.CreateWorkerDto]),
+    __metadata("design:paramtypes", [create_worker_dto_1.CreateWorkerDto, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], WorkersController.prototype, "create", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('w9')),
+    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, company_id_decorator_1.CompanyId)()),
+    __param(3, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, update_worker_dto_1.UpdateWorkerDto, mongoose_1.Types.ObjectId, Object]),
+    __metadata("design:returntype", Promise)
+], WorkersController.prototype, "update", null);
+__decorate([
+    (0, common_1.Patch)('avatar/:id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('avatar')),
+    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
+    __param(2, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
+        validators: [new common_1.MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
+    }))),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId, Object]),
+    __metadata("design:returntype", Promise)
+], WorkersController.prototype, "uploadAvatar", null);
+__decorate([
+    (0, auth_decorator_1.Public)(),
+    (0, common_1.Patch)('change-password'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [change_password_dto_1.ChangePasswordDto]),
+    __metadata("design:returntype", Promise)
+], WorkersController.prototype, "changePassword", null);
 exports.WorkersController = WorkersController = __decorate([
     (0, common_1.Controller)('workers'),
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __metadata("design:paramtypes", [workers_service_1.WorkersService])
 ], WorkersController);
 //# sourceMappingURL=workers.controller.js.map

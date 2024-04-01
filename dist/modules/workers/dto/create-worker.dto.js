@@ -12,49 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateWorkerDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
-const class_transformer_1 = require("class-transformer");
-class Phone {
-}
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], Phone.prototype, "number", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], Phone.prototype, "code", void 0);
-class PersonalInformation {
-}
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
-    __metadata("design:type", String)
-], PersonalInformation.prototype, "socialSecurityNumber", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
-    (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
-], PersonalInformation.prototype, "fileId", void 0);
-class EmergencyContact {
-}
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
-    __metadata("design:type", String)
-], EmergencyContact.prototype, "name", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
-    __metadata("design:type", String)
-], EmergencyContact.prototype, "phone", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsEmpty)(),
-    __metadata("design:type", String)
-], EmergencyContact.prototype, "phoneCode", void 0);
+const mongoose_1 = require("mongoose");
 class CreateWorkerDto {
 }
 exports.CreateWorkerDto = CreateWorkerDto;
@@ -65,44 +23,17 @@ __decorate([
 ], CreateWorkerDto.prototype, "name", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateWorkerDto.prototype, "username", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], CreateWorkerDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateWorkerDto.prototype, "password", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateWorkerDto.prototype, "nationality", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => Phone),
-    __metadata("design:type", Phone)
-], CreateWorkerDto.prototype, "phone", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsEmpty)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => PersonalInformation),
-    __metadata("design:type", PersonalInformation)
-], CreateWorkerDto.prototype, "personalInformation", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsEmpty)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => EmergencyContact),
-    __metadata("design:type", EmergencyContact)
-], CreateWorkerDto.prototype, "emergencyContact", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsEmpty)(),
     (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
-], CreateWorkerDto.prototype, "fileId", void 0);
+    __metadata("design:type", mongoose_1.Types.ObjectId)
+], CreateWorkerDto.prototype, "projectId", void 0);
 //# sourceMappingURL=create-worker.dto.js.map

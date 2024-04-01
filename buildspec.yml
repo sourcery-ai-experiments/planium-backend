@@ -1,11 +1,6 @@
 version: 0.2
-
 phases:
   install:
-    commands:
-      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-      - . ~/.nvm/nvm.sh && nvm install 20.9.0
-  pre_build:
     commands:
       - npm install
   build:
@@ -13,8 +8,8 @@ phases:
       - npm run build
   post_build:
     commands:
-      - cp -R node_modules/ dist/node_modules
-      - cp Procfile dist/Procfile
+      - cp -R node_modules/ dist/node_modules # nodejs needs this
+      - cp Procfile dist/Procfile # EBS needs this
 artifacts:
   files:
     - "**/*"

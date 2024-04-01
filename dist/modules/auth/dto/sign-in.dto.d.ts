@@ -1,4 +1,4 @@
-export declare class SignInWorkerDto {
-    email: string;
+export declare class SignInDto {
+    username: string;
     password: string;
 }

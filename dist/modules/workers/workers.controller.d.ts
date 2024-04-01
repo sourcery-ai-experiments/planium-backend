@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -21,43 +22,25 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
+import { Types } from 'mongoose';
 import { WorkersService } from './workers.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateWorkerDto } from './dto/create-worker.dto';
+import { UpdateWorkerDto } from './dto/update-worker.dto';
 export declare class WorkersController {
     private readonly workersService;
     constructor(workersService: WorkersService);
-    create(createWorkerDto: CreateWorkerDto): Promise<{
+    create(createWorkerDto: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: {
-            _id: import("mongoose").Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            email: string;
-            nationality: string;
-            phone: Record<string, any>;
-            personalInformation: Record<string, any>;
-            emergencyContact: Record<string, any>;
-            fileId: import("mongoose").Types.ObjectId;
-        };
+    }>;
+    update(workerId: Types.ObjectId, updateWorkerDto: UpdateWorkerDto, companyId: Types.ObjectId, file?: Express.Multer.File): Promise<{
+        message: string;
+    }>;
+    uploadAvatar(workerId: Types.ObjectId, companyId: Types.ObjectId, file: Express.Multer.File): Promise<{
+        message: string;
+    }>;
+    changePassword(changePasswordDto: ChangePasswordDto): Promise<{
+        message: string;
     }>;
 }

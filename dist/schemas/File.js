@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileSchema = exports.File = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const methods_1 = require("./methods");
 let File = class File {
 };
 exports.File = File;
@@ -21,15 +20,23 @@ __decorate([
     __metadata("design:type", String)
 ], File.prototype, "url", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, type: mongoose_2.Types.ObjectId }),
+    (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], File.prototype, "key", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], File.prototype, "companyId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], File.prototype, "createdAt", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: new Date() }),
+    __metadata("design:type", Number)
+], File.prototype, "updatedAt", void 0);
 exports.File = File = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true, versionKey: false })
+    (0, mongoose_1.Schema)({ versionKey: false })
 ], File);
 exports.FileSchema = mongoose_1.SchemaFactory.createForClass(File);
-exports.FileSchema.methods.getUrl = function () {
-    return this.url;
-};
-exports.FileSchema.statics.findByCompany = methods_1.findByCompany;
 //# sourceMappingURL=File.js.map

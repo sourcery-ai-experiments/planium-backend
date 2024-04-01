@@ -1,3 +1,4 @@
+/// <reference types="multer" />
 /// <reference types="mongoose/types/aggregate" />
 /// <reference types="mongoose/types/callback" />
 /// <reference types="mongoose/types/collection" />
@@ -22,52 +23,51 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Model } from 'mongoose';
-import { Worker, WorkerDocument } from '@/schemas/Worker';
-import { CreateWorkerDto } from '@/modules/workers/dto/create-worker.dto';
+import { Connection, Model, Types } from 'mongoose';
+import { Worker, WorkerDocument } from '@schema/Worker';
+import { UsersService } from '@module/users/users.service';
+import { ProjectsService } from '../projects/projects.service';
+import { CompaniesService } from '../companies/companies.service';
+import { SesService } from '../aws/aws.ses.service';
+import { FilesService } from '../files/files.service';
+import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
+import { UpdateWorkerDto } from './dto/update-worker.dto';
 export declare class WorkersService {
     private readonly workerModel;
-    constructor(workerModel: Model<WorkerDocument>);
-    create(worker: CreateWorkerDto): Promise<{
-        message: string;
-        data: {
-            _id: import("mongoose").Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            email: string;
-            nationality: string;
-            phone: Record<string, any>;
-            personalInformation: Record<string, any>;
-            emergencyContact: Record<string, any>;
-            fileId: import("mongoose").Types.ObjectId;
-        };
-    }>;
+    private readonly sesService;
+    private readonly filesService;
+    private readonly companiesService;
+    private readonly userService;
+    private readonly projectsService;
+    private readonly connection;
+    constructor(workerModel: Model<WorkerDocument>, sesService: SesService, filesService: FilesService, companiesService: CompaniesService, userService: UsersService, projectsService: ProjectsService, connection: Connection);
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
-    findOne(where: Record<string, string>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: import("mongoose").Types.ObjectId;
+    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
+        _id: Types.ObjectId;
     }> & import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     } & Required<{
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     }>>;
-    private verifyEmailExists;
+    create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    update(workerId: Types.ObjectId, updateWorkerDto: UpdateWorkerDto, companyId: Types.ObjectId, file?: Express.Multer.File): Promise<{
+        message: string;
+    }>;
+    uploadAvatar(file: Express.Multer.File, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        message: string;
+    }>;
+    changePassword(userId: Types.ObjectId, password: string): Promise<{
+        message: string;
+    }>;
+    private validateCompanyExists;
+    private createUser;
+    private updateUser;
+    private createWorker;
+    private assingWorkerToProject;
+    private sendWelcomeEmail;
+    private uploadW9File;
+    private generateTemporalPassword;
 }
