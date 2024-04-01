@@ -11,13 +11,11 @@ import {
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { Public } from '@/decorators/auth/auth.decorator';
-import { UserTypes } from '@/decorators/auth/user-type.decorator';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 import { CompanyId } from '@/decorators/company-id.decorator';
 import { WorkersService } from './workers.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateWorkerDto } from './dto/create-worker.dto';
-import { UserType } from '@/types/User';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -25,7 +23,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
-  @UserTypes(UserType.COMPANY_USER)
   @Post()
   async create(
     @Body() createWorkerDto: CreateWorkerDto,
@@ -34,7 +31,6 @@ export class WorkersController {
     return this.workersService.create(createWorkerDto, companyId);
   }
 
-  @UserTypes(UserType.WORKER)
   @Patch(':id')
   @UseInterceptors(FileInterceptor('w9'))
   async update(
@@ -51,7 +47,6 @@ export class WorkersController {
     );
   }
 
-  @UserTypes(UserType.WORKER)
   @Patch('avatar/:id')
   @UseInterceptors(FileInterceptor('avatar'))
   async uploadAvatar(
@@ -68,13 +63,13 @@ export class WorkersController {
   }
 
   @Public()
-  @Patch('change-password')
-  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
-    const { userId, password } = changePasswordDto;
+  @Patch('change-password/:id')
+  async changePassword(
+    @Param('id', ParseMongoIdPipe) userId: Types.ObjectId,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    const { password } = changePasswordDto;
 
-    return this.workersService.changePassword(
-      new Types.ObjectId(userId),
-      password,
-    );
+    return this.workersService.changePassword(userId, password);
   }
 }

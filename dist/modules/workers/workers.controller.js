@@ -16,13 +16,11 @@ exports.WorkersController = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
 const auth_decorator_1 = require("../../decorators/auth/auth.decorator");
-const user_type_decorator_1 = require("../../decorators/auth/user-type.decorator");
 const mongo_id_pipe_1 = require("../../pipes/mongo-id.pipe");
 const company_id_decorator_1 = require("../../decorators/company-id.decorator");
 const workers_service_1 = require("./workers.service");
 const change_password_dto_1 = require("./dto/change-password.dto");
 const create_worker_dto_1 = require("./dto/create-worker.dto");
-const User_1 = require("../../types/User");
 const update_worker_dto_1 = require("./dto/update-worker.dto");
 const platform_express_1 = require("@nestjs/platform-express");
 let WorkersController = class WorkersController {
@@ -38,9 +36,9 @@ let WorkersController = class WorkersController {
     async uploadAvatar(workerId, companyId, file) {
         return this.workersService.uploadAvatar(file, workerId, companyId);
     }
-    async changePassword(changePasswordDto) {
-        const { userId, password } = changePasswordDto;
-        return this.workersService.changePassword(new mongoose_1.Types.ObjectId(userId), password);
+    async changePassword(userId, changePasswordDto) {
+        const { password } = changePasswordDto;
+        return this.workersService.changePassword(userId, password);
     }
 };
 exports.WorkersController = WorkersController;
@@ -77,15 +75,15 @@ __decorate([
 ], WorkersController.prototype, "uploadAvatar", null);
 __decorate([
     (0, auth_decorator_1.Public)(),
-    (0, common_1.Patch)('change-password'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Patch)('change-password/:id'),
+    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [change_password_dto_1.ChangePasswordDto]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, change_password_dto_1.ChangePasswordDto]),
     __metadata("design:returntype", Promise)
 ], WorkersController.prototype, "changePassword", null);
 exports.WorkersController = WorkersController = __decorate([
     (0, common_1.Controller)('workers'),
-    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __metadata("design:paramtypes", [workers_service_1.WorkersService])
 ], WorkersController);
 //# sourceMappingURL=workers.controller.js.map

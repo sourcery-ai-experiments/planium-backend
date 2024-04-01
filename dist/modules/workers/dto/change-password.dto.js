@@ -17,11 +17,6 @@ class ChangePasswordDto {
 exports.ChangePasswordDto = ChangePasswordDto;
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
-], ChangePasswordDto.prototype, "userId", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], ChangePasswordDto.prototype, "password", void 0);
