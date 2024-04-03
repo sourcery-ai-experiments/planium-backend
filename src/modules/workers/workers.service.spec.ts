@@ -85,6 +85,7 @@ describe('WorkersService', () => {
     findOne: jest.fn().mockImplementation((where) => ({
       exec: jest.fn().mockResolvedValue(workerList[0]),
     })),
+    aggregate: jest.fn().mockImplementation(() => workerList),
     updateOne: jest.fn(),
   };
 
