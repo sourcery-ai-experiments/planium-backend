@@ -108,7 +108,6 @@ export class WorkersService {
                 url: '$w9File.url',
               },
             },
-            companyId: 1,
           },
         },
       ]);
