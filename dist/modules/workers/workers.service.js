@@ -54,7 +54,73 @@ let WorkersService = class WorkersService {
     }
     async findOne(where) {
         try {
-            return this.workerModel.findOne(where).exec();
+            const response = await this.workerModel.aggregate([
+                {
+                    $match: where,
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'files',
+                        localField: 'personalInformation.fileId',
+                        foreignField: '_id',
+                        as: 'w9File',
+                    },
+                },
+                {
+                    $unwind: '$user',
+                },
+                {
+                    $unwind: {
+                        path: '$w9File',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'files',
+                        localField: 'user.fileId',
+                        foreignField: '_id',
+                        as: 'avatar',
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$avatar',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $project: {
+                        name: '$user.name',
+                        username: '$user.username',
+                        email: '$user.email',
+                        phone: '$user.phone',
+                        type: '$user.type',
+                        file: {
+                            _id: '$avatar._id',
+                            url: '$avatar.url',
+                        },
+                        emergencyContact: 1,
+                        personalInformation: {
+                            socialSecurityNumber: 1,
+                            file: {
+                                _id: '$w9File._id',
+                                url: '$w9File.url',
+                            },
+                        },
+                        companyId: 1,
+                    },
+                },
+            ]);
+            return response[0];
         }
         catch (error) {
             throw new Error(error);
