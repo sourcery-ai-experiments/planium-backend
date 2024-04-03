@@ -24,7 +24,7 @@
 /// <reference types="mongoose/types/inferschematype" />
 import { Types } from 'mongoose';
 import { AuthService } from './auth.service';
-import { VerifyCodeDto, EmailRecoveryDto, SignInDto, SmsRecoveryDto } from './dto';
+import { VerifyCodeDto, SignInDto, SmsRecoveryDto } from './dto';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
@@ -36,34 +36,8 @@ export declare class AuthController {
     }>;
     validateUser(req: any, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: {
+        data: import("mongoose").Document<unknown, {}, import("../../schemas/Worker").Worker> & import("../../schemas/Worker").Worker & {
             _id: Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            username: string;
-            email: string;
-            countryId: string;
-            phone: Record<string, any>;
-            type: string;
-            fileId: Types.ObjectId;
         };
     }>;
     refreshToken(companyId: Types.ObjectId, req: any): Promise<{
@@ -73,12 +47,6 @@ export declare class AuthController {
         };
     }>;
     sendRecoverySms(smsRecoveryDto: SmsRecoveryDto): Promise<{
-        message: string;
-        data: {
-            userId: Types.ObjectId;
-        };
-    }>;
-    sendRecoveryEmail(emailRecoveryDto: EmailRecoveryDto): Promise<{
         message: string;
         data: {
             userId: Types.ObjectId;

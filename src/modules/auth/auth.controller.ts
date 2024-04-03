@@ -10,13 +10,9 @@ import {
 import { Types } from 'mongoose';
 import { CompanyId } from '@/decorators/company-id.decorator';
 import { Public } from '@/decorators/auth/auth.decorator';
+import { UserType } from '@/types/User';
 import { AuthService } from './auth.service';
-import {
-  VerifyCodeDto,
-  EmailRecoveryDto,
-  SignInDto,
-  SmsRecoveryDto,
-} from './dto';
+import { VerifyCodeDto, SignInDto, SmsRecoveryDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,8 +29,9 @@ export class AuthController {
   @Get('validate')
   validateUser(@Request() req: any, @CompanyId() companyId: Types.ObjectId) {
     const userId = new Types.ObjectId(req.user['userId']);
+    const userType = req.user['type'] as UserType;
 
-    return this.authService.validateSession(userId, companyId);
+    return this.authService.validateSession(userId, userType, companyId);
   }
 
   @Get('refresh')
@@ -61,13 +58,13 @@ export class AuthController {
     return this.authService.sendRecoverySms(username);
   }
 
-  @Public()
+  /*  @Public()
   @Post('recovery/email')
   sendRecoveryEmail(@Body() emailRecoveryDto: EmailRecoveryDto) {
     const { email } = emailRecoveryDto;
 
     return this.authService.sendRecoveryEmail(email);
-  }
+  } */
 
   @Public()
   @Post('recovery/verify')
