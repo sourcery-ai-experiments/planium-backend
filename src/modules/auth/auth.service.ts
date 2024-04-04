@@ -59,14 +59,18 @@ export class AuthService {
     type: UserType,
     companyId: Types.ObjectId,
   ) {
-    let user: WorkerDocument;
+    let user = null;
 
     // TODO: Agregar validación y obtención de usuario de empresa
     if (type === UserType.WORKER) {
-      user = await this.workerService.findOne({
+      const response = await this.workerService.findOne({
         userId,
         companyId,
       });
+
+      const { username, type, companyId: deletedId, ...worker } = response;
+
+      user = worker;
     }
 
     if (!user) {

@@ -66,12 +66,14 @@ let AuthService = class AuthService {
         return bcrypt.compare(password, storedPasswordHash);
     }
     async validateSession(userId, type, companyId) {
-        let user;
+        let user = null;
         if (type === User_1.UserType.WORKER) {
-            user = await this.workerService.findOne({
+            const response = await this.workerService.findOne({
                 userId,
                 companyId,
             });
+            const { username, type, companyId: deletedId, ...worker } = response;
+            user = worker;
         }
         if (!user) {
             throw new common_1.UnauthorizedException('Sesión no válida');
