@@ -14,6 +14,7 @@ import { generateUsername } from '@/helpers/generate-data';
 import { welcomeTemplate } from '@/templates/email/welcome';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { Folder } from '@/types/File';
+import { WorkerAggregateResponse } from '@/types/Worker';
 
 @Injectable()
 export class WorkersService {
@@ -44,7 +45,7 @@ export class WorkersService {
     }
   }
 
-  async findOne(where: Record<string, any>): Promise<WorkerDocument> {
+  async findOne(where: Record<string, any>): Promise<WorkerAggregateResponse> {
     try {
       const response = await this.workerModel.aggregate([
         {
@@ -108,6 +109,7 @@ export class WorkersService {
                 url: '$w9File.url',
               },
             },
+            companyId: 1,
           },
         },
       ]);

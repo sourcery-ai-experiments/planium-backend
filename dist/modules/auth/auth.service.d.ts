@@ -50,9 +50,7 @@ export declare class AuthService {
     comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
     validateSession(userId: Types.ObjectId, type: UserType, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: import("mongoose").Document<unknown, {}, import("@/schemas/Worker").Worker> & import("@/schemas/Worker").Worker & {
-            _id: Types.ObjectId;
-        };
+        data: any;
     }>;
     refreshToken(payload: object): Promise<{
         message: string;

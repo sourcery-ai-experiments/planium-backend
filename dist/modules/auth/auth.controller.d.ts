@@ -36,9 +36,7 @@ export declare class AuthController {
     }>;
     validateUser(req: any, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: import("mongoose").Document<unknown, {}, import("../../schemas/Worker").Worker> & import("../../schemas/Worker").Worker & {
-            _id: Types.ObjectId;
-        };
+        data: any;
     }>;
     refreshToken(companyId: Types.ObjectId, req: any): Promise<{
         message: string;
