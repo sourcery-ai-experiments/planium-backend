@@ -1,9 +1,4 @@
-import {
-  IsOptional,
-  ValidateNested,
-  IsMongoId,
-  IsMobilePhone,
-} from 'class-validator';
+import { IsOptional, ValidateNested, IsMongoId } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { Types } from 'mongoose';
@@ -35,12 +30,9 @@ class EmergencyContact {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsMobilePhone()
-  phone: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  phoneCountryCode: string;
+  @ValidateNested()
+  @Type(() => Phone)
+  phone: Phone;
 }
 
 export class UpdateWorkerDto {

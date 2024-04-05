@@ -16,8 +16,10 @@ export class Worker {
   @Prop(
     raw({
       name: { type: String },
-      phone: { type: String },
-      phoneCountryCode: { type: String },
+      phone: {
+        number: { type: String },
+        countryCode: { type: String },
+      },
     }),
   )
   emergencyContact: Record<string, any>;

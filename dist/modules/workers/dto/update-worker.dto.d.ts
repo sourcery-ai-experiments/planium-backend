@@ -33,8 +33,7 @@ declare class PersonalInformation {
 }
 declare class EmergencyContact {
     name: string;
-    phone: string;
-    phoneCountryCode: string;
+    phone: Phone;
 }
 export declare class UpdateWorkerDto {
     name: string;
