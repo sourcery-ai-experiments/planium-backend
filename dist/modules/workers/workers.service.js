@@ -92,8 +92,22 @@ let WorkersService = class WorkersService {
                     },
                 },
                 {
+                    $lookup: {
+                        from: 'countries',
+                        localField: 'user.countryId',
+                        foreignField: '_id',
+                        as: 'country',
+                    },
+                },
+                {
                     $unwind: {
                         path: '$avatar',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$country',
                         preserveNullAndEmptyArrays: true,
                     },
                 },
@@ -104,6 +118,7 @@ let WorkersService = class WorkersService {
                         email: '$user.email',
                         phone: '$user.phone',
                         type: '$user.type',
+                        country: '$country',
                         file: {
                             _id: '$avatar._id',
                             url: '$avatar.url',
@@ -235,6 +250,9 @@ let WorkersService = class WorkersService {
             email: worker.email,
             phone: worker.phone,
         };
+        if (worker?.countryId) {
+            userBody['countryId'] = new mongoose_2.Types.ObjectId(worker.countryId);
+        }
         return await this.userService.update(userId, userBody, companyId, session);
     }
     async createWorker(userId, companyId, session) {

@@ -33,8 +33,8 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({}),
-    __metadata("design:type", String)
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
 ], User.prototype, "countryId", void 0);
 __decorate([
     (0, mongoose_1.Prop)((0, mongoose_1.raw)({

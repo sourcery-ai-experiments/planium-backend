@@ -85,8 +85,22 @@ export class WorkersService {
           },
         },
         {
+          $lookup: {
+            from: 'countries',
+            localField: 'user.countryId',
+            foreignField: '_id',
+            as: 'country',
+          },
+        },
+        {
           $unwind: {
             path: '$avatar',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: '$country',
             preserveNullAndEmptyArrays: true,
           },
         },
@@ -97,6 +111,7 @@ export class WorkersService {
             email: '$user.email',
             phone: '$user.phone',
             type: '$user.type',
+            country: '$country',
             file: {
               _id: '$avatar._id',
               url: '$avatar.url',
@@ -181,7 +196,6 @@ export class WorkersService {
 
     const session = await this.connection.startSession();
     session.startTransaction();
-
     try {
       await this.updateUser(updateWorkerDto, worker.userId, session, companyId);
 
@@ -299,6 +313,10 @@ export class WorkersService {
       email: worker.email,
       phone: worker.phone,
     };
+
+    if (worker?.countryId) {
+      userBody['countryId'] = new Types.ObjectId(worker.countryId);
+    }
 
     return await this.userService.update(userId, userBody, companyId, session);
   }
