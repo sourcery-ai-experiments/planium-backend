@@ -178,11 +178,14 @@ let WorkersService = class WorkersService {
                     fileId,
                 };
             }
-            await this.workerModel.updateOne({ _id: workerId }, updateWorkerDto, {
+            await this.workerModel.updateOne({ _id: workerId }, {
+                ...updateWorkerDto,
+                updatedAt: new Date(),
+            }, {
                 session,
             });
             await session.commitTransaction();
-            return { message: 'Operario actualizado correctamente' };
+            return { message: 'Información actualizada correctamente' };
         }
         catch (error) {
             await session.abortTransaction();

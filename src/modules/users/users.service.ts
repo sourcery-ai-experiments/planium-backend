@@ -96,7 +96,10 @@ export class UsersService {
 
     const updatedUser = await this.userModel.findByIdAndUpdate(
       id,
-      updateUserDto,
+      {
+        ...updateUserDto,
+        updatedAt: new Date(),
+      },
       { session },
     );
 
