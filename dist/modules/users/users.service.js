@@ -86,7 +86,10 @@ let UsersService = class UsersService {
         if (!user) {
             throw new common_1.BadRequestException('El usuario no existe');
         }
-        const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { session });
+        const updatedUser = await this.userModel.findByIdAndUpdate(id, {
+            ...updateUserDto,
+            updatedAt: new Date(),
+        }, { session });
         const { password, ...userData } = updatedUser.toObject();
         return {
             message: 'Usuario actualizado correctamente',

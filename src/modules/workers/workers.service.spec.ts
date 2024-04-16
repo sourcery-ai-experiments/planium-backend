@@ -182,7 +182,7 @@ describe('WorkersService', () => {
     } as any;
 
     expect(await service.update(workerId, updateWorkerDto, companyId)).toEqual({
-      message: 'Operario actualizado correctamente',
+      message: 'Información actualizada correctamente',
     });
   });
 });
