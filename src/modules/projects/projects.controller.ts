@@ -18,7 +18,6 @@ import { AddWorkersDto } from './dto/add-workers.dto';
 import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 
 @Controller('projects')
-@UserTypes(UserType.COMPANY_USER)
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
@@ -30,6 +29,7 @@ export class ProjectsController {
     return await this.projectsService.getByWorkerId(workerId, companyId);
   }
 
+  @UserTypes(UserType.COMPANY_USER)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -39,6 +39,7 @@ export class ProjectsController {
     return await this.projectsService.create(createProjectDto, companyId);
   }
 
+  @UserTypes(UserType.COMPANY_USER)
   @Patch(':id/workers')
   async addWorkers(
     @Body() addWorkersDto: AddWorkersDto,
