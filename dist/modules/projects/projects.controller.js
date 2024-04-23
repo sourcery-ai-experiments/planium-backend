@@ -47,6 +47,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "getByWorkerId", null);
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     (0, common_1.Post)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     __param(0, (0, common_1.Body)()),
@@ -56,6 +57,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "create", null);
 __decorate([
+    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     (0, common_1.Patch)(':id/workers'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
@@ -66,7 +68,6 @@ __decorate([
 ], ProjectsController.prototype, "addWorkers", null);
 exports.ProjectsController = ProjectsController = __decorate([
     (0, common_1.Controller)('projects'),
-    (0, user_type_decorator_1.UserTypes)(User_1.UserType.COMPANY_USER),
     __metadata("design:paramtypes", [projects_service_1.ProjectsService])
 ], ProjectsController);
 //# sourceMappingURL=projects.controller.js.map
