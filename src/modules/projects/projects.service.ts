@@ -40,7 +40,9 @@ export class ProjectsService {
       },
     ]);
 
-    return projects;
+    return {
+      data: projects,
+    };
   }
 
   async create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId) {
