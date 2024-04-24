@@ -26,8 +26,8 @@ let WorkdaysController = class WorkdaysController {
     constructor(workdaysService) {
         this.workdaysService = workdaysService;
     }
-    async getByWorkerId(workerId, isActive, companyId) {
-        return await this.workdaysService.getWorkdaysByWorkerId(isActive, workerId, companyId);
+    async getAll(workerId, isActive, companyId) {
+        return await this.workdaysService.getAll(isActive, workerId, companyId);
     }
     async create(createWorkdayDto, req, file, companyId) {
         const workerId = new mongoose_1.Types.ObjectId(req.user.sub);
@@ -39,15 +39,15 @@ let WorkdaysController = class WorkdaysController {
 };
 exports.WorkdaysController = WorkdaysController;
 __decorate([
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)(),
     (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
-    __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(0, (0, common_1.Query)('workerId', mongo_id_pipe_1.ParseMongoIdPipe)),
     __param(1, (0, common_1.Query)('isActive', new common_1.ParseBoolPipe({ optional: true }))),
     __param(2, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, Boolean, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
-], WorkdaysController.prototype, "getByWorkerId", null);
+], WorkdaysController.prototype, "getAll", null);
 __decorate([
     (0, common_1.Post)(),
     (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),

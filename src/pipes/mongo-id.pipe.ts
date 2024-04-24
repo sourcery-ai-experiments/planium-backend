@@ -9,7 +9,10 @@ import { Types, isValidObjectId } from 'mongoose';
 @Injectable()
 export class ParseMongoIdPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
-    if (value === undefined && metadata.type === 'param') {
+    if (
+      value === undefined &&
+      (metadata.type === 'param' || metadata.type === 'query')
+    ) {
       return value;
     }
 
