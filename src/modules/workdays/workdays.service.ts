@@ -123,7 +123,7 @@ export class WorkdaysService {
       await session.commitTransaction();
 
       return {
-        message: 'Jornada creada correctamente',
+        message: 'Jornada iniciada correctamente',
       };
     } catch (error) {
       await session.abortTransaction();
