@@ -29,7 +29,7 @@ import { CreateWorkdayDto } from './dto/create-workday.dto';
 export declare class WorkdaysController {
     private readonly workdaysService;
     constructor(workdaysService: WorkdaysService);
-    getByWorkerId(workerId: Types.ObjectId, isActive: boolean, companyId: Types.ObjectId): Promise<{
+    getAll(workerId: Types.ObjectId, isActive: boolean, companyId: Types.ObjectId): Promise<{
         data: any[];
     }>;
     create(createWorkdayDto: CreateWorkdayDto, req: any, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{

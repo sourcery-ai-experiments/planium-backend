@@ -21,16 +21,16 @@ export class WorkdaysService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  async getWorkdaysByWorkerId(
+  async getAll(
     isActive: boolean,
     workerId: Types.ObjectId,
     companyId: Types.ObjectId,
   ) {
     const query = {
-      workerId,
       companyId,
     };
 
+    if (workerId) query['workerId'] = workerId;
     if (isActive) query['isActive'] = isActive;
 
     const workdays = await this.workdayModel.aggregate([

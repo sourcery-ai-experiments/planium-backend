@@ -34,7 +34,7 @@ export declare class WorkdaysService {
     private readonly filesService;
     private readonly connection;
     constructor(workdayModel: Model<WorkdayDocument>, projectsService: ProjectsService, filesService: FilesService, connection: Connection);
-    getWorkdaysByWorkerId(isActive: boolean, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+    getAll(isActive: boolean, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         data: any[];
     }>;
     create(file: Express.Multer.File, workday: CreateWorkdayDto, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{

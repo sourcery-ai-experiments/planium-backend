@@ -27,11 +27,12 @@ let WorkdaysService = class WorkdaysService {
         this.filesService = filesService;
         this.connection = connection;
     }
-    async getWorkdaysByWorkerId(isActive, workerId, companyId) {
+    async getAll(isActive, workerId, companyId) {
         const query = {
-            workerId,
             companyId,
         };
+        if (workerId)
+            query['workerId'] = workerId;
         if (isActive)
             query['isActive'] = isActive;
         const workdays = await this.workdayModel.aggregate([
@@ -100,7 +101,7 @@ let WorkdaysService = class WorkdaysService {
             await this.workdayModel.create([newWorkday], { session });
             await session.commitTransaction();
             return {
-                message: 'Jornada creada correctamente',
+                message: 'Jornada iniciada correctamente',
             };
         }
         catch (error) {

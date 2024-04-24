@@ -11,7 +11,8 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
 let ParseMongoIdPipe = class ParseMongoIdPipe {
     transform(value, metadata) {
-        if (value === undefined && metadata.type === 'param') {
+        if (value === undefined &&
+            (metadata.type === 'param' || metadata.type === 'query')) {
             return value;
         }
         if (!(0, mongoose_1.isValidObjectId)(value)) {
