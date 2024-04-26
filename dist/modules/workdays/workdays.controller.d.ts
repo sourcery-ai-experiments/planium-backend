@@ -34,6 +34,9 @@ export declare class WorkdaysController {
     }>;
     create(createWorkdayDto: CreateWorkdayDto, req: any, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
         message: string;
+        data: {
+            _id: Types.ObjectId;
+        };
     }>;
     endWorkday(workdayId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;

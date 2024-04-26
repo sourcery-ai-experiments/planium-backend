@@ -110,7 +110,7 @@ export class WorkdaysService {
         session,
       );
 
-      const newWorkday = {
+      const workdayToSave = {
         fileId: newFile.id,
         workerId,
         companyId,
@@ -118,12 +118,17 @@ export class WorkdaysService {
         ...workday,
       };
 
-      await this.workdayModel.create([newWorkday], { session });
+      const newWorkday = await this.workdayModel.create([workdayToSave], {
+        session,
+      });
 
       await session.commitTransaction();
 
       return {
         message: 'Jornada iniciada correctamente',
+        data: {
+          _id: newWorkday[0]._id,
+        },
       };
     } catch (error) {
       await session.abortTransaction();
