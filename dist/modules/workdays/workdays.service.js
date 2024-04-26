@@ -91,17 +91,22 @@ let WorkdaysService = class WorkdaysService {
         try {
             const { originalname, buffer } = file;
             const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.WORKER_WORKDAY, companyId, session);
-            const newWorkday = {
+            const workdayToSave = {
                 fileId: newFile.id,
                 workerId,
                 companyId,
                 updatedBy: workerId,
                 ...workday,
             };
-            await this.workdayModel.create([newWorkday], { session });
+            const newWorkday = await this.workdayModel.create([workdayToSave], {
+                session,
+            });
             await session.commitTransaction();
             return {
                 message: 'Jornada iniciada correctamente',
+                data: {
+                    _id: newWorkday[0]._id,
+                },
             };
         }
         catch (error) {

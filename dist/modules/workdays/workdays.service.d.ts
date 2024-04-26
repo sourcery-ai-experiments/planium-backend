@@ -39,6 +39,9 @@ export declare class WorkdaysService {
     }>;
     create(file: Express.Multer.File, workday: CreateWorkdayDto, workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
+        data: {
+            _id: Types.ObjectId;
+        };
     }>;
     endWorkday(workdayId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
