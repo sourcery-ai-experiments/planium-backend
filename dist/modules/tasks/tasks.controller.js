@@ -28,8 +28,8 @@ let TasksController = class TasksController {
     constructor(tasksService) {
         this.tasksService = tasksService;
     }
-    async getAll(projectId, status, type, companyId) {
-        return await this.tasksService.getAll(companyId, projectId, status, type);
+    async getAll(projectId, workerId, status, type, companyId) {
+        return await this.tasksService.getAll(companyId, projectId, workerId, status, type);
     }
     async getTaskById(taskId, companyId) {
         return await this.tasksService.getById(taskId, companyId);
@@ -61,11 +61,12 @@ exports.TasksController = TasksController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('projectId', mongo_id_pipe_1.ParseMongoIdPipe)),
-    __param(1, (0, common_1.Query)('status', new common_1.ParseEnumPipe(Task_1.TaskStatus, { optional: true }))),
-    __param(2, (0, common_1.Query)('type', new common_1.ParseEnumPipe(Task_1.TaskType, { optional: true }))),
-    __param(3, (0, company_id_decorator_1.CompanyId)()),
+    __param(1, (0, common_1.Query)('workerId', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(2, (0, common_1.Query)('status', new common_1.ParseEnumPipe(Task_1.TaskStatus, { optional: true }))),
+    __param(3, (0, common_1.Query)('type', new common_1.ParseEnumPipe(Task_1.TaskType, { optional: true }))),
+    __param(4, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, String, String, mongoose_1.Types.ObjectId]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId, String, String, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "getAll", null);
 __decorate([

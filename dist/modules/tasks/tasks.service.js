@@ -30,7 +30,7 @@ let TasksService = class TasksService {
         this.filesService = filesService;
         this.connection = connection;
     }
-    async getAll(companyId, projectId, status, type) {
+    async getAll(companyId, projectId, workerId, status, type) {
         const query = {
             companyId,
             projectId,
@@ -39,6 +39,8 @@ let TasksService = class TasksService {
             query['status'] = status;
         if (type)
             query['type'] = type;
+        if (workerId)
+            query['workerId'] = workerId;
         await this.verifyExistProject(projectId);
         const tasks = await this.taskModel.aggregate([
             {

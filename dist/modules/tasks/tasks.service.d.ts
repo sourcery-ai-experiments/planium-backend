@@ -36,7 +36,7 @@ export declare class TasksService {
     private readonly filesService;
     private readonly connection;
     constructor(taskModel: Model<TaskDocument>, request: Record<string, unknown>, projectsService: ProjectsService, filesService: FilesService, connection: Connection);
-    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<{
+    getAll(companyId: Types.ObjectId, projectId: Types.ObjectId, workerId: Types.ObjectId, status: TaskStatus, type: TaskType): Promise<{
         data: any[];
     }>;
     getById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
