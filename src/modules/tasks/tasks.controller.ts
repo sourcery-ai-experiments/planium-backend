@@ -35,13 +35,20 @@ export class TasksController {
   @Get()
   async getAll(
     @Query('projectId', ParseMongoIdPipe) projectId: Types.ObjectId,
+    @Query('workerId', ParseMongoIdPipe) workerId: Types.ObjectId,
     @Query('status', new ParseEnumPipe(TaskStatus, { optional: true }))
     status: TaskStatus,
     @Query('type', new ParseEnumPipe(TaskType, { optional: true }))
     type: TaskType,
     @CompanyId() companyId: Types.ObjectId,
   ) {
-    return await this.tasksService.getAll(companyId, projectId, status, type);
+    return await this.tasksService.getAll(
+      companyId,
+      projectId,
+      workerId,
+      status,
+      type,
+    );
   }
 
   @Get(':id')
