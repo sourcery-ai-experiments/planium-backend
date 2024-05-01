@@ -28,6 +28,7 @@ export class TasksService {
   async getAll(
     companyId: Types.ObjectId,
     projectId: Types.ObjectId,
+    workerId: Types.ObjectId,
     status: TaskStatus,
     type: TaskType,
   ) {
@@ -38,6 +39,7 @@ export class TasksService {
 
     if (status) query['status'] = status;
     if (type) query['type'] = type;
+    if (workerId) query['workerId'] = workerId;
 
     await this.verifyExistProject(projectId);
 
