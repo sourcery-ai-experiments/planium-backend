@@ -209,7 +209,7 @@ let TasksService = class TasksService {
     }
     async uploadFilesToTask(task, updateBy, companyId, files, session = null) {
         const newFiles = await this.filesService.uploadManyFiles(files, File_1.Folder.COMPANY_PROJECT_TASK, companyId, session);
-        task.files = [...task.files, ...newFiles.map((file) => file.id)];
+        task.files = [...task.files, ...newFiles.map((file) => file._id)];
         task.updatedAt = new Date().getTime();
         task.updatedBy = updateBy;
         await this.taskModel.updateOne({ _id: task._id }, task, { session });

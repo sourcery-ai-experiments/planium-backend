@@ -272,7 +272,7 @@ export class TasksService {
       session,
     );
 
-    task.files = [...task.files, ...newFiles.map((file) => file.id)];
+    task.files = [...task.files, ...newFiles.map((file) => file._id)];
     task.updatedAt = new Date().getTime();
     task.updatedBy = updateBy;
 
