@@ -45,7 +45,7 @@ export declare class TasksService {
     create(createTaskDto: CreateTaskDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
+    startTask(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{

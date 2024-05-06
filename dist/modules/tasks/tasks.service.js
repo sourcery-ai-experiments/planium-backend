@@ -139,7 +139,7 @@ let TasksService = class TasksService {
             throw new Error(error);
         }
     }
-    async startTask(taskId, file, companyId) {
+    async startTask(taskId, companyId) {
         const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
         const task = await this.verifyTaskExist(taskId, companyId);
         if (task.status !== Task_2.TaskStatus.TO_DO) {
@@ -148,9 +148,6 @@ let TasksService = class TasksService {
         const session = await this.connection.startSession();
         session.startTransaction();
         try {
-            const { originalname, buffer } = file;
-            const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.COMPANY_PROJECT_TASK, companyId, session);
-            task.files = [newFile.id];
             task.status = Task_2.TaskStatus.IN_PROGRESS;
             task.updatedAt = new Date().getTime();
             task.updatedBy = subId;

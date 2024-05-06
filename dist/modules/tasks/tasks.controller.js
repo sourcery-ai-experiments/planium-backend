@@ -43,8 +43,8 @@ let TasksController = class TasksController {
         }
         return await this.tasksService.create(createTaskDto, companyId);
     }
-    async startTask(taskId, file, companyId) {
-        return await this.tasksService.startTask(taskId, file, companyId);
+    async startTask(taskId, companyId) {
+        return await this.tasksService.startTask(taskId, companyId);
     }
     async taskReview(taskId, companyId) {
         return await this.tasksService.taskReview(taskId, companyId);
@@ -90,14 +90,10 @@ __decorate([
 __decorate([
     (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.Patch)('start/:id'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
-    __param(1, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
-        validators: [new common_1.MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
-    }))),
-    __param(2, (0, company_id_decorator_1.CompanyId)()),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, Object, mongoose_1.Types.ObjectId]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "startTask", null);
 __decorate([

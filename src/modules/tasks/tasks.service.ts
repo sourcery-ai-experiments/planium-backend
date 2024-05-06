@@ -151,11 +151,7 @@ export class TasksService {
     }
   }
 
-  async startTask(
-    taskId: Types.ObjectId,
-    file: Express.Multer.File,
-    companyId: Types.ObjectId,
-  ) {
+  async startTask(taskId: Types.ObjectId, companyId: Types.ObjectId) {
     const subId = new Types.ObjectId(this.request.user['sub']);
 
     const task = await this.verifyTaskExist(taskId, companyId);
@@ -168,17 +164,6 @@ export class TasksService {
     session.startTransaction();
 
     try {
-      const { originalname, buffer } = file;
-
-      const newFile = await this.filesService.uploadOneFile(
-        originalname,
-        buffer,
-        Folder.COMPANY_PROJECT_TASK,
-        companyId,
-        session,
-      );
-
-      task.files = [newFile.id];
       task.status = TaskStatus.IN_PROGRESS;
       task.updatedAt = new Date().getTime();
       task.updatedBy = subId;
