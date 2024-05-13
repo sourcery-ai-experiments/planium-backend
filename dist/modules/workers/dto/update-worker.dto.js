@@ -49,14 +49,10 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiPropertyOptional)(),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsMobilePhone)(),
-    __metadata("design:type", String)
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => Phone),
+    __metadata("design:type", Phone)
 ], EmergencyContact.prototype, "phone", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], EmergencyContact.prototype, "phoneCountryCode", void 0);
 class UpdateWorkerDto {
 }
 exports.UpdateWorkerDto = UpdateWorkerDto;

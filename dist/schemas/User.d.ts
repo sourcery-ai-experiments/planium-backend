@@ -29,7 +29,7 @@ export declare class User {
     username: string;
     email: string;
     password: string;
-    countryId: string;
+    countryId: Types.ObjectId;
     phone: Record<string, any>;
     type: string;
     fileId: Types.ObjectId;

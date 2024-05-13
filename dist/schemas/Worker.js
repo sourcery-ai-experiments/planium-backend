@@ -25,8 +25,10 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)((0, mongoose_1.raw)({
         name: { type: String },
-        phone: { type: String },
-        phoneCountryCode: { type: String },
+        phone: {
+            number: { type: String },
+            countryCode: { type: String },
+        },
     })),
     __metadata("design:type", Object)
 ], Worker.prototype, "emergencyContact", void 0);

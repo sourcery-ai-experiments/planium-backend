@@ -31,7 +31,7 @@ import { UploadFilesDto } from './dto/upload-files.dto';
 export declare class TasksController {
     private readonly tasksService;
     constructor(tasksService: TasksService);
-    getAll(projectId: Types.ObjectId, status: TaskStatus, type: TaskType, companyId: Types.ObjectId): Promise<{
+    getAll(projectId: Types.ObjectId, workerId: Types.ObjectId, status: TaskStatus, type: TaskType, companyId: Types.ObjectId): Promise<{
         data: any[];
     }>;
     getTaskById(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
@@ -40,7 +40,7 @@ export declare class TasksController {
     create(createTaskDto: CreateTaskDto, req: any, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
-    startTask(taskId: Types.ObjectId, file: Express.Multer.File, companyId: Types.ObjectId): Promise<{
+    startTask(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;
     taskReview(taskId: Types.ObjectId, companyId: Types.ObjectId): Promise<{

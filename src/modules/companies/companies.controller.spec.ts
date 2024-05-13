@@ -39,12 +39,4 @@ describe('CompaniesController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-
-  it('should find all companies by worker id', async () => {
-    const workerId = new Types.ObjectId();
-
-    expect(await controller.findAllByWorkerId(workerId)).toEqual(companyList);
-
-    expect(mockCompaniesService.findAllByWorkerId).toHaveBeenCalled();
-  });
 });

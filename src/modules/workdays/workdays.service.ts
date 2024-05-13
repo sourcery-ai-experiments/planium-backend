@@ -21,16 +21,16 @@ export class WorkdaysService {
     @InjectConnection() private readonly connection: Connection,
   ) {}
 
-  async getWorkdaysByWorkerId(
+  async getAll(
     isActive: boolean,
     workerId: Types.ObjectId,
     companyId: Types.ObjectId,
   ) {
     const query = {
-      workerId,
       companyId,
     };
 
+    if (workerId) query['workerId'] = workerId;
     if (isActive) query['isActive'] = isActive;
 
     const workdays = await this.workdayModel.aggregate([
@@ -110,7 +110,7 @@ export class WorkdaysService {
         session,
       );
 
-      const newWorkday = {
+      const workdayToSave = {
         fileId: newFile.id,
         workerId,
         companyId,
@@ -118,12 +118,17 @@ export class WorkdaysService {
         ...workday,
       };
 
-      await this.workdayModel.create([newWorkday], { session });
+      const newWorkday = await this.workdayModel.create([workdayToSave], {
+        session,
+      });
 
       await session.commitTransaction();
 
       return {
-        message: 'Jornada creada correctamente',
+        message: 'Jornada iniciada correctamente',
+        data: {
+          _id: newWorkday[0]._id,
+        },
       };
     } catch (error) {
       await session.abortTransaction();

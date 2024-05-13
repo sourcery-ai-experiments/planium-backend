@@ -48,7 +48,9 @@ let ProjectsService = class ProjectsService {
                 },
             },
         ]);
-        return projects;
+        return {
+            data: projects,
+        };
     }
     async create(createProjectDto, companyId) {
         try {

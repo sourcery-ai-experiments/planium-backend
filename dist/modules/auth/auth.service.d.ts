@@ -30,6 +30,7 @@ import { SesService } from '../aws/aws.ses.service';
 import { SnsService } from '../aws/aws.sns.service';
 import { CompanyUsersService } from '@module/company_users/company_users.service';
 import { WorkersService } from '@/modules/workers/workers.service';
+import { UserType } from '@/types/User';
 import { UserDocument } from '@/schemas/User';
 export declare class AuthService {
     private readonly userService;
@@ -47,37 +48,9 @@ export declare class AuthService {
         };
     }>;
     comparePasswords(password: string, storedPasswordHash: string): Promise<any>;
-    validateSession(userId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+    validateSession(userId: Types.ObjectId, type: UserType, companyId: Types.ObjectId): Promise<{
         message: string;
-        data: {
-            _id: Types.ObjectId;
-            __v?: any;
-            $locals: Record<string, unknown>;
-            $op: "remove" | "save" | "validate";
-            $where: Record<string, unknown>;
-            baseModelName?: string;
-            collection: import("mongoose").Collection<import("bson").Document>;
-            db: import("mongoose").Connection;
-            errors?: import("mongoose").Error.ValidationError;
-            id?: any;
-            isNew: boolean;
-            schema: import("mongoose").Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-                [x: string]: any;
-            }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }>> & import("mongoose").FlatRecord<{
-                [x: string]: any;
-            }> & Required<{
-                _id: unknown;
-            }>>;
-            name: string;
-            username: string;
-            email: string;
-            countryId: string;
-            phone: Record<string, any>;
-            type: string;
-            fileId: Types.ObjectId;
-        };
+        data: any;
     }>;
     refreshToken(payload: object): Promise<{
         message: string;

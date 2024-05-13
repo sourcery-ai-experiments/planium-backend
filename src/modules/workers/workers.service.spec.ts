@@ -85,6 +85,7 @@ describe('WorkersService', () => {
     findOne: jest.fn().mockImplementation((where) => ({
       exec: jest.fn().mockResolvedValue(workerList[0]),
     })),
+    aggregate: jest.fn().mockImplementation(() => workerList),
     updateOne: jest.fn(),
   };
 
@@ -181,7 +182,7 @@ describe('WorkersService', () => {
     } as any;
 
     expect(await service.update(workerId, updateWorkerDto, companyId)).toEqual({
-      message: 'Operario actualizado correctamente',
+      message: 'Información actualizada correctamente',
     });
   });
 });

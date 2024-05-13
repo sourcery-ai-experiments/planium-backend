@@ -11,6 +11,7 @@ import { CompanyUsersService } from '@module/company_users/company_users.service
 import { WorkersService } from '@/modules/workers/workers.service';
 import { UserType } from '@/types/User';
 import { UserDocument } from '@/schemas/User';
+import { WorkerDocument } from '@/schemas/Worker';
 
 @Injectable()
 export class AuthService {
@@ -53,24 +54,32 @@ export class AuthService {
     return bcrypt.compare(password, storedPasswordHash);
   }
 
-  async validateSession(userId: Types.ObjectId, companyId: Types.ObjectId) {
-    const user = await this.userService.findOne({ _id: userId, companyId });
+  async validateSession(
+    userId: Types.ObjectId,
+    type: UserType,
+    companyId: Types.ObjectId,
+  ) {
+    let user = null;
+
+    // TODO: Agregar validación y obtención de usuario de empresa
+    if (type === UserType.WORKER) {
+      const response = await this.workerService.findOne({
+        userId,
+        companyId,
+      });
+
+      const { username, type, companyId: deletedId, ...worker } = response;
+
+      user = worker;
+    }
 
     if (!user) {
       throw new UnauthorizedException('Sesión no válida');
     }
 
-    const {
-      password,
-      createdAt,
-      updatedAt,
-      companyId: company,
-      ...userData
-    } = user;
-
     return {
       message: 'Usuario verificado correctamente',
-      data: userData,
+      data: user,
     };
   }
 
@@ -117,6 +126,7 @@ export class AuthService {
     };
   }
 
+  // ? Este servicio esta inactivo
   sendRecoveryEmail = async (email: string) => {
     const user = await this.userService.findOne({ email });
     if (!user) {

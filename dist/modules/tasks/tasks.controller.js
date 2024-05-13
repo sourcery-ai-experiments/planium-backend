@@ -28,8 +28,8 @@ let TasksController = class TasksController {
     constructor(tasksService) {
         this.tasksService = tasksService;
     }
-    async getAll(projectId, status, type, companyId) {
-        return await this.tasksService.getAll(companyId, projectId, status, type);
+    async getAll(projectId, workerId, status, type, companyId) {
+        return await this.tasksService.getAll(companyId, projectId, workerId, status, type);
     }
     async getTaskById(taskId, companyId) {
         return await this.tasksService.getById(taskId, companyId);
@@ -43,8 +43,8 @@ let TasksController = class TasksController {
         }
         return await this.tasksService.create(createTaskDto, companyId);
     }
-    async startTask(taskId, file, companyId) {
-        return await this.tasksService.startTask(taskId, file, companyId);
+    async startTask(taskId, companyId) {
+        return await this.tasksService.startTask(taskId, companyId);
     }
     async taskReview(taskId, companyId) {
         return await this.tasksService.taskReview(taskId, companyId);
@@ -61,11 +61,12 @@ exports.TasksController = TasksController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('projectId', mongo_id_pipe_1.ParseMongoIdPipe)),
-    __param(1, (0, common_1.Query)('status', new common_1.ParseEnumPipe(Task_1.TaskStatus, { optional: true }))),
-    __param(2, (0, common_1.Query)('type', new common_1.ParseEnumPipe(Task_1.TaskType, { optional: true }))),
-    __param(3, (0, company_id_decorator_1.CompanyId)()),
+    __param(1, (0, common_1.Query)('workerId', mongo_id_pipe_1.ParseMongoIdPipe)),
+    __param(2, (0, common_1.Query)('status', new common_1.ParseEnumPipe(Task_1.TaskStatus, { optional: true }))),
+    __param(3, (0, common_1.Query)('type', new common_1.ParseEnumPipe(Task_1.TaskType, { optional: true }))),
+    __param(4, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, String, String, mongoose_1.Types.ObjectId]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId, String, String, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "getAll", null);
 __decorate([
@@ -89,14 +90,10 @@ __decorate([
 __decorate([
     (0, user_type_decorator_1.UserTypes)(User_1.UserType.WORKER),
     (0, common_1.Patch)('start/:id'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id', mongo_id_pipe_1.ParseMongoIdPipe)),
-    __param(1, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
-        validators: [new common_1.MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
-    }))),
-    __param(2, (0, company_id_decorator_1.CompanyId)()),
+    __param(1, (0, company_id_decorator_1.CompanyId)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, Object, mongoose_1.Types.ObjectId]),
+    __metadata("design:paramtypes", [mongoose_1.Types.ObjectId, mongoose_1.Types.ObjectId]),
     __metadata("design:returntype", Promise)
 ], TasksController.prototype, "startTask", null);
 __decorate([

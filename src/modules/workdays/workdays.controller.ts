@@ -27,19 +27,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class WorkdaysController {
   constructor(private readonly workdaysService: WorkdaysService) {}
 
-  @Get(':id')
+  @Get()
   @UserTypes(UserType.WORKER)
-  async getByWorkerId(
-    @Param('id', ParseMongoIdPipe) workerId: Types.ObjectId,
+  async getAll(
+    @Query('workerId', ParseMongoIdPipe) workerId: Types.ObjectId,
     @Query('isActive', new ParseBoolPipe({ optional: true }))
     isActive: boolean,
     @CompanyId() companyId: Types.ObjectId,
   ) {
-    return await this.workdaysService.getWorkdaysByWorkerId(
-      isActive,
-      workerId,
-      companyId,
-    );
+    return await this.workdaysService.getAll(isActive, workerId, companyId);
   }
 
   @Post()

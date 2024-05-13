@@ -9,6 +9,7 @@ import { SnsService } from '../aws/aws.sns.service';
 import { CompanyUsersService } from '../company_users/company_users.service';
 import { WorkersService } from '@/modules/workers/workers.service';
 import { Types } from 'mongoose';
+import { UserType } from '@/types/User';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -25,6 +26,10 @@ describe('AuthService', () => {
     email: 'pepe.mock@gmail.com',
     password: '123456789',
     companyId: new Types.ObjectId(),
+    phone: {
+      number: '123456789',
+      countryCode: '+57',
+    },
   } as any;
 
   beforeEach(async () => {
@@ -136,13 +141,12 @@ describe('AuthService', () => {
     });
   });
   it('should send a recovery sms', async () => {
-    const phone = '12345678';
-    const countryCode = '54';
+    const username = 'pepediaz#123';
 
     jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
     jest.spyOn(otpService, 'generateOTP').mockResolvedValue('123456');
 
-    await expect(service.sendRecoverySms(phone, countryCode)).resolves.toEqual({
+    await expect(service.sendRecoverySms(username)).resolves.toEqual({
       message: 'SMS enviado correctamente',
       data: {
         userId: mockUser._id,
@@ -196,9 +200,11 @@ describe('AuthService', () => {
       },
     } as any;
 
-    jest.spyOn(userService, 'findOne').mockResolvedValue(user);
+    jest.spyOn(workerService, 'findOne').mockResolvedValue(user);
 
-    const result = await service.validateSession(userId, companyId);
+    const type = UserType.WORKER;
+
+    const result = await service.validateSession(userId, type, companyId);
 
     expect(result.message).toBe('Usuario verificado correctamente');
     expect(result.data).toHaveProperty('name', 'Test User');

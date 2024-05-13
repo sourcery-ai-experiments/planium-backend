@@ -32,6 +32,7 @@ import { SesService } from '../aws/aws.ses.service';
 import { FilesService } from '../files/files.service';
 import { CreateWorkerDto } from '@module/workers/dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
+import { WorkerAggregateResponse } from '@/types/Worker';
 export declare class WorkersService {
     private readonly workerModel;
     private readonly sesService;
@@ -43,13 +44,7 @@ export declare class WorkersService {
     constructor(workerModel: Model<WorkerDocument>, sesService: SesService, filesService: FilesService, companiesService: CompaniesService, userService: UsersService, projectsService: ProjectsService, connection: Connection);
     findAll(): Promise<Worker[]>;
     findById(id: string): Promise<Worker>;
-    findOne(where: Record<string, any>): Promise<import("mongoose").Document<unknown, {}, import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: Types.ObjectId;
-    }> & import("mongoose").Document<unknown, {}, Worker> & Worker & {
-        _id: Types.ObjectId;
-    } & Required<{
-        _id: Types.ObjectId;
-    }>>;
+    findOne(where: Record<string, any>): Promise<WorkerAggregateResponse>;
     create(worker: CreateWorkerDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

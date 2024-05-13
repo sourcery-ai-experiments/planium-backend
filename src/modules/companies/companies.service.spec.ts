@@ -3,7 +3,6 @@ import { getModelToken } from '@nestjs/mongoose';
 import { CompaniesService } from './companies.service';
 import { Company } from '@schema/Company';
 import { WorkersService } from '@/modules/workers/workers.service';
-import { Types } from 'mongoose';
 
 describe('CompaniesService', () => {
   let service: CompaniesService;
@@ -70,18 +69,5 @@ describe('CompaniesService', () => {
     });
 
     expect(mockCompanyModel.create).toHaveBeenCalled();
-  });
-
-  it('should find all companies by worker id', async () => {
-    const workerId = new Types.ObjectId();
-
-    expect(await service.findAllByWorkerId(workerId)).toEqual({
-      data: [
-        {
-          _id: '507f1f77bcf86cd799439011',
-          name: 'Company 1',
-        },
-      ],
-    });
   });
 });

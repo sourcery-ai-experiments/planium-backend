@@ -30,7 +30,7 @@ let TasksService = class TasksService {
         this.filesService = filesService;
         this.connection = connection;
     }
-    async getAll(companyId, projectId, status, type) {
+    async getAll(companyId, projectId, workerId, status, type) {
         const query = {
             companyId,
             projectId,
@@ -39,6 +39,8 @@ let TasksService = class TasksService {
             query['status'] = status;
         if (type)
             query['type'] = type;
+        if (workerId)
+            query['workerId'] = workerId;
         await this.verifyExistProject(projectId);
         const tasks = await this.taskModel.aggregate([
             {
@@ -137,7 +139,7 @@ let TasksService = class TasksService {
             throw new Error(error);
         }
     }
-    async startTask(taskId, file, companyId) {
+    async startTask(taskId, companyId) {
         const subId = new mongoose_2.Types.ObjectId(this.request.user['sub']);
         const task = await this.verifyTaskExist(taskId, companyId);
         if (task.status !== Task_2.TaskStatus.TO_DO) {
@@ -146,9 +148,6 @@ let TasksService = class TasksService {
         const session = await this.connection.startSession();
         session.startTransaction();
         try {
-            const { originalname, buffer } = file;
-            const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.COMPANY_PROJECT_TASK, companyId, session);
-            task.files = [newFile.id];
             task.status = Task_2.TaskStatus.IN_PROGRESS;
             task.updatedAt = new Date().getTime();
             task.updatedBy = subId;
@@ -207,7 +206,7 @@ let TasksService = class TasksService {
     }
     async uploadFilesToTask(task, updateBy, companyId, files, session = null) {
         const newFiles = await this.filesService.uploadManyFiles(files, File_1.Folder.COMPANY_PROJECT_TASK, companyId, session);
-        task.files = [...task.files, ...newFiles.map((file) => file.id)];
+        task.files = [...task.files, ...newFiles.map((file) => file._id)];
         task.updatedAt = new Date().getTime();
         task.updatedBy = updateBy;
         await this.taskModel.updateOne({ _id: task._id }, task, { session });

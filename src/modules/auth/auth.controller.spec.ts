@@ -58,8 +58,7 @@ describe('AuthController', () => {
 
   it('should send a recovery sms', async () => {
     const smsRecoveryDto = {
-      phone: '12345678',
-      countryCode: '56',
+      username: 'kuzo_mock#1234',
     };
     expect(await controller.sendRecoverySms(smsRecoveryDto)).toEqual({
       message: 'SMS enviado correctamente',
@@ -68,7 +67,7 @@ describe('AuthController', () => {
     expect(mockAuthService.sendRecoverySms).toHaveBeenCalled();
   });
 
-  it('should send a recovery email', async () => {
+  /*  it('should send a recovery email', async () => {
     const email = 'test@gmail.com';
 
     expect(await controller.sendRecoveryEmail({ email })).toEqual({
@@ -77,5 +76,5 @@ describe('AuthController', () => {
         userId: expect.any(Types.ObjectId),
       },
     });
-  });
+  }); */
 });

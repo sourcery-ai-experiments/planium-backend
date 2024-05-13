@@ -14,6 +14,7 @@ import { generateUsername } from '@/helpers/generate-data';
 import { welcomeTemplate } from '@/templates/email/welcome';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { Folder } from '@/types/File';
+import { WorkerAggregateResponse } from '@/types/Worker';
 
 @Injectable()
 export class WorkersService {
@@ -44,9 +45,91 @@ export class WorkersService {
     }
   }
 
-  async findOne(where: Record<string, any>) {
+  async findOne(where: Record<string, any>): Promise<WorkerAggregateResponse> {
     try {
-      return this.workerModel.findOne(where).exec();
+      const response = await this.workerModel.aggregate([
+        {
+          $match: where,
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        {
+          $lookup: {
+            from: 'files',
+            localField: 'personalInformation.fileId',
+            foreignField: '_id',
+            as: 'w9File',
+          },
+        },
+        {
+          $unwind: '$user',
+        },
+        {
+          $unwind: {
+            path: '$w9File',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'files',
+            localField: 'user.fileId',
+            foreignField: '_id',
+            as: 'avatar',
+          },
+        },
+        {
+          $lookup: {
+            from: 'countries',
+            localField: 'user.countryId',
+            foreignField: '_id',
+            as: 'country',
+          },
+        },
+        {
+          $unwind: {
+            path: '$avatar',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: '$country',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            name: '$user.name',
+            username: '$user.username',
+            email: '$user.email',
+            phone: '$user.phone',
+            type: '$user.type',
+            country: '$country',
+            file: {
+              _id: '$avatar._id',
+              url: '$avatar.url',
+            },
+            emergencyContact: 1,
+            personalInformation: {
+              socialSecurityNumber: 1,
+              file: {
+                _id: '$w9File._id',
+                url: '$w9File.url',
+              },
+            },
+            companyId: 1,
+          },
+        },
+      ]);
+
+      return response[0];
     } catch (error) {
       throw new Error(error);
     }
@@ -113,7 +196,6 @@ export class WorkersService {
 
     const session = await this.connection.startSession();
     session.startTransaction();
-
     try {
       await this.updateUser(updateWorkerDto, worker.userId, session, companyId);
 
@@ -126,13 +208,20 @@ export class WorkersService {
         };
       }
 
-      await this.workerModel.updateOne({ _id: workerId }, updateWorkerDto, {
-        session,
-      });
+      await this.workerModel.updateOne(
+        { _id: workerId },
+        {
+          ...updateWorkerDto,
+          updatedAt: new Date(),
+        },
+        {
+          session,
+        },
+      );
 
       await session.commitTransaction();
 
-      return { message: 'Operario actualizado correctamente' };
+      return { message: 'Información actualizada correctamente' };
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -231,6 +320,10 @@ export class WorkersService {
       email: worker.email,
       phone: worker.phone,
     };
+
+    if (worker?.countryId) {
+      userBody['countryId'] = new Types.ObjectId(worker.countryId);
+    }
 
     return await this.userService.update(userId, userBody, companyId, session);
   }

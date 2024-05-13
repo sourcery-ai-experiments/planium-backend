@@ -31,7 +31,9 @@ export declare class ProjectsService {
     constructor(projectModel: Model<ProjectDocument>, request: Record<string, unknown>);
     findById(id: Types.ObjectId): Promise<Project>;
     findOne(where: Record<string, unknown>): Promise<Project>;
-    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<any[]>;
+    getByWorkerId(workerId: Types.ObjectId, companyId: Types.ObjectId): Promise<{
+        data: any[];
+    }>;
     create(createProjectDto: CreateProjectDto, companyId: Types.ObjectId): Promise<{
         message: string;
     }>;

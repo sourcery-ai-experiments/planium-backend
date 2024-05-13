@@ -5,15 +5,12 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  MaxFileSizeValidator,
   Param,
   ParseEnumPipe,
-  ParseFilePipe,
   Patch,
   Post,
   Query,
   Request,
-  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,7 +22,7 @@ import { ParseMongoIdPipe } from '@/pipes/mongo-id.pipe';
 import { TaskStatus, TaskType } from '@/types/Task';
 import { UserType } from '@/types/User';
 import { UserTypes } from '@/decorators/auth/user-type.decorator';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadFilesDto } from './dto/upload-files.dto';
 
 @Controller('tasks')
@@ -35,13 +32,20 @@ export class TasksController {
   @Get()
   async getAll(
     @Query('projectId', ParseMongoIdPipe) projectId: Types.ObjectId,
+    @Query('workerId', ParseMongoIdPipe) workerId: Types.ObjectId,
     @Query('status', new ParseEnumPipe(TaskStatus, { optional: true }))
     status: TaskStatus,
     @Query('type', new ParseEnumPipe(TaskType, { optional: true }))
     type: TaskType,
     @CompanyId() companyId: Types.ObjectId,
   ) {
-    return await this.tasksService.getAll(companyId, projectId, status, type);
+    return await this.tasksService.getAll(
+      companyId,
+      projectId,
+      workerId,
+      status,
+      type,
+    );
   }
 
   @Get(':id')
@@ -72,18 +76,11 @@ export class TasksController {
 
   @UserTypes(UserType.WORKER)
   @Patch('start/:id')
-  @UseInterceptors(FileInterceptor('file'))
   async startTask(
     @Param('id', ParseMongoIdPipe) taskId: Types.ObjectId,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 20 })],
-      }),
-    )
-    file: Express.Multer.File,
     @CompanyId() companyId: Types.ObjectId,
   ) {
-    return await this.tasksService.startTask(taskId, file, companyId);
+    return await this.tasksService.startTask(taskId, companyId);
   }
 
   @UserTypes(UserType.WORKER)

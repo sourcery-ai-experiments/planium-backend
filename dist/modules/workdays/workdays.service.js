@@ -27,11 +27,12 @@ let WorkdaysService = class WorkdaysService {
         this.filesService = filesService;
         this.connection = connection;
     }
-    async getWorkdaysByWorkerId(isActive, workerId, companyId) {
+    async getAll(isActive, workerId, companyId) {
         const query = {
-            workerId,
             companyId,
         };
+        if (workerId)
+            query['workerId'] = workerId;
         if (isActive)
             query['isActive'] = isActive;
         const workdays = await this.workdayModel.aggregate([
@@ -90,17 +91,22 @@ let WorkdaysService = class WorkdaysService {
         try {
             const { originalname, buffer } = file;
             const newFile = await this.filesService.uploadOneFile(originalname, buffer, File_1.Folder.WORKER_WORKDAY, companyId, session);
-            const newWorkday = {
+            const workdayToSave = {
                 fileId: newFile.id,
                 workerId,
                 companyId,
                 updatedBy: workerId,
                 ...workday,
             };
-            await this.workdayModel.create([newWorkday], { session });
+            const newWorkday = await this.workdayModel.create([workdayToSave], {
+                session,
+            });
             await session.commitTransaction();
             return {
-                message: 'Jornada creada correctamente',
+                message: 'Jornada iniciada correctamente',
+                data: {
+                    _id: newWorkday[0]._id,
+                },
             };
         }
         catch (error) {

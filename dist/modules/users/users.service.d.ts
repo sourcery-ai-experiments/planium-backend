@@ -61,7 +61,7 @@ export declare class UsersService {
             name: string;
             username: string;
             email: string;
-            countryId: string;
+            countryId: Types.ObjectId;
             phone: Record<string, any>;
             type: string;
             fileId: Types.ObjectId;
@@ -96,7 +96,7 @@ export declare class UsersService {
             name: string;
             username: string;
             email: string;
-            countryId: string;
+            countryId: Types.ObjectId;
             phone: Record<string, any>;
             type: string;
             fileId: Types.ObjectId;

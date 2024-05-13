@@ -29,7 +29,8 @@ let AuthController = class AuthController {
     }
     validateUser(req, companyId) {
         const userId = new mongoose_1.Types.ObjectId(req.user['userId']);
-        return this.authService.validateSession(userId, companyId);
+        const userType = req.user['type'];
+        return this.authService.validateSession(userId, userType, companyId);
     }
     refreshToken(companyId, req) {
         const subId = req.user.sub;
@@ -46,10 +47,6 @@ let AuthController = class AuthController {
     sendRecoverySms(smsRecoveryDto) {
         const { username } = smsRecoveryDto;
         return this.authService.sendRecoverySms(username);
-    }
-    sendRecoveryEmail(emailRecoveryDto) {
-        const { email } = emailRecoveryDto;
-        return this.authService.sendRecoveryEmail(email);
     }
     verifyRecoveryCode(verifyCodeDto) {
         const { otp, userId } = verifyCodeDto;
@@ -90,14 +87,6 @@ __decorate([
     __metadata("design:paramtypes", [dto_1.SmsRecoveryDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "sendRecoverySms", null);
-__decorate([
-    (0, auth_decorator_1.Public)(),
-    (0, common_1.Post)('recovery/email'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.EmailRecoveryDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "sendRecoveryEmail", null);
 __decorate([
     (0, auth_decorator_1.Public)(),
     (0, common_1.Post)('recovery/verify'),
